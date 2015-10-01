@@ -1,0 +1,115 @@
+/* 
+ * GA Digital Files Transfer Tool
+ * Author: Nouman Tayyab (nouman@avpreserve.com)
+ * Version: 1.0
+ * Requires: JDK 1.7 or higher
+ * Description: This tool transfers digital files to the Gates Archive.
+ * Support: info@gatesarchive.com
+ * Copyright 2013 Gates Archive
+ */
+package uk.sipperfly.ui;
+
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import uk.sipperfly.persistent.Configurations;
+import uk.sipperfly.repository.ConfigurationsRepo;
+import static uk.sipperfly.ui.MainFrame.GACOM;
+import uk.sipperfly.utils.CommonUtil;
+
+/**
+ * This class implements the visitor used by the FileTransfer class.
+ *
+ * @author Nouman Tayyab
+ */
+class CopyDirVisitor extends SimpleFileVisitor<Path> {
+
+	private final MainFrame parent;
+	private final Path fromPath;
+	private final Path toPath;
+
+	/**
+	 * Constructor for CopyDirVisitor
+	 *
+	 * @param parent Pointer to the parent GUI for status updates
+	 * @param fromPath The source of the copy
+	 * @param toPath The destination of the copy
+	 */
+	public CopyDirVisitor(MainFrame parent, Path fromPath, Path toPath) {
+		if (parent == null
+				|| fromPath == null
+				|| toPath == null) {
+			throw new IllegalArgumentException();
+		}
+
+		this.parent = parent;
+		this.fromPath = fromPath;
+		this.toPath = toPath;
+
+	}
+
+	/**
+	 * Creates the target directories as we walk the tree.
+	 *
+	 * @param dir The target directory path.
+	 * @param attrs Default attributes (unused)
+	 * @return CONTINUE in all cases
+	 * @throws IOException If the target directory cannot be created
+	 */
+	@Override
+	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+		if (dir == null
+				|| attrs == null) {
+			throw new IllegalArgumentException();
+		}
+
+		Path targetPath = toPath.resolve(fromPath.relativize(dir));
+		if (!Files.exists(targetPath)) {
+			Files.createDirectory(targetPath);
+		}
+		return FileVisitResult.CONTINUE;
+	}
+
+	/**
+	 * Performs the actual file copy from the source to the target. Updates the parent GUI progress bar as well.
+	 *
+	 * @param file The path of the file to copy
+	 * @param attrs Default attributes (unused)
+	 * @return CONTINUE in all cases
+	 * @throws IOException If the file cannot be copied
+	 */
+	@Override
+	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+		if (file == null
+				|| attrs == null) {
+			throw new IllegalArgumentException();
+		}
+
+		if (this.parent.GetBackgroundWorker().isCancelled()) {
+			Logger.getLogger(GACOM).log(Level.SEVERE, "TERMINATING file visitor");
+			return FileVisitResult.TERMINATE;
+		}
+		ConfigurationsRepo configRepo = new ConfigurationsRepo();
+		Configurations config = configRepo.getOneOrCreateOne();
+		config.getFilters();
+		CommonUtil commonUtil = new CommonUtil();
+
+		System.out.println(file.getFileName().toString());
+		boolean ignore = commonUtil.checkIgnoreFiles(file.getFileName().toString(), config.getFilters());
+		if (!ignore) {
+			Files.copy(file, toPath.resolve(fromPath.relativize(file)), REPLACE_EXISTING);
+			this.parent.tranferredFiles = this.parent.tranferredFiles + 1;
+			this.parent.UpdateProgressBar(this.parent.tranferredFiles);
+			
+		}
+		Logger.getLogger(GACOM).log(Level.INFO, "Count of Files: ".concat(Integer.toString(this.parent.tranferredFiles)));
+
+		return FileVisitResult.CONTINUE;
+	}
+}

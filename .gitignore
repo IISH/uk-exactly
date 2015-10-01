@@ -1,0 +1,8 @@
+dist
+build
+exactly
+*.log
+.DS_Store
+logfile.txt
+logfile.txt*
+nbproject/private
