@@ -82,6 +82,7 @@ public class BagInfoEntry extends JPanel {
 		this.scrollPane = new JScrollPane(this.valueField);
 		this.scrollPane.setVerticalScrollBarPolicy(
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		this.scrollPane.setPreferredSize(new Dimension(203, 40));
 
 		add(this.label);
 		add(this.labelField);
