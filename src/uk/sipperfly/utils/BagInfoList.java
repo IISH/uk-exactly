@@ -4,7 +4,7 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
-import uk.sipperfly.ui.MainFrame;
+import uk.sipperfly.ui.Exactly;
 
 /**
  *
@@ -13,9 +13,9 @@ import uk.sipperfly.ui.MainFrame;
 public class BagInfoList extends JPanel {
 
 	private List<BagInfoEntry> entries;
-	private final MainFrame parent;
+	private final Exactly parent;
 
-	public BagInfoList(MainFrame frame) {
+	public BagInfoList(Exactly frame) {
 		this.entries = new ArrayList<BagInfoEntry>();
 		this.parent = frame;
 

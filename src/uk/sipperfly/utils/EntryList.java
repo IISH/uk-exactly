@@ -5,7 +5,7 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
-import uk.sipperfly.ui.MainFrame;
+import uk.sipperfly.ui.Exactly;
 
 /**
  * 
@@ -14,9 +14,9 @@ import uk.sipperfly.ui.MainFrame;
 public class EntryList extends JPanel {
 
 	private List<Entry> entries;
-	private final MainFrame parent;
+	private final Exactly parent;
 
-	public EntryList(MainFrame frame) {
+	public EntryList(Exactly frame) {
 		this.entries = new ArrayList<Entry>();
 		this.parent = frame;
 

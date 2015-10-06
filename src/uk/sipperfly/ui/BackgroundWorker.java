@@ -19,7 +19,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingWorker;
-import static uk.sipperfly.ui.MainFrame.GACOM;
+import static uk.sipperfly.ui.Exactly.GACOM;
 
 // Bagit imports
 import gov.loc.repository.bagit.Bag;
@@ -82,7 +82,7 @@ import org.w3c.dom.Element;
 class BackgroundWorker extends SwingWorker<Integer, Void> {
 
 	private final List<String> sources;
-	private final MainFrame parent;
+	private final Exactly parent;
 	private int numberOfFiles;
 	private final Configurations config;
 	private final FTP ftp;
@@ -106,7 +106,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	 * @param process
 	 * @throws IOException
 	 */
-	public BackgroundWorker(final List<String> sources, MainFrame parent, int process) throws IOException {
+	public BackgroundWorker(final List<String> sources, Exactly parent, int process) throws IOException {
 		if (sources == null || sources.isEmpty()
 				|| parent == null) {
 			throw new IllegalArgumentException();

@@ -13,7 +13,7 @@ import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.net.ftp.FTPClient;
-import static uk.sipperfly.ui.MainFrame.GACOM;
+import static uk.sipperfly.ui.Exactly.GACOM;
 
 /**
  *

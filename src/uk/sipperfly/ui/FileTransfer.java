@@ -14,7 +14,7 @@ import java.nio.file.Path;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static uk.sipperfly.ui.MainFrame.GACOM;
+import static uk.sipperfly.ui.Exactly.GACOM;
 
 /**
  * This class walks the file tree of the source, invoking a visitor pattern on each file.
@@ -25,7 +25,7 @@ class FileTransfer {
 
 	private Path source;
 	private Path target;
-	private final MainFrame parent;
+	private final Exactly parent;
 
 	/**
 	 * Constructor for FileTransfer
@@ -33,7 +33,7 @@ class FileTransfer {
 	 * @param target The destination of the copy
 	 * @param parent Pointer to the parent GUI for status updates
 	 */
-	public FileTransfer(MainFrame parent) {
+	public FileTransfer(Exactly parent) {
 		if (parent == null) {
 			throw new IllegalArgumentException();
 		}

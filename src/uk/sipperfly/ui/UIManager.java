@@ -34,7 +34,7 @@ public class UIManager {
 	ConfigurationsRepo configurationsRepo;
 	RecipientsRepo recipientsRepo;
 	BagInfoRepo bagInfoRepo;
-	MainFrame mainFrame;
+	Exactly mainFrame;
 	FTPRepo FTPRepo;
 	CommonUtil commonUtil;
 
@@ -43,7 +43,7 @@ public class UIManager {
 	 *
 	 * @param mainFrame
 	 */
-	public UIManager(MainFrame mainFrame) {
+	public UIManager(Exactly mainFrame) {
 		this.FTPRepo = new FTPRepo();
 		this.configurationsRepo = new ConfigurationsRepo();
 		this.recipientsRepo = new RecipientsRepo();

@@ -20,7 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import uk.sipperfly.persistent.Configurations;
 import uk.sipperfly.repository.ConfigurationsRepo;
-import static uk.sipperfly.ui.MainFrame.GACOM;
+import static uk.sipperfly.ui.Exactly.GACOM;
 import uk.sipperfly.utils.CommonUtil;
 
 /**
@@ -30,7 +30,7 @@ import uk.sipperfly.utils.CommonUtil;
  */
 class CopyDirVisitor extends SimpleFileVisitor<Path> {
 
-	private final MainFrame parent;
+	private final Exactly parent;
 	private final Path fromPath;
 	private final Path toPath;
 
@@ -41,7 +41,7 @@ class CopyDirVisitor extends SimpleFileVisitor<Path> {
 	 * @param fromPath The source of the copy
 	 * @param toPath The destination of the copy
 	 */
-	public CopyDirVisitor(MainFrame parent, Path fromPath, Path toPath) {
+	public CopyDirVisitor(Exactly parent, Path fromPath, Path toPath) {
 		if (parent == null
 				|| fromPath == null
 				|| toPath == null) {

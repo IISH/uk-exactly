@@ -10,44 +10,30 @@
 package uk.sipperfly.ui;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
 import java.io.File;
 import java.io.IOException;
-import java.net.SocketException;
-import java.nio.file.Files;
 import java.util.logging.Logger;
 import java.util.logging.FileHandler;
 import java.util.logging.SimpleFormatter;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.logging.Level;
-import javax.swing.GroupLayout;
-import javax.swing.JButton;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.Painter;
-import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.text.DefaultCaret;
 import static javax.swing.text.DefaultCaret.ALWAYS_UPDATE;
 import javax.xml.parsers.ParserConfigurationException;
 import uk.sipperfly.persistent.Configurations;
 import uk.sipperfly.repository.ConfigurationsRepo;
 
-import static uk.sipperfly.ui.MainFrame.GACOM;
+import static uk.sipperfly.ui.Exactly.GACOM;
 import uk.sipperfly.utils.CommonUtil;
 import org.apache.commons.io.FileUtils;
 import uk.sipperfly.utils.BagInfoList;
 import uk.sipperfly.utils.EmailList;
-import uk.sipperfly.utils.Entry;
 import uk.sipperfly.utils.EntryList;
 import uk.sipperfly.utils.MyPainter;
 
@@ -56,7 +42,7 @@ import uk.sipperfly.utils.MyPainter;
  *
  * @author Nouman Tayyab
  */
-public class MainFrame extends javax.swing.JFrame {
+public class Exactly extends javax.swing.JFrame {
 
 	private JFileChooser fileChooser;
 	private String inputDirPath;
@@ -80,7 +66,7 @@ public class MainFrame extends javax.swing.JFrame {
 	/**
 	 * Creates new form MainFrame
 	 */
-	public MainFrame() {
+	public Exactly() {
 //		this.emailIdList = new int[10];
 		this.list = new EntryList(this);
 		this.bagInfo = new BagInfoList(this);
@@ -92,6 +78,8 @@ public class MainFrame extends javax.swing.JFrame {
 		this.uIManager.setEmailFields();
 		this.uIManager.setFtpFields();
 		this.uIManager.setBagInfoFields();
+		ImageIcon img = new ImageIcon(Exactly.class.getClass().getResource("/uk/sipperfly/ui/resources/Exactly-logo.png"));
+		this.setIconImage(img.getImage());
 	}
 
 	/**
@@ -232,7 +220,7 @@ public class MainFrame extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Exactly - Transfer Tool");
+        setTitle("Exactly 0.1");
         setBackground(new java.awt.Color(255, 255, 255));
         setResizable(false);
         addPropertyChangeListener(new java.beans.PropertyChangeListener() {
@@ -1219,8 +1207,9 @@ public class MainFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(8, 8, 8)
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 599, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1244,8 +1233,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGap(22, 22, 22)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(clearLog)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(clearLog))
                     .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
@@ -1481,12 +1469,13 @@ public class MainFrame extends javax.swing.JFrame {
 				Logger.getLogger(GACOM).log(Level.SEVERE, "Invalid credentials. Please try again.");
 			}
 		} catch (IOException ex) {
-			Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(Exactly.class.getName()).log(Level.SEVERE, null, ex);
 		}
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void formPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_formPropertyChange
 		this.setResizable(false);
+
     }//GEN-LAST:event_formPropertyChange
 
     private void quitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitActionPerformed
@@ -1515,11 +1504,11 @@ public class MainFrame extends javax.swing.JFrame {
 				this.uIManager.exportInfo(exportPath);
 				UpdateResult("Done exporting...", 0);
 			} catch (IOException ex) {
-				Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+				Logger.getLogger(Exactly.class.getName()).log(Level.SEVERE, null, ex);
 			} catch (ParserConfigurationException ex) {
-				Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+				Logger.getLogger(Exactly.class.getName()).log(Level.SEVERE, null, ex);
 			} catch (Exception ex) {
-				Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+				Logger.getLogger(Exactly.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
 
@@ -1858,6 +1847,8 @@ public class MainFrame extends javax.swing.JFrame {
 	 * @param args the command line arguments
 	 */
 	public static void main(String args[]) {
+
+		
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -1879,16 +1870,33 @@ public class MainFrame extends javax.swing.JFrame {
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
 			java.util.logging.Logger.getLogger(GACOM).log(java.util.logging.Level.SEVERE, null, ex);
 		}
+
+//		System.setProperty("apple.laf.useScreenMenuBar", "true");
+//
+// set the name of the application menu item
+//		System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Exactly 0.1");
+//		try {
+//			javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
+//		} catch (ClassNotFoundException ex) {
+//			Logger.getLogger(Exactly.class.getName()).log(Level.SEVERE, null, ex);
+//		} catch (InstantiationException ex) {
+//			Logger.getLogger(Exactly.class.getName()).log(Level.SEVERE, null, ex);
+//		} catch (IllegalAccessException ex) {
+//			Logger.getLogger(Exactly.class.getName()).log(Level.SEVERE, null, ex);
+//		} catch (UnsupportedLookAndFeelException ex) {
+//			Logger.getLogger(Exactly.class.getName()).log(Level.SEVERE, null, ex);
+//		}
 		//</editor-fold>
 
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-
-				new MainFrame().setVisible(true);
+				new Exactly().setVisible(true);
 			}
 		});
+
+
 	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JRadioButton activeMode;
