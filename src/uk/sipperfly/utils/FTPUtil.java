@@ -1,6 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * Exactly
+ * Author: Nouman Tayyab (nouman@avpreserve.com)
+ * Author: Rimsha Khalid (rimsha@avpreserve.com)
+ * Version: 0.1
+ * Requires: JDK 1.7 or higher
+ * Description: This tool transfers digital files to the UK Exactly
+ * Support: info@avpreserve.com
+ * Copyright Audio Visual Preservation Solutions, Inc
  */
 package uk.sipperfly.utils;
 
@@ -11,12 +17,8 @@ import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPSClient;
 
-/**
- *
- * @author Rimsha Khalid(rimsha@avpreserve.com)
- */
 public class FTPUtil {
 
 	private static String GACOM = "com.UKExactly";
@@ -30,7 +32,7 @@ public class FTPUtil {
 	 * @param remoteParentDir Path of the parent directory of the current directory on the server (used by recursive calls).
 	 * @throws IOException if any network or IO error occurred.
 	 */
-	public static boolean uploadDirectory(FTPClient ftpClient,
+	public static boolean uploadDirectory(FTPSClient ftpClient,
 			String remoteDirPath, String localParentDir, String remoteParentDir)
 			throws IOException {
 
@@ -51,12 +53,11 @@ public class FTPUtil {
 					Logger.getLogger(GACOM).log(Level.INFO, "About to upload the file: ", localFilePath);
 					System.out.println("About to upload the file: " + localFilePath);
 					boolean uploaded = uploadSingleFile(ftpClient, localFilePath, remoteFilePath);
-
+					
 					if (uploaded) {
 						Logger.getLogger(GACOM).log(Level.INFO, "UPLOADED a file to: ", remoteFilePath);
 						System.out.println("UPLOADED a file to: " + remoteFilePath);
 					} else {
-//						System.out.println(ftpClient.getReplyString());
 						System.out.println("COULD NOT upload the file: " + localFilePath);
 						Logger.getLogger(GACOM).log(Level.INFO, "COULD NOT upload the file: ", localFilePath);
 						return false;
@@ -68,7 +69,6 @@ public class FTPUtil {
 						System.out.println("CREATED the directory: " + remoteFilePath);
 						Logger.getLogger(GACOM).log(Level.INFO, "CREATED the directory: ", remoteFilePath);
 					} else {
-						System.out.println(ftpClient.getReplyString());
 						System.out.println("COULD NOT create the directory: " + remoteFilePath);
 						Logger.getLogger(GACOM).log(Level.INFO, "COULD NOT create the directory: ", remoteFilePath);
 						return false;
@@ -97,7 +97,7 @@ public class FTPUtil {
 	 * @return true if the file was uploaded successfully, false otherwise
 	 * @throws IOException if any network or IO error occurred.
 	 */
-	public static boolean uploadSingleFile(FTPClient ftpClient,
+	public static boolean uploadSingleFile(FTPSClient ftpClient,
 			String localFilePath, String remoteFilePath) throws IOException {
 		File localFile = new File(localFilePath);
 		try (InputStream inputStream = new FileInputStream(localFile)) {

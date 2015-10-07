@@ -1,6 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * Exactly
+ * Author: Nouman Tayyab (nouman@avpreserve.com)
+ * Author: Rimsha Khalid (rimsha@avpreserve.com)
+ * Version: 0.1
+ * Requires: JDK 1.7 or higher
+ * Description: This tool transfers digital files to the UK Exactly
+ * Support: info@avpreserve.com
+ * Copyright Audio Visual Preservation Solutions, Inc
  */
 package uk.sipperfly.utils;
 
@@ -13,10 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-/**
- * 
- * @author Rimsha Khalid(rimsha@avpreserve.com)
- */
+
 public class EmailEntry extends JPanel {
 	private JLabel label;
 	private JTextField textField;

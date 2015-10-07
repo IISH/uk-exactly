@@ -1,11 +1,12 @@
 /* 
- * GA Digital Files Transfer Tool
+ * Exactly
  * Author: Nouman Tayyab (nouman@avpreserve.com)
- * Version: 1.0
+ * Author: Rimsha Khalid (rimsha@avpreserve.com)
+ * Version: 0.1
  * Requires: JDK 1.7 or higher
  * Description: This tool transfers digital files to the UK Exactly
- * Support: info@gatesarchive.com
- * Copyright 2013 Gates Archive
+ * Support: info@avpreserve.com
+ * Copyright Audio Visual Preservation Solutions, Inc
  */
 package uk.sipperfly.ui;
 
@@ -22,7 +23,6 @@ import java.util.logging.Level;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.UIDefaults;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.text.DefaultCaret;
 import static javax.swing.text.DefaultCaret.ALWAYS_UPDATE;
 import javax.xml.parsers.ParserConfigurationException;
@@ -36,6 +36,11 @@ import uk.sipperfly.utils.BagInfoList;
 import uk.sipperfly.utils.EmailList;
 import uk.sipperfly.utils.EntryList;
 import uk.sipperfly.utils.MyPainter;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URL;
 
 /**
  * This is the main UI class for the tool.
@@ -80,6 +85,34 @@ public class Exactly extends javax.swing.JFrame {
 		this.uIManager.setBagInfoFields();
 		ImageIcon img = new ImageIcon(Exactly.class.getClass().getResource("/uk/sipperfly/ui/resources/Exactly-logo.png"));
 		this.setIconImage(img.getImage());
+		String osName = System.getProperty("os.name").toLowerCase();
+		boolean isMacOs = osName.startsWith("mac os x");
+		if (isMacOs) {
+			try {
+				Class util = Class.forName("com.apple.eawt.Application");
+				Method getApplication = util.getMethod("getApplication", new Class[0]);
+				Object application = getApplication.invoke(util);
+				Class params[] = new Class[1];
+				params[0] = Image.class;
+				Method setDockIconImage = util.getMethod("setDockIconImage", params);
+				URL url = Exactly.class.getClass().getResource("/uk/sipperfly/ui/resources/Exactly-logo.png");
+				Image image = Toolkit.getDefaultToolkit().getImage(url);
+				setDockIconImage.invoke(application, image);
+				Method removeAboutMenuItem = util.getMethod("removeAboutMenuItem");
+				removeAboutMenuItem.invoke(application);
+			} catch (ClassNotFoundException e) {
+				Logger.getLogger(GACOM).log(Level.SEVERE, null, e);
+			} catch (NoSuchMethodException e) {
+				Logger.getLogger(GACOM).log(Level.SEVERE, null, e);
+				// log exception
+			} catch (InvocationTargetException e) {
+				Logger.getLogger(GACOM).log(Level.SEVERE, null, e);
+				// log exception
+			} catch (IllegalAccessException e) {
+				Logger.getLogger(GACOM).log(Level.SEVERE, null, e);
+				// log exception
+			}
+		}
 	}
 
 	/**
@@ -1529,9 +1562,7 @@ public class Exactly extends javax.swing.JFrame {
 			if (files.length >= 1) {
 				inputDirPath = files[0].getAbsolutePath();
 				editInputDir.setText(inputDirPath);
-				System.out.println(files.length);
 				for (int i = 1; i < files.length; i++) {
-					System.out.println(files[i].getAbsolutePath().toString());
 					this.list.addEntry(files[i].getAbsolutePath().toString());
 				}
 			}
@@ -1558,7 +1589,6 @@ public class Exactly extends javax.swing.JFrame {
 		Boolean isSelected = false;
 		List<String> validDirs = new ArrayList<String>();
 		List<String> directories = new ArrayList<String>();
-		System.out.println(editInputDir.getText());
 		directories = this.uIManager.getInputDirectories();
 		directories.add(editInputDir.getText());
 		long size = 0;
@@ -1738,7 +1768,6 @@ public class Exactly extends javax.swing.JFrame {
 			File file = fileChooser.getSelectedFile();
 			if (file.getName().indexOf("xml") > 0) {
 				UpdateResult("Importing xml.", 0);
-				System.out.println(file.getName());
 //			inputDirPath = file.getAbsolutePath();
 				String message = this.uIManager.importXml(file.getAbsolutePath().toString());
 				UpdateResult(message, 0);
@@ -1848,7 +1877,7 @@ public class Exactly extends javax.swing.JFrame {
 	 */
 	public static void main(String args[]) {
 
-		
+
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -1870,22 +1899,6 @@ public class Exactly extends javax.swing.JFrame {
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
 			java.util.logging.Logger.getLogger(GACOM).log(java.util.logging.Level.SEVERE, null, ex);
 		}
-
-//		System.setProperty("apple.laf.useScreenMenuBar", "true");
-//
-// set the name of the application menu item
-//		System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Exactly 0.1");
-//		try {
-//			javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
-//		} catch (ClassNotFoundException ex) {
-//			Logger.getLogger(Exactly.class.getName()).log(Level.SEVERE, null, ex);
-//		} catch (InstantiationException ex) {
-//			Logger.getLogger(Exactly.class.getName()).log(Level.SEVERE, null, ex);
-//		} catch (IllegalAccessException ex) {
-//			Logger.getLogger(Exactly.class.getName()).log(Level.SEVERE, null, ex);
-//		} catch (UnsupportedLookAndFeelException ex) {
-//			Logger.getLogger(Exactly.class.getName()).log(Level.SEVERE, null, ex);
-//		}
 		//</editor-fold>
 
 		/* Create and display the form */

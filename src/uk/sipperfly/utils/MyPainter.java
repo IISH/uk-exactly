@@ -1,6 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * Exactly
+ * Author: Nouman Tayyab (nouman@avpreserve.com)
+ * Author: Rimsha Khalid (rimsha@avpreserve.com)
+ * Version: 0.1
+ * Requires: JDK 1.7 or higher
+ * Description: This tool transfers digital files to the UK Exactly
+ * Support: info@avpreserve.com
+ * Copyright Audio Visual Preservation Solutions, Inc
  */
 package uk.sipperfly.utils;
 
@@ -9,10 +15,6 @@ import java.awt.Graphics2D;
 import javax.swing.JProgressBar;
 import javax.swing.Painter;
 
-/**
- * 
- * @author Rimsha Khalid(rimsha@avpreserve.com)
- */
 public class MyPainter implements Painter<JProgressBar> {
 
     private final Color color;

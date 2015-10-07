@@ -1,18 +1,16 @@
-/*
- * GA Digital Files Transfer Tool
- * Author: Nouman Tayyab
- * Version: 1.0
+/* 
+ * Exactly
+ * Author: Nouman Tayyab (nouman@avpreserve.com)
+ * Author: Rimsha Khalid (rimsha@avpreserve.com)
+ * Version: 0.1
  * Requires: JDK 1.7 or higher
- * Description: This tool transfers digital files to the Gates Archive.
- * Support: info@gatesarchive.com
- * Copyright 2013 Gates Archive
+ * Description: This tool transfers digital files to the UK Exactly
+ * Support: info@avpreserve.com
+ * Copyright Audio Visual Preservation Solutions, Inc
  */
 package uk.sipperfly.utils;
 
-/**
- *
- * @author noumantayyab
- */
+
 //Import all needed packages
 import java.io.File;
 import java.io.FileInputStream;

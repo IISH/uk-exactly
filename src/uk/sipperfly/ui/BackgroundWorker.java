@@ -1,11 +1,12 @@
 /* 
- * Exactly Digital Files Transfer Tool
+ * Exactly
  * Author: Nouman Tayyab (nouman@avpreserve.com)
- * Version: 1.0
+ * Author: Rimsha Khalid (rimsha@avpreserve.com)
+ * Version: 0.1
  * Requires: JDK 1.7 or higher
- * Description: This tool transfers digital files to the Gates Archive.
- * Support: info@gatesarchive.com
- * Copyright 2013 Gates Archive
+ * Description: This tool transfers digital files to the UK Exactly
+ * Support: info@avpreserve.com
+ * Copyright Audio Visual Preservation Solutions, Inc
  */
 package uk.sipperfly.ui;
 
@@ -905,8 +906,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 					}
 				}
 				Element firstname = doc.createElement(stringBuilder.toString().replace(" ", "-"));
-				firstname.appendChild(doc.createTextNode(text[1]));
-				//			firstname.appendChild(doc.createTextNode(text[1]));
+				firstname.appendChild(doc.createTextNode(text[1].replaceAll("\\s+", " ").trim()));
 				rootElement.appendChild(firstname);
 			}
 			// write the content into xml file

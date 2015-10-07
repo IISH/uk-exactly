@@ -1,4 +1,13 @@
-
+/* 
+ * Exactly
+ * Author: Nouman Tayyab (nouman@avpreserve.com)
+ * Author: Rimsha Khalid (rimsha@avpreserve.com)
+ * Version: 0.1
+ * Requires: JDK 1.7 or higher
+ * Description: This tool transfers digital files to the UK Exactly
+ * Support: info@avpreserve.com
+ * Copyright Audio Visual Preservation Solutions, Inc
+ */
 package uk.sipperfly.utils;
 
 import java.security.*;
@@ -6,10 +15,7 @@ import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import sun.misc.*;
 
-/**
- * 
- * @author Rimsha Khalid(rimsha@avpreserve.com)
- */
+
 public class EncryptDecryptUtil {
 
     private static final String ALGO = "AES";

@@ -1,4 +1,13 @@
-
+/* 
+ * Exactly
+ * Author: Nouman Tayyab (nouman@avpreserve.com)
+ * Author: Rimsha Khalid (rimsha@avpreserve.com)
+ * Version: 0.1
+ * Requires: JDK 1.7 or higher
+ * Description: This tool transfers digital files to the UK Exactly
+ * Support: info@avpreserve.com
+ * Copyright Audio Visual Preservation Solutions, Inc
+ */
 package uk.sipperfly.utils;
 
 import java.awt.Dimension;
@@ -12,10 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-/**
- * 
- * @author Rimsha Khalid(rimsha@avpreserve.com)
- */
+
 public class Entry extends JPanel {
 
 	private JLabel label;

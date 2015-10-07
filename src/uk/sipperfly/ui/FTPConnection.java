@@ -1,6 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * Exactly
+ * Author: Nouman Tayyab (nouman@avpreserve.com)
+ * Author: Rimsha Khalid (rimsha@avpreserve.com)
+ * Version: 0.1
+ * Requires: JDK 1.7 or higher
+ * Description: This tool transfers digital files to the UK Exactly
+ * Support: info@avpreserve.com
+ * Copyright Audio Visual Preservation Solutions, Inc
  */
 package uk.sipperfly.ui;
 
@@ -12,13 +18,9 @@ import java.io.IOException;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPSClient;
 import static uk.sipperfly.ui.Exactly.GACOM;
 
-/**
- *
- * @author Rimsha Khalid(rimsha@avpreserve.com)
- */
 public class FTPConnection {
 
 	String host;
@@ -44,7 +46,7 @@ public class FTPConnection {
 
 	/**
 	 * Connect with ftp with given info.
-	 * 
+	 *
 	 * @return true if connected successfully, false otherwise
 	 */
 	public boolean validateCon() {
@@ -53,7 +55,7 @@ public class FTPConnection {
 			int port = 21;
 			String user = this.username;
 			String pass = this.password;
-			FTPClient ftp = new FTPClient();
+			FTPSClient ftp = new FTPSClient();
 
 			ftp.connect(server, port);
 			System.out.println("Connected to " + server + ".");
@@ -85,20 +87,26 @@ public class FTPConnection {
 
 	/**
 	 * Upload files to ftp server
-	 * 
+	 *
 	 * @param location of the folder which have to upload on ftp
-	 * @param type zip file or folder
-	 * @return 
+	 * @param type     zip file or folder
+	 * @return
 	 */
 	public boolean uploadFiles(String location, String type) {
 		try {
 			this.validateCon();
-			FTPClient ftpClient = new FTPClient();
+			FTPSClient ftpClient = new FTPSClient();
+			ftpClient.setControlEncoding("UTF-8");
+
 			ftpClient.connect(this.host, this.port);
+
 			ftpClient.login(this.username, this.password);
-			if (this.mode == "passive") {
+			ftpClient.execPBSZ(0);
+			// Set data channel protection to private
+			ftpClient.execPROT("P");
+			if (this.mode.equalsIgnoreCase("passive")) {
 				ftpClient.enterLocalPassiveMode();
-			} else if (this.mode == "active") {
+			} else if (this.mode.equalsIgnoreCase("active")) {
 				ftpClient.enterLocalActiveMode();
 			}
 			int reply = ftpClient.getReplyCode();
@@ -144,7 +152,6 @@ public class FTPConnection {
 				}
 			} else {
 				ftpClient.makeDirectory(remoteFile);
-				System.out.println(ftpClient.getReplyString());
 				done = FTPUtil.uploadDirectory(ftpClient, remoteFile, location, "");
 				if (done) {
 					ftpClient.logout();
