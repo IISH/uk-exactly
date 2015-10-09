@@ -1638,7 +1638,6 @@ public class Exactly extends javax.swing.JFrame {
 
 				}
 			}
-
 		}
 
 		size = commonUtil.convertBytestoGB(size);

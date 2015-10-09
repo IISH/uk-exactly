@@ -115,10 +115,16 @@ public class FTPConnection {
 				ftpClient.disconnect();
 				return false;
 			}
-
+			ftpClient.setKeepAlive(true);
 			ftpClient.setFileType(FTP.BINARY_FILE_TYPE, FTP.BINARY_FILE_TYPE);
 			ftpClient.setFileTransferMode(FTP.BINARY_FILE_TYPE);
-			ftpClient.setControlKeepAliveTimeout(300); 
+			ftpClient.setControlKeepAliveTimeout(300);
+			ftpClient.sendSiteCommand("RECFM=FB");
+			ftpClient.sendSiteCommand("LRECL=2000");
+			ftpClient.sendSiteCommand("BLKSIZE=27000");
+			ftpClient.sendSiteCommand("CY");
+			ftpClient.sendSiteCommand("PRI= 50");
+			ftpClient.sendSiteCommand("SEC=25");
 			String remoteFile;
 			File localFile = new File(location);
 			if (this.destination != null) {
@@ -134,7 +140,7 @@ public class FTPConnection {
 					remoteFile = ftpClient.printWorkingDirectory() + "/" + localFile.getName();
 				}
 			}
-           System.out.println("working dir === "+ftpClient.printWorkingDirectory());
+			System.out.println("working dir === " + ftpClient.printWorkingDirectory());
 			boolean done;
 			if (type.equals("zip")) {
 				done = FTPUtil.uploadSingleFile(ftpClient, location, remoteFile);

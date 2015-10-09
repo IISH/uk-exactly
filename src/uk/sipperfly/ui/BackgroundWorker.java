@@ -789,7 +789,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 			}
 			ms.SetMessage(from, toEmail,
 					"Exactly Digital Transfer",
-					"Transfer completed at: " + new Date()
+					"Transfer completed: " + new Date()
 					+ "\nTransfer Name: " + transferName
 					+ "\nTarget: " + targetS
 					+ "\nFTP Target: " + ftpLocation
@@ -802,7 +802,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		} else {
 			ms.SetMessage(from, toEmail,
 					"Exactly Digital Transfer",
-					"Transfer completed at: " + new Date()
+					"Transfer completed: " + new Date()
 					+ "\nTransfer Name: " + transferName
 					+ "\nTarget: " + targetS
 					+ "\nApplication Used: Exactly"

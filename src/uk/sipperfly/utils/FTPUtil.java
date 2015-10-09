@@ -59,6 +59,8 @@ public class FTPUtil {
 						Logger.getLogger(GACOM).log(Level.INFO, "UPLOADED a file to: ", remoteFilePath);
 						System.out.println("UPLOADED a file to: " + remoteFilePath);
 					} else {
+						String systemStatus = ftpClient.getStatus();
+						System.out.println("Status == "+systemStatus);
 						System.out.println(ftpClient.getReplyString());
 						System.out.println("COULD NOT upload the file: " + localFilePath);
 						Logger.getLogger(GACOM).log(Level.INFO, "COULD NOT upload the file: ", localFilePath);
@@ -99,11 +101,20 @@ public class FTPUtil {
 	 * @return true if the file was uploaded successfully, false otherwise
 	 * @throws IOException if any network or IO error occurred.
 	 */
-	public static boolean uploadSingleFile(FTPClient ftpClient, String localFilePath, String remoteFilePath) throws FileNotFoundException, IOException{
+	public static boolean uploadSingleFile(FTPClient ftpClient, String localFilePath, String remoteFilePath) throws FileNotFoundException, IOException {
 		File localFile = new File(localFilePath);
 		try (InputStream inputStream = new FileInputStream(localFile)) {
-			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+//			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 			try {
+				String systemStatus = ftpClient.getStatus();
+//				ftpClient.setConnectTimeout(connectTimeout);
+				
+				System.out.println("Status == "+systemStatus);
+				System.out.println("getDefaultTimeout == "+ftpClient.getDefaultTimeout());
+				System.out.println("getSoTimeout == "+ftpClient.getSoTimeout());
+				System.out.println("getConnectTimeout == "+ftpClient.getConnectTimeout());
+				
+//				ftpClient.setD
 				return ftpClient.storeFile(remoteFilePath, inputStream);
 			} catch (Exception e) {
 				e.printStackTrace();
