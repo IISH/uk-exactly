@@ -455,7 +455,7 @@ public class UIManager {
 	public boolean validateBageInfo() {
 		List l = this.mainFrame.bagInfo.getList();
 		for (Object e : l) {
-			if (this.mainFrame.bagInfo.getJfieldTextValue(e) == null || this.mainFrame.bagInfo.getJfieldTextValue(e).isEmpty() || this.mainFrame.bagInfo.getJfieldTextValue(e) == "" || this.mainFrame.bagInfo.getJfieldTextLabel(e) == null || this.mainFrame.bagInfo.getJfieldTextLabel(e) == "" || this.mainFrame.bagInfo.getJfieldTextLabel(e).isEmpty()) {
+			if (this.mainFrame.bagInfo.getJfieldTextLabel(e) == null || this.mainFrame.bagInfo.getJfieldTextLabel(e) == "" || this.mainFrame.bagInfo.getJfieldTextLabel(e).isEmpty()) {
 				return false;
 			}
 		}

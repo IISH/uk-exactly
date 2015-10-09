@@ -157,6 +157,7 @@ public class Exactly extends javax.swing.JFrame {
         jPanel10 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         enableBagFields = new javax.swing.JCheckBox();
+        jLabel1 = new javax.swing.JLabel();
         hideTransfer = new javax.swing.JLabel();
         show = new javax.swing.JLabel();
         hide = new javax.swing.JLabel();
@@ -228,6 +229,7 @@ public class Exactly extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu4 = new javax.swing.JMenu();
         export = new javax.swing.JMenuItem();
@@ -330,7 +332,7 @@ public class Exactly extends javax.swing.JFrame {
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 5, Short.MAX_VALUE)
+            .addGap(0, 25, Short.MAX_VALUE)
         );
 
         jButton1.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
@@ -348,6 +350,9 @@ public class Exactly extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        jLabel1.setText("To copy and paste, use Windows shortcuts: \"control+c\" and \"control+v\"");
+
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
         jPanel11Layout.setHorizontalGroup(
@@ -362,21 +367,28 @@ public class Exactly extends javax.swing.JFrame {
                         .addComponent(jButton1)
                         .addGap(52, 52, 52))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
                         .addComponent(jButton9)
                         .addGap(47, 47, 47))))
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel11Layout.createSequentialGroup()
-                .addContainerGap(14, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
+                .addContainerGap(32, Short.MAX_VALUE)
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(enableBagFields))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton9)
-                .addGap(25, 25, 25))
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addComponent(jButton9)
+                        .addGap(25, 25, 25))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addContainerGap())))
         );
 
         hideTransfer.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
@@ -522,7 +534,7 @@ public class Exactly extends javax.swing.JFrame {
                                         .addComponent(showTransfer)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(hideTransfer)))))
-                        .addGap(0, 31, Short.MAX_VALUE))
+                        .addGap(0, 50, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -563,7 +575,7 @@ public class Exactly extends javax.swing.JFrame {
                     .addComponent(showTransfer))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap(73, Short.MAX_VALUE))
+                .addContainerGap(112, Short.MAX_VALUE))
         );
 
         jScrollPane3.setViewportView(jPanel1);
@@ -604,7 +616,7 @@ public class Exactly extends javax.swing.JFrame {
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 605, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnTransferFiles)
@@ -733,7 +745,7 @@ public class Exactly extends javax.swing.JFrame {
                 .addComponent(unBag)
                 .addGap(18, 18, 18)
                 .addComponent(unBaggingProgress, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(321, Short.MAX_VALUE))
+                .addContainerGap(426, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Receive", jPanel4);
@@ -920,7 +932,7 @@ public class Exactly extends javax.swing.JFrame {
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton4)
                     .addComponent(saveBtn))
-                .addContainerGap(198, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel3.setMinimumSize(new java.awt.Dimension(64, 48));
@@ -1066,7 +1078,7 @@ public class Exactly extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton7)
                     .addComponent(jButton8))
-                .addContainerGap(217, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jScrollPane2.setBorder(null);
@@ -1168,10 +1180,12 @@ public class Exactly extends javax.swing.JFrame {
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveEmailBtn)
                     .addComponent(jButton5))
-                .addContainerGap(429, Short.MAX_VALUE))
+                .addContainerGap(534, Short.MAX_VALUE))
         );
 
         jScrollPane2.setViewportView(jPanel7);
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/uk/sipperfly/ui/resources/Exactly-label.png"))); // NOI18N
 
         jMenu4.setText("Exactly");
 
@@ -1250,24 +1264,32 @@ public class Exactly extends javax.swing.JFrame {
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 627, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(clearLog, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(38, 38, 38))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(clearLog)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, 584, Short.MAX_VALUE)
+                    .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, 689, Short.MAX_VALUE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 584, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 689, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(clearLog))
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addComponent(clearLog)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 689, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -1490,13 +1512,13 @@ public class Exactly extends javax.swing.JFrame {
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
 		if (this.editCurrentStatus.getText().isEmpty() || this.editCurrentStatus.getText() == null) {
-			UpdateResult("Saving FTP settings...", 0);
+			UpdateResult("Validating and saving FTP settings...", 0);
 		} else {
-			UpdateResult("Saving FTP settings...", 1);
+			UpdateResult("Validating and saving FTP settings... ", 1);
 		}
 		try {
 			if (this.uIManager.saveFTPSettings()) {
-				UpdateResult("FTP settings saved successfully.", 0);
+				UpdateResult("FTP settings validated and saved successfully.", 0);
 			} else {
 				UpdateResult("Invalid credentials. Please try again.", 0);
 				Logger.getLogger(GACOM).log(Level.SEVERE, "Invalid credentials. Please try again.");
@@ -1719,7 +1741,7 @@ public class Exactly extends javax.swing.JFrame {
 				UpdateResult("Something went wrong. Please try agian.", 0);
 			}
 		} else {
-			UpdateResult("Please fill both fields", 0);
+			UpdateResult("Label is required", 0);
 			return;
 		}
     }//GEN-LAST:event_jButton9ActionPerformed
@@ -1950,6 +1972,7 @@ public class Exactly extends javax.swing.JFrame {
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
     private javax.swing.JInternalFrame jInternalFrame1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
@@ -1958,6 +1981,7 @@ public class Exactly extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel35;

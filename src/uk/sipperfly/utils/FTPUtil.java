@@ -12,12 +12,13 @@ package uk.sipperfly.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPSClient;
+import org.apache.commons.net.ftp.FTPClient;
 
 public class FTPUtil {
 
@@ -32,7 +33,7 @@ public class FTPUtil {
 	 * @param remoteParentDir Path of the parent directory of the current directory on the server (used by recursive calls).
 	 * @throws IOException if any network or IO error occurred.
 	 */
-	public static boolean uploadDirectory(FTPSClient ftpClient,
+	public static boolean uploadDirectory(FTPClient ftpClient,
 			String remoteDirPath, String localParentDir, String remoteParentDir)
 			throws IOException {
 
@@ -53,11 +54,12 @@ public class FTPUtil {
 					Logger.getLogger(GACOM).log(Level.INFO, "About to upload the file: ", localFilePath);
 					System.out.println("About to upload the file: " + localFilePath);
 					boolean uploaded = uploadSingleFile(ftpClient, localFilePath, remoteFilePath);
-					
+
 					if (uploaded) {
 						Logger.getLogger(GACOM).log(Level.INFO, "UPLOADED a file to: ", remoteFilePath);
 						System.out.println("UPLOADED a file to: " + remoteFilePath);
 					} else {
+						System.out.println(ftpClient.getReplyString());
 						System.out.println("COULD NOT upload the file: " + localFilePath);
 						Logger.getLogger(GACOM).log(Level.INFO, "COULD NOT upload the file: ", localFilePath);
 						return false;
@@ -97,12 +99,19 @@ public class FTPUtil {
 	 * @return true if the file was uploaded successfully, false otherwise
 	 * @throws IOException if any network or IO error occurred.
 	 */
-	public static boolean uploadSingleFile(FTPSClient ftpClient,
-			String localFilePath, String remoteFilePath) throws IOException {
+	public static boolean uploadSingleFile(FTPClient ftpClient, String localFilePath, String remoteFilePath) throws FileNotFoundException, IOException{
 		File localFile = new File(localFilePath);
 		try (InputStream inputStream = new FileInputStream(localFile)) {
 			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-			return ftpClient.storeFile(remoteFilePath, inputStream);
+			try {
+				return ftpClient.storeFile(remoteFilePath, inputStream);
+			} catch (Exception e) {
+				e.printStackTrace();
+				if (e.getCause() != null) {
+					e.getCause().printStackTrace();
+				}
+				return false;
+			}
 		}
 	}
 }

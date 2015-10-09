@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.net.ftp.FTPSClient;
+import org.apache.commons.net.ftp.FTPClient;
 import static uk.sipperfly.ui.Exactly.GACOM;
 
 public class FTPConnection {
@@ -55,7 +55,7 @@ public class FTPConnection {
 			int port = 21;
 			String user = this.username;
 			String pass = this.password;
-			FTPSClient ftp = new FTPSClient();
+			FTPClient ftp = new FTPClient();
 
 			ftp.connect(server, port);
 			System.out.println("Connected to " + server + ".");
@@ -95,15 +95,15 @@ public class FTPConnection {
 	public boolean uploadFiles(String location, String type) {
 		try {
 			this.validateCon();
-			FTPSClient ftpClient = new FTPSClient();
+			FTPClient ftpClient = new FTPClient();
 			ftpClient.setControlEncoding("UTF-8");
 
 			ftpClient.connect(this.host, this.port);
 
 			ftpClient.login(this.username, this.password);
-			ftpClient.execPBSZ(0);
+//			ftpClient.execPBSZ(0);
 			// Set data channel protection to private
-			ftpClient.execPROT("P");
+//			ftpClient.execPROT("P");
 			if (this.mode.equalsIgnoreCase("passive")) {
 				ftpClient.enterLocalPassiveMode();
 			} else if (this.mode.equalsIgnoreCase("active")) {
@@ -118,6 +118,7 @@ public class FTPConnection {
 
 			ftpClient.setFileType(FTP.BINARY_FILE_TYPE, FTP.BINARY_FILE_TYPE);
 			ftpClient.setFileTransferMode(FTP.BINARY_FILE_TYPE);
+			ftpClient.setControlKeepAliveTimeout(300); 
 			String remoteFile;
 			File localFile = new File(location);
 			if (this.destination != null) {
@@ -133,7 +134,7 @@ public class FTPConnection {
 					remoteFile = ftpClient.printWorkingDirectory() + "/" + localFile.getName();
 				}
 			}
-
+           System.out.println("working dir === "+ftpClient.printWorkingDirectory());
 			boolean done;
 			if (type.equals("zip")) {
 				done = FTPUtil.uploadSingleFile(ftpClient, location, remoteFile);

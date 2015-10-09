@@ -795,8 +795,9 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 					+ "\nFTP Target: " + ftpLocation
 					+ "\nApplication Used: Exactly"
 					+ "\nUser: " + this.parent.userNameField.getText()
-					+ "\nTransfer Size: " + this.bagSize + " bytes"
-					+ "\nFiles count: " + this.bagCount
+					+ "\nTotal File count: " + this.bagCount
+					+ "\nTotal Bytes: " + this.bagSize
+					
 					+ "\n" + msg);
 		} else {
 			ms.SetMessage(from, toEmail,
@@ -806,8 +807,8 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 					+ "\nTarget: " + targetS
 					+ "\nApplication Used: Exactly"
 					+ "\nUser: " + this.parent.userNameField.getText()
-					+ "\nTransfer Size: " + this.bagSize + " bytes"
-					+ "\nFiles count: " + this.bagCount);
+					+ "\nTotal File count: " + this.bagCount
+					+ "\nTotal Bytes: " + this.bagSize);
 		}
 		// attached bagit if needed in future.
 //		ms.AttachFile(source.toString() + File.separator + "bag-info.txt");
@@ -883,9 +884,9 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 			Document doc = docBuilder.newDocument();
 			Element rootElement = doc.createElement("transfer_metadata");
 			doc.appendChild(rootElement);
-			Attr attr = doc.createAttribute("xsi:noNamespaceSchemaLocation");
-			attr.setValue("../bert/AVPS/Projects/UK-Sipperfly/bag-info.xsd");
-			rootElement.setAttributeNode(attr);
+//			Attr attr = doc.createAttribute("xsi:noNamespaceSchemaLocation");
+//			attr.setValue("../bert/AVPS/Projects/UK-Sipperfly/bag-info.xsd");
+//			rootElement.setAttributeNode(attr);
 			Attr attr1 = doc.createAttribute("xmlns:xsi");
 			attr1.setValue("http://www.w3.org/2001/XMLSchema-instance");
 			rootElement.setAttributeNode(attr1);
@@ -906,7 +907,12 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 					}
 				}
 				Element firstname = doc.createElement(stringBuilder.toString().replace(" ", "-"));
-				firstname.appendChild(doc.createTextNode(text[1].replaceAll("\\s+", " ").trim()));
+				if(text.length > 1){
+					firstname.appendChild(doc.createTextNode(text[1].replaceAll("\\s+", " ").trim()));
+				}else{
+					firstname.appendChild(doc.createTextNode("")); 
+				}
+				
 				rootElement.appendChild(firstname);
 			}
 			// write the content into xml file
