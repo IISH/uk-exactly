@@ -1,13 +1,13 @@
 <#if licenseFirst??>
 ${licenseFirst}
 </#if>
-${licensePrefix}GA Digital Files Transfer Tool
+${licensePrefix}UK Exactly
 ${licensePrefix}Author: Nouman Tayyab
 ${licensePrefix}Version: 1.0
 ${licensePrefix}Requires: JDK 1.7 or higher
-${licensePrefix}Description: This tool transfers digital files to the Gates Archive.
-${licensePrefix}Support: info@gatesarchive.com
-${licensePrefix}Copyright 2013 Gates Archive
+${licensePrefix}Description: This tool transfers digital files to the AVPreserve
+${licensePrefix}Support: info@avpreserve.com
+${licensePrefix}Copyright 2015 AVPreserve
 <#if licenseLast??>
 ${licenseLast}
 </#if>
