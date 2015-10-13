@@ -1874,7 +1874,7 @@ public class Exactly extends javax.swing.JFrame {
 				this.uIManager.restoreTransferPath();
 				return false;
 			}
-			UpdateTransferResult("Saving Destination...");
+			UpdateResult("Saving Destination...", 0);
 			String filters = "";//this.filterField.getText();
 			this.uIManager.saveLocationAndFilter(inputDirText, filters);
 			UpdateResult("Destination location updated successfully.", 0);

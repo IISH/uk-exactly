@@ -609,6 +609,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		} catch (IOException ex) {
 			Logger.getLogger(GACOM).log(Level.SEVERE, "Error closing the bag", ex);
 		}
+		
 		if (this.parent.totalFiles > this.parent.tranferredFiles) {
 			this.parent.UpdateProgressBar(this.parent.totalFiles);
 		}
@@ -637,7 +638,6 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		}
 		this.parent.jProgressBar2.setMaximum(totalFiles);
 		for (String source : this.sources) {
-
 			File sourceFile = new File(source);
 			File folder = new File(sourceFile.getName());
 			Path folderTarget = this.commonUtil.combine(this.target, folder.toPath());

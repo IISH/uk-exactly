@@ -23,12 +23,12 @@ import static uk.sipperfly.ui.Exactly.GACOM;
 
 public class FTPConnection {
 
-	String host;
-	String username;
-	String password;
-	int port;
-	String mode;
-	String destination;
+	public String host;
+	public String username;
+	public String password;
+	public int port;
+	public String mode;
+	public String destination;
 
 	public FTPConnection(String host, String username, String password, int port, String mode, String destination) {
 		if (host == null || host.length() < 1 || username == null || username.length() < 1
@@ -52,12 +52,11 @@ public class FTPConnection {
 	public boolean validateCon() {
 		try {
 			String server = this.host;
-			int port = 21;
+			int ftpPort = this.port;
 			String user = this.username;
 			String pass = this.password;
 			FTPClient ftp = new FTPClient();
-
-			ftp.connect(server, port);
+			ftp.connect(server, ftpPort);
 			System.out.println("Connected to " + server + ".");
 			if (ftp.login(user, pass)) {
 				ftp.logout();
@@ -71,7 +70,7 @@ public class FTPConnection {
 					}
 				}
 			} else {
-				Logger.getLogger(GACOM).log(Level.INFO, "FTP Login: ", "Invalid username or password");
+				Logger.getLogger(GACOM).log(Level.INFO, "FTP Login: Invalid username or password");
 				return false;
 			}
 
@@ -95,15 +94,11 @@ public class FTPConnection {
 	public boolean uploadFiles(String location, String type) {
 		try {
 			this.validateCon();
+			FTPUtil ftpUtil = new FTPUtil(this);
 			FTPClient ftpClient = new FTPClient();
 			ftpClient.setControlEncoding("UTF-8");
-
 			ftpClient.connect(this.host, this.port);
-
 			ftpClient.login(this.username, this.password);
-//			ftpClient.execPBSZ(0);
-			// Set data channel protection to private
-//			ftpClient.execPROT("P");
 			if (this.mode.equalsIgnoreCase("passive")) {
 				ftpClient.enterLocalPassiveMode();
 			} else if (this.mode.equalsIgnoreCase("active")) {
@@ -111,7 +106,7 @@ public class FTPConnection {
 			}
 			int reply = ftpClient.getReplyCode();
 			if (!FTPReply.isPositiveCompletion(reply)) {
-				Logger.getLogger(GACOM).log(Level.INFO, "FTP Login: ", ftpClient.getReplyString());
+				Logger.getLogger(GACOM).log(Level.INFO, "FTP Login: ".concat(ftpClient.getReplyString()));
 				ftpClient.disconnect();
 				return false;
 			}
@@ -140,20 +135,19 @@ public class FTPConnection {
 					remoteFile = ftpClient.printWorkingDirectory() + "/" + localFile.getName();
 				}
 			}
-			System.out.println("working dir === " + ftpClient.printWorkingDirectory());
 			boolean done;
 			if (type.equals("zip")) {
 				done = FTPUtil.uploadSingleFile(ftpClient, location, remoteFile);
 				if (done) {
 					ftpClient.logout();
 					ftpClient.disconnect();
-					Logger.getLogger(GACOM).log(Level.INFO, "FTP Upload: ", "The file is uploaded successfully.");
+					Logger.getLogger(GACOM).log(Level.INFO, "FTP Upload: The file is uploaded successfully.");
 					System.out.println("The file is uploaded successfully.");
 					return true;
 				} else {
 					ftpClient.logout();
 					ftpClient.disconnect();
-					Logger.getLogger(GACOM).log(Level.SEVERE, "FTP Upload: ", "Error occured while uploading.");
+					Logger.getLogger(GACOM).log(Level.SEVERE, "FTP Upload: Error occured while uploading.");
 					System.out.println("Error occured while uploading.");
 					return false;
 				}
@@ -163,13 +157,13 @@ public class FTPConnection {
 				if (done) {
 					ftpClient.logout();
 					ftpClient.disconnect();
-					Logger.getLogger(GACOM).log(Level.INFO, "FTP Upload: ", "The file is uploaded successfully.");
+					Logger.getLogger(GACOM).log(Level.INFO, "FTP Upload: The file is uploaded successfully.");
 					System.out.println("The file is uploaded successfully.");
 					return true;
 				} else {
 					ftpClient.logout();
 					ftpClient.disconnect();
-					Logger.getLogger(GACOM).log(Level.SEVERE, "FTP Upload: ", "Error occured while uploading.");
+					Logger.getLogger(GACOM).log(Level.SEVERE, "FTP Upload: Error occured while uploading.");
 					System.out.println("Error occured while uploading.");
 					return false;
 				}
@@ -181,6 +175,6 @@ public class FTPConnection {
 			Logger.getLogger(FTPConnection.class.getName()).log(Level.SEVERE, null, ex);
 			return false;
 		}
-
 	}
+
 }

@@ -11,6 +11,7 @@
 package uk.sipperfly.utils;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -25,7 +26,6 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.text.DefaultEditorKit;
-
 
 public class BagInfoEntry extends JPanel {
 
@@ -48,6 +48,9 @@ public class BagInfoEntry extends JPanel {
 	 * @param size  size of list
 	 */
 	public BagInfoEntry(String label, String value, String id, BagInfoList list, int size) {
+		this.setLayout(new FlowLayout(FlowLayout.LEFT));
+//		this.setLayout(new BorderLayout());
+
 		this.label = new JLabel("Label");
 		this.label.setFont(new java.awt.Font("Verdana", 0, 13));
 		this.label.setAlignmentX((float) 0.0);
@@ -64,11 +67,12 @@ public class BagInfoEntry extends JPanel {
 
 		this.minus = new JButton(new RemoveEntryAction());
 		this.minus.setFont(new java.awt.Font("Verdana", 0, 13));
-
+		this.minus.setPreferredSize(new Dimension(41, 35));
+		
 		this.parent = list;
 
 		this.labelField = new JTextField();
-		this.labelField.setPreferredSize(new Dimension(203, 35));
+		this.labelField.setPreferredSize(new Dimension(450, 35));
 		this.labelField.setSize(203, 30);
 		this.labelField.setText(label);
 		this.labelField.setFont(new java.awt.Font("Verdana", 0, 13));
@@ -79,35 +83,35 @@ public class BagInfoEntry extends JPanel {
 		this.id.setVisible(false);
 
 		this.valueField = new JTextArea();
-//		this.valueField.setPreferredSize(new Dimension(203, 35));
 		this.valueField.setSize(203, 30);
 		this.valueField.setText(value);
 		this.valueField.setFont(new java.awt.Font("Verdana", 0, 13));
 		this.valueField.setMargin(new Insets(2, 2, 2, 2));
 		this.valueField.setLineWrap(true);
 		this.valueField.setWrapStyleWord(true);
-		this.scrollPane = new JScrollPane(this.valueField);
-		this.scrollPane.setVerticalScrollBarPolicy(
-				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		this.scrollPane.setPreferredSize(new Dimension(203, 40));
+		this.scrollPane = new JScrollPane(this.valueField, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+//		this.scrollPane.setVerticalScrollBarPolicy(
+//				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		this.scrollPane.setPreferredSize(new Dimension(450, 35));
 
 		add(this.label);
 		add(this.labelField);
+		add(this.minus);
 		add(this.value);
 		add(this.scrollPane);
-		add(this.minus);
+		
 
 
 		this.setVisible(true);
-		this.setPreferredSize(new Dimension(571, 50));
+		this.setPreferredSize(new Dimension(571, 80));
 
 		int y_axis;
 		if (size == 0) {
 			y_axis = 0;
 		} else {
-			y_axis = size * 50;
+			y_axis = size * 80;
 		}
-		this.setBounds(0, y_axis, 571, 50);
+		this.setBounds(0, y_axis, 571, 80);
 		InputMap im = (InputMap) UIManager.get("TextField.focusInputMap");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
