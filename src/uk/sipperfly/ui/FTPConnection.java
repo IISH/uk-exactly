@@ -19,6 +19,7 @@ import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPConnectionClosedException;
 import static uk.sipperfly.ui.Exactly.GACOM;
 
 public class FTPConnection {
@@ -92,11 +93,11 @@ public class FTPConnection {
 	 * @return
 	 */
 	public boolean uploadFiles(String location, String type) {
-		try {
-			this.validateCon();
-			FTPUtil ftpUtil = new FTPUtil(this);
-			FTPClient ftpClient = new FTPClient();
-			ftpClient.setControlEncoding("UTF-8");
+		this.validateCon();
+		FTPUtil ftpUtil = new FTPUtil(this);
+		FTPClient ftpClient = new FTPClient();
+		ftpClient.setControlEncoding("UTF-8");
+		try{
 			ftpClient.connect(this.host, this.port);
 			ftpClient.login(this.username, this.password);
 			if (this.mode.equalsIgnoreCase("passive")) {
@@ -113,7 +114,7 @@ public class FTPConnection {
 			ftpClient.setKeepAlive(true);
 			ftpClient.setFileType(FTP.BINARY_FILE_TYPE, FTP.BINARY_FILE_TYPE);
 			ftpClient.setFileTransferMode(FTP.BINARY_FILE_TYPE);
-			ftpClient.setControlKeepAliveTimeout(300);
+			ftpClient.setControlKeepAliveTimeout(999999999);
 			ftpClient.sendSiteCommand("RECFM=FB");
 			ftpClient.sendSiteCommand("LRECL=2000");
 			ftpClient.sendSiteCommand("BLKSIZE=27000");
@@ -175,6 +176,7 @@ public class FTPConnection {
 			Logger.getLogger(FTPConnection.class.getName()).log(Level.SEVERE, null, ex);
 			return false;
 		}
+		
 	}
 
 }
