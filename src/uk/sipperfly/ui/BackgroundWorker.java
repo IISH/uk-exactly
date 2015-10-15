@@ -71,8 +71,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Attr;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import uk.sipperfly.persistent.BagInfo;
 
 /**
  * This class implements the background worker thread.
@@ -348,7 +350,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 
 	/**
 	 * Firstly validate bag. If bag is valid then unpack it at specified destination.
-	 * 
+	 *
 	 * @param workingPath
 	 * @param name
 	 * @param zipPath
@@ -390,8 +392,8 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 
 	/**
 	 * add int suffix with file name.
-	 * 
-	 * @param folderPath 
+	 *
+	 * @param folderPath
 	 */
 	public void getFileSuffix(String folderPath) {
 		File f = new File(folderPath + "_" + fileCounter);
@@ -429,7 +431,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	/**
 	 * Set Target path to place bag after successful transfer.
 	 *
-	 * @return Path target. 
+	 * @return Path target.
 	 * @throws Exception
 	 */
 	protected Path setTragetPath() throws Exception {
@@ -454,7 +456,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 
 	/**
 	 * check whether bag title is already existed in destination folder while file transfer.
-	 * 
+	 *
 	 * @return true if existed else false
 	 */
 	public boolean validateBagName() {
@@ -565,8 +567,10 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		} catch (IOException e) {
 			Logger.getLogger(GACOM).log(Level.INFO, "Issue while updating tagmanifest-md5.txt", e);
 		}
-
-		this.createXML();
+//		bagInfoTxt.getBagSize();
+//		bagInfoTxt.getBaggingDate();
+//bagInfoTxt.getPayloadOxum(), bag.getPayload().size(),
+		this.createXML(bagInfoTxt.getPayloadOxum(), bagInfoTxt.getBaggingDate(), bagInfoTxt.getBagSize());
 		//		this.parent.UpdateProgressBar(this.parent.tranferredFiles);
 		//		this.parent.UpdateProgressBar(this.parent.tranferredFiles);
 
@@ -609,7 +613,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		} catch (IOException ex) {
 			Logger.getLogger(GACOM).log(Level.SEVERE, "Error closing the bag", ex);
 		}
-		
+
 		if (this.parent.totalFiles > this.parent.tranferredFiles) {
 			this.parent.UpdateProgressBar(this.parent.totalFiles);
 		}
@@ -676,8 +680,8 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 
 	/**
 	 * Transfer file to ftp server.
-	 * 
-	 * @throws IOException 
+	 *
+	 * @throws IOException
 	 */
 	public void UploadFilesFTP() throws IOException {
 		String userName = this.ftp.getUsername();
@@ -708,10 +712,10 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	}
 
 	/**
-	 * Validate ftp Credentials 
-	 * 
+	 * Validate ftp Credentials
+	 *
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public boolean ValidateFTPCredentials() throws IOException {
 
@@ -797,7 +801,6 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 					+ "\nUser: " + this.parent.userNameField.getText()
 					+ "\nTotal File count: " + this.bagCount
 					+ "\nTotal Bytes: " + this.bagSize
-					
 					+ "\n" + msg);
 		} else {
 			ms.SetMessage(from, toEmail,
@@ -821,9 +824,9 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 
 	/**
 	 * validate input bag
-	 * 
+	 *
 	 * @param path
-	 * @return 
+	 * @return
 	 */
 	public int ValidateBag(String path) {
 		BagFactory bagfactory = new BagFactory();
@@ -843,9 +846,9 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 
 	/**
 	 * Recognize bag structure.
-	 * 
+	 *
 	 * @param path
-	 * @return 
+	 * @return
 	 */
 	public int BagRecognition(String path) {
 		BagFactory bagfactory = new BagFactory();
@@ -872,15 +875,12 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	/**
 	 * create bag-info.xml file at transfer destination
 	 */
-	public void createXML() {
+	public void createXML(String payload, String date, String size) {
 		try {
 			char[] charArray = {'<', '>', '&', '"', '\\', '!', '#', '$', '%', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '=', '?', '@', '[', ']', '^', '`', '{', '|', '}', '~'};
 			//		List<char[]> asList = Arrays.asList(charArray);
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-			String file = this.target.toString() + File.separator + "bag-info.txt";
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			String line;
 			Document doc = docBuilder.newDocument();
 			Element rootElement = doc.createElement("transfer_metadata");
 			doc.appendChild(rootElement);
@@ -890,16 +890,31 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 			Attr attr1 = doc.createAttribute("xmlns:xsi");
 			attr1.setValue("http://www.w3.org/2001/XMLSchema-instance");
 			rootElement.setAttributeNode(attr1);
-
-			while ((line = br.readLine()) != null) {
+			
+			Element payLoad = doc.createElement("Payload-Oxum");
+			payLoad.appendChild(doc.createTextNode(payload));
+			rootElement.appendChild(payLoad);
+			
+			Element baggingDate = doc.createElement("Bagging-Date");
+			baggingDate.appendChild(doc.createTextNode(date));
+			rootElement.appendChild(baggingDate);
+			
+			Element bagsize = doc.createElement("Bag-Size");
+			bagsize.appendChild(doc.createTextNode(size));
+			rootElement.appendChild(bagsize);
+			
+			BagInfoRepo bagInfoRepo = new BagInfoRepo();
+			List<BagInfo> bagInfo = bagInfoRepo.getOneOrCreateOne();
+			
+			for (BagInfo b : bagInfo) {
 				StringBuilder stringBuilder = new StringBuilder();
-				String[] text = line.split(": ");
-				char[] txt = Normalizer.normalize(text[0], Normalizer.Form.NFD).toCharArray();
-				for (int i = 0; i < text[0].length(); i++) {
+				char[] txt =  Normalizer.normalize(b.getLabel(), Normalizer.Form.NFD).toCharArray();
+				for (int i = 0; i < b.getLabel().length(); i++) {
 					int check = 0;
 					for (int j = 0; j < charArray.length; j++) {
 						if (txt[i] == charArray[j]) {
 							check = 1;
+
 						}
 					}
 					if (check == 0) {
@@ -907,12 +922,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 					}
 				}
 				Element firstname = doc.createElement(stringBuilder.toString().replace(" ", "-"));
-				if(text.length > 1){
-					firstname.appendChild(doc.createTextNode(text[1].replaceAll("\\s+", " ").trim()));
-				}else{
-					firstname.appendChild(doc.createTextNode("")); 
-				}
-				
+				firstname.appendChild(doc.createTextNode(b.getValue().trim()));
 				rootElement.appendChild(firstname);
 			}
 			// write the content into xml file
@@ -925,13 +935,11 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 			transformer.transform(source, result);
 		} catch (ParserConfigurationException ex) {
 			Logger.getLogger(BackgroundWorker.class.getName()).log(Level.SEVERE, null, ex);
-		} catch (FileNotFoundException ex) {
-			Logger.getLogger(BackgroundWorker.class.getName()).log(Level.SEVERE, null, ex);
-		} catch (IOException ex) {
-			Logger.getLogger(BackgroundWorker.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (TransformerConfigurationException ex) {
 			Logger.getLogger(BackgroundWorker.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (TransformerException ex) {
+			Logger.getLogger(BackgroundWorker.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (DOMException ex) {
 			Logger.getLogger(BackgroundWorker.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
