@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.net.ftp.FTP;
@@ -61,9 +62,15 @@ public class FTPUtil {
 		File[] subFiles = localDir.listFiles();
 		if (subFiles != null && subFiles.length > 0) {
 			for (File item : subFiles) {
-				if (!ftpClient.isConnected()) {
-					reconnect();
-				}
+			boolean answer = ftpClient.sendNoOp();
+			if(!answer){
+				reconnect();
+			}
+			String status= ftpClient.getStatus();
+			boolean a= ftpClient.isAvailable();
+//				if (!ftpClient.isConnected()) {
+//					reconnect();
+//				}
 				String remoteFilePath = remoteDirPath + "/" + remoteParentDir + "/" + item.getName();
 				if (remoteParentDir.equals("")) {
 					remoteFilePath = remoteDirPath + "/" + item.getName();
@@ -125,7 +132,12 @@ public class FTPUtil {
 		try (InputStream inputStream = new FileInputStream(localFile)) {
 			try {
 				return ftpClient.storeFile(remoteFilePath, inputStream);
-			} catch (Exception e) {
+			} 
+			catch (SocketTimeoutException e) {
+				Logger.getLogger(GACOM).log(Level.SEVERE, "upload Single File: ", e.getCause());
+				return false;
+			}
+			catch (Exception e) {
 				e.printStackTrace();
 				if (e.getCause() != null) {
 					e.getCause().printStackTrace();
@@ -154,13 +166,13 @@ public class FTPUtil {
 		ftpClient.setKeepAlive(true);
 		ftpClient.setFileType(FTP.BINARY_FILE_TYPE, FTP.BINARY_FILE_TYPE);
 		ftpClient.setFileTransferMode(FTP.BINARY_FILE_TYPE);
-		ftpClient.setControlKeepAliveTimeout(99999999);
-		ftpClient.sendSiteCommand("RECFM=FB");
-		ftpClient.sendSiteCommand("LRECL=2000");
-		ftpClient.sendSiteCommand("BLKSIZE=27000");
-		ftpClient.sendSiteCommand("CY");
-		ftpClient.sendSiteCommand("PRI= 50");
-		ftpClient.sendSiteCommand("SEC=25");
+		ftpClient.setControlKeepAliveTimeout(300);
+//		ftpClient.sendSiteCommand("RECFM=FB");
+//		ftpClient.sendSiteCommand("LRECL=2000");
+//		ftpClient.sendSiteCommand("BLKSIZE=27000");
+//		ftpClient.sendSiteCommand("CY");
+//		ftpClient.sendSiteCommand("PRI= 50");
+//		ftpClient.sendSiteCommand("SEC=25");
 
 //		ftpClient.sendSiteCommand("RECFM=FB");
 //		ftpClient.sendSiteCommand("LRECL=2000");
