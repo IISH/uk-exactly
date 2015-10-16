@@ -563,6 +563,7 @@ public class CommonUtil {
 							configurations.setEmailNotifications(Boolean.valueOf(eElement.getElementsByTagName("Email-Notification").item(0).getTextContent()));
 						}
 					}
+					this.configurationsRepo.save(configurations);
 				}
 				message = message + "Successfully imported xml";
 

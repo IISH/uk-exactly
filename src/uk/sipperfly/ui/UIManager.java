@@ -24,6 +24,7 @@ import uk.sipperfly.repository.BagInfoRepo;
 import uk.sipperfly.repository.ConfigurationsRepo;
 import uk.sipperfly.repository.RecipientsRepo;
 import uk.sipperfly.repository.FTPRepo;
+import uk.sipperfly.utils.BagInfoEntry;
 import uk.sipperfly.utils.CommonUtil;
 
 /**
@@ -543,6 +544,14 @@ public class UIManager {
 			this.setConfigurationFields();
 			this.setFtpFields();
 			this.setEmailFields();
+			List<BagInfo> bagInfo = this.bagInfoRepo.getOneOrCreateOne();
+			if (bagInfo.size() > 0) {
+				this.mainFrame.hideTransfer.setVisible(true);
+				this.mainFrame.show.setVisible(true);
+				this.mainFrame.hide.setVisible(false);
+				this.mainFrame.showTransfer.setVisible(false);
+				this.mainFrame.jPanel11.setVisible(true);
+			}
 			return result;
 		}
 		return "Invalid xml format";
