@@ -208,7 +208,7 @@ public class CommonUtil {
 	public String createBagInfoTxt(List<BagInfo> bagInfo) {
 		StringBuilder stringBuilder = new StringBuilder();
 		for (BagInfo b : bagInfo) {
-			String text = b.getLabel().concat(": ").concat(b.getValue());
+			String text = b.getLabel().concat(": ").concat(b.getValue()).replaceAll("\\s+", " ").trim();
 			int startIndex = 0;
 			int endIndex = 78;
 			int size = text.length() / 79;
@@ -515,9 +515,7 @@ public class CommonUtil {
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			dBuilder.setErrorHandler(new SimpleErrorHandler());
 			Document doc = dBuilder.parse(fXmlFile);
-
 			doc.getDocumentElement().normalize();
-
 			NodeList nList = doc.getElementsByTagName("Metadata").item(0).getChildNodes();
 			this.bagInfoRepo.truncate();
 			for (int temp = 0; temp < nList.getLength(); temp++) {
@@ -527,7 +525,7 @@ public class CommonUtil {
 					BagInfo bagInfo = new BagInfo();
 					if (!eElement.getNodeName().isEmpty()) {
 						bagInfo.setLabel(eElement.getNodeName().replace("-", " "));
-						bagInfo.setValue(eElement.getTextContent());
+						bagInfo.setValue(eElement.getTextContent().replaceAll("\\s+", " ").trim());
 						this.bagInfoRepo.save(bagInfo);
 					}
 				}
