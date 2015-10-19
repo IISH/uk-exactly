@@ -101,7 +101,7 @@ public class FTPConnection {
 		} else {
 			InputStream srcStream = null;
 			try {
-
+				ftp.setSoTimeout(0);
 				srcStream = src.toURI().toURL().openStream();
 				if (ftp.storeFile(src.getName(), srcStream)) {
 					Logger.getLogger(GACOM).log(Level.INFO, "UPLOADED a file to: ".concat(src.getAbsolutePath()));
@@ -145,9 +145,8 @@ public class FTPConnection {
 		Logger.getLogger(GACOM).log(Level.INFO, ftp.getReplyString());
 
 		ftp.changeWorkingDirectory(this.destination);
-		ftp.setFileType(FTPClient.BINARY_FILE_TYPE);
 		ftp.setKeepAlive(true);
-//			ftpClient.setFileType(FTP.BINARY_FILE_TYPE, FTP.BINARY_FILE_TYPE);
+		ftp.setFileType(FTP.BINARY_FILE_TYPE);
 		ftp.setFileTransferMode(FTP.BINARY_FILE_TYPE);
 		ftp.setControlKeepAliveTimeout(300);
 		try {
