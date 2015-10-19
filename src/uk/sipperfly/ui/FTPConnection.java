@@ -87,24 +87,35 @@ public class FTPConnection {
 		}
 	}
 
-	public void upload(File src, FTPClient ftp) throws IOException {
+	public boolean upload(File src, FTPClient ftp) throws IOException {
 		if (src.isDirectory()) {
 			ftp.makeDirectory(src.getName());
 			Logger.getLogger(GACOM).log(Level.INFO, "Directory created: ".concat(src.getName()));
 			ftp.changeWorkingDirectory(src.getName());
 			for (File file : src.listFiles()) {
+				Logger.getLogger(GACOM).log(Level.INFO, "About to upload the file: ".concat(file.getAbsolutePath()));
+				System.out.println("About to upload the file: " + file);
 				upload(file, ftp);
 			}
 			ftp.changeToParentDirectory();
 		} else {
 			InputStream srcStream = null;
 			try {
+
 				srcStream = src.toURI().toURL().openStream();
-				ftp.storeFile(src.getName(), srcStream);
+				if (ftp.storeFile(src.getName(), srcStream)) {
+					Logger.getLogger(GACOM).log(Level.INFO, "UPLOADED a file to: ".concat(src.getAbsolutePath()));
+					System.out.println("UPLOADED a file to: " + src.getAbsolutePath());
+				} else {
+					System.out.println("COULD NOT create the directory: " + src.getAbsolutePath());
+					Logger.getLogger(GACOM).log(Level.INFO, "COULD NOT create the directory: ".concat(src.getAbsolutePath()));
+					return false;
+				}
 			} finally {
 				IOUtils.closeQuietly(srcStream);
 			}
 		}
+		return true;
 	}
 
 	/**
@@ -135,9 +146,17 @@ public class FTPConnection {
 
 		ftp.changeWorkingDirectory(this.destination);
 		ftp.setFileType(FTPClient.BINARY_FILE_TYPE);
-
+		ftp.setKeepAlive(true);
+//			ftpClient.setFileType(FTP.BINARY_FILE_TYPE, FTP.BINARY_FILE_TYPE);
+		ftp.setFileTransferMode(FTP.BINARY_FILE_TYPE);
+		ftp.setControlKeepAliveTimeout(300);
 		try {
-			upload(localSrc, ftp);
+			if (!upload(localSrc, ftp)) {
+				return false;
+			}
+		} catch (SocketException ex) {
+			Logger.getLogger(FTPConnection.class.getName()).log(Level.SEVERE, null, ex);
+			return false;
 		} finally {
 			ftp.disconnect();
 			Logger.getLogger(GACOM).log(Level.INFO, "FTP disconnected");
@@ -230,5 +249,4 @@ public class FTPConnection {
 //		}
 
 	}
-
 }

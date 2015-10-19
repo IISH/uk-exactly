@@ -56,8 +56,8 @@ import uk.sipperfly.repository.RecipientsRepo;
  * @author noumantayyab
  */
 public class CommonUtil {
-	private static String GACOM = "com.UKExactly";
 
+	private static String GACOM = "com.UKExactly";
 	/**
 	 * Bytes conversion value in GB.
 	 */
@@ -71,7 +71,7 @@ public class CommonUtil {
 	/**
 	 * Convert the bytes size to GB.
 	 *
-	 * @param size in bytes 
+	 * @param size in bytes
 	 * @return size in GB
 	 */
 	public long convertBytestoGB(long size) {
@@ -81,7 +81,7 @@ public class CommonUtil {
 
 	/**
 	 * Count files in a directory (including files in all subdirectories)
-	 * 
+	 *
 	 * @param directory the directory to start in
 	 * @return the total number of files
 	 */
@@ -107,7 +107,7 @@ public class CommonUtil {
 	 * Check the file against ignore filter.
 	 * Return false if file is not in ignore list and vice versa.
 	 *
-	 * @param fileName Name of the file including extention
+	 * @param fileName  Name of the file including extention
 	 * @param dbFilters Comma separated ignore file names
 	 * @return boolean
 	 */
@@ -153,15 +153,15 @@ public class CommonUtil {
 
 	/**
 	 * Creates a semaphore text file in the source directory to let the user know that the transfer has completed successfully.
-	 * It contains the name of the user that initiated the transfer, Transfer title, local and ftp location  and a timestamp.
-	 * 
-	 * @param username  The name of the user that initiated the transfer.
+	 * It contains the name of the user that initiated the transfer, Transfer title, local and ftp location and a timestamp.
+	 *
+	 * @param username     The name of the user that initiated the transfer.
 	 * @param transferName transfer title
-	 * @param source local path for transfer
-	 * @param ftp ftp path for transfer if ft deliver is checked
-	 * @param bagSize size in bytes
-	 * @param bagCount total files
-	 * @param zip 1 if zip is checked, 0 otherwise
+	 * @param source       local path for transfer
+	 * @param ftp          ftp path for transfer if ft deliver is checked
+	 * @param bagSize      size in bytes
+	 * @param bagCount     total files
+	 * @param zip          1 if zip is checked, 0 otherwise
 	 * @return True if the semaphore was created successfully, false otherwise.
 	 */
 	public boolean CreateSuccessSemaphore(String username, String transferName, Path source, String ftp, String bagSize, int bagCount, int zip) {
@@ -208,8 +208,51 @@ public class CommonUtil {
 	public String createBagInfoTxt(List<BagInfo> bagInfo) {
 		StringBuilder stringBuilder = new StringBuilder();
 		for (BagInfo b : bagInfo) {
-			stringBuilder.append(b.getLabel().concat(": ").concat(b.getValue()));
-			stringBuilder.append(System.getProperty("line.separator"));
+			String text = b.getLabel().concat(": ").concat(b.getValue());
+			int startIndex = 0;
+			int endIndex = 78;
+			int size = text.length() / 79;
+			System.out.println("text.length() == " + text.length());
+			if (text.length() > 79) {
+				String newString;
+				int i = 1;
+				while (i != 0) {
+					int first = text.indexOf(" ", endIndex);
+					int last = text.lastIndexOf(" ", endIndex);
+					if (first < 0) {
+						newString = text.substring(startIndex, endIndex);
+						startIndex = text.length() + 1;
+					} else if (first == endIndex + 1 || first == endIndex) {
+						newString = text.substring(startIndex, endIndex);
+						if (first == endIndex) {
+							startIndex = first + 1;
+
+						} else {
+							startIndex = first;
+						}
+						endIndex = first + 78;
+					} else {
+						endIndex = last;
+						newString = text.substring(startIndex, endIndex);
+						startIndex = last + 1;
+						endIndex = endIndex + 78;
+					}
+
+					stringBuilder.append(newString);
+					stringBuilder.append(System.getProperty("line.separator"));
+					stringBuilder.append("\t");
+					if (startIndex > text.length()) {
+						i = 0;
+					}
+					if (endIndex > text.length()) {
+						endIndex = text.length();
+					}
+				}
+				stringBuilder.append(System.getProperty("line.separator"));
+			} else {
+				stringBuilder.append(b.getLabel().concat(": ").concat(b.getValue()));
+				stringBuilder.append(System.getProperty("line.separator"));
+			}
 		}
 		String finalString = stringBuilder.toString();
 		return finalString;
@@ -217,7 +260,7 @@ public class CommonUtil {
 
 	/**
 	 * Search and replace text in file.
-	 * 
+	 *
 	 * @param filePath
 	 * @param oldString
 	 * @param newString
@@ -285,11 +328,11 @@ public class CommonUtil {
 
 	/**
 	 * Unpack bag.
-	 * 
-	 * @param source path of source bag
+	 *
+	 * @param source      path of source bag
 	 * @param destination where it should be unpacked
-	 * @param folder name of the folder after unpack
-	 * @throws IOException 
+	 * @param folder      name of the folder after unpack
+	 * @throws IOException
 	 */
 	public void unBag(String source, String destination, String folder) throws IOException {
 		File workDir = new File(source);
@@ -303,11 +346,12 @@ public class CommonUtil {
 
 	/**
 	 * Create xml file to export
+	 *
 	 * @param recipient
 	 * @param ftp
 	 * @param config
 	 * @param bagInfo
-	 * @param path 
+	 * @param path
 	 */
 	public void createXMLExport(List<Recipients> recipient, FTP ftp, Configurations config, List<BagInfo> bagInfo, String path) {
 		try {
@@ -324,7 +368,7 @@ public class CommonUtil {
 
 			for (BagInfo b : bagInfo) {
 				StringBuilder stringBuilder = new StringBuilder();
-				char[] txt =  Normalizer.normalize(b.getLabel(), Normalizer.Form.NFD).toCharArray();
+				char[] txt = Normalizer.normalize(b.getLabel(), Normalizer.Form.NFD).toCharArray();
 				for (int i = 0; i < b.getLabel().length(); i++) {
 					int check = 0;
 					for (int j = 0; j < charArray.length; j++) {
@@ -456,133 +500,133 @@ public class CommonUtil {
 
 	/**
 	 * Import xml file. Truncate all info in db and add new info from xml.
-	 * 
+	 *
 	 * @param path input xml file location
 	 * @return message string whether import is successful or not
 	 */
 	public String importXML(String path) {
-			String message = "";
-			try {
+		String message = "";
+		try {
 
-				String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w-]+\\.)+[\\w]+[\\w]$";
-				File fXmlFile = new File(path);
-				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-				dbFactory.setValidating(true);
-				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-				dBuilder.setErrorHandler(new SimpleErrorHandler());
-				Document doc = dBuilder.parse(fXmlFile);
+			String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w-]+\\.)+[\\w]+[\\w]$";
+			File fXmlFile = new File(path);
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			dbFactory.setValidating(true);
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			dBuilder.setErrorHandler(new SimpleErrorHandler());
+			Document doc = dBuilder.parse(fXmlFile);
 
-				doc.getDocumentElement().normalize();
+			doc.getDocumentElement().normalize();
 
-				NodeList nList = doc.getElementsByTagName("Metadata").item(0).getChildNodes();
-				this.bagInfoRepo.truncate();
-				for (int temp = 0; temp < nList.getLength(); temp++) {
-					Node nNode = nList.item(temp);
-					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-						Element eElement = (Element) nNode;
-						BagInfo bagInfo = new BagInfo();
-						if (!eElement.getNodeName().isEmpty()) {
-							bagInfo.setLabel(eElement.getNodeName().replace("-", " "));
-							bagInfo.setValue(eElement.getTextContent());
-							this.bagInfoRepo.save(bagInfo);
-						}
+			NodeList nList = doc.getElementsByTagName("Metadata").item(0).getChildNodes();
+			this.bagInfoRepo.truncate();
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+				Node nNode = nList.item(temp);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element eElement = (Element) nNode;
+					BagInfo bagInfo = new BagInfo();
+					if (!eElement.getNodeName().isEmpty()) {
+						bagInfo.setLabel(eElement.getNodeName().replace("-", " "));
+						bagInfo.setValue(eElement.getTextContent());
+						this.bagInfoRepo.save(bagInfo);
 					}
 				}
-
-				NodeList recList = doc.getElementsByTagName("Recipients").item(0).getChildNodes();
-				this.recipientsRepo.truncate();
-				for (int temp = 0; temp < recList.getLength(); temp++) {
-					Recipients recipient = this.recipientsRepo.getOneOrCreateOne("");
-					Node nNode = recList.item(temp);
-					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-						Element eElement = (Element) nNode;
-						if (!eElement.getTextContent().isEmpty()) {
-							if (eElement.getTextContent().matches(EMAIL_REGEX)) {
-								recipient.setEmail(eElement.getTextContent());
-								this.recipientsRepo.save(recipient);
-							} else {
-								message = message + "Can't save " + eElement.getTextContent() + "because of invalid email format. ";
-							}
-						}
-					}
-				}
-
-				this.FTPRepo.truncate();
-				NodeList ftpList = doc.getElementsByTagName("FTP");
-				for (int temp = 0; temp < ftpList.getLength(); temp++) {
-					FTP ftp = this.FTPRepo.getOneOrCreateOne();
-					Node nNode = ftpList.item(temp);
-					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-						Element eElement = (Element) nNode;
-						if (eElement.getElementsByTagName("Host").getLength() == 1) {
-							ftp.setHostName(eElement.getElementsByTagName("Host").item(0).getTextContent());
-						}
-						if (eElement.getElementsByTagName("Username").getLength() == 1) {
-							ftp.setUsername(eElement.getElementsByTagName("Username").item(0).getTextContent());
-						}
-						if (eElement.getElementsByTagName("Password").getLength() == 1) {
-							ftp.setPassword(EncryptDecryptUtil.decrypt(eElement.getElementsByTagName("Password").item(0).getTextContent()));
-						}
-						if (eElement.getElementsByTagName("Port").getLength() == 1) {
-							ftp.setPort(Integer.parseInt(eElement.getElementsByTagName("Port").item(0).getTextContent()));
-						}
-						if (eElement.getElementsByTagName("Mode").getLength() == 1) {
-							ftp.setMode(eElement.getElementsByTagName("Mode").item(0).getTextContent());
-						}
-						if (eElement.getElementsByTagName("Destination").getLength() == 1) {
-							ftp.setDestination(eElement.getElementsByTagName("Destination").item(0).getTextContent());
-						}
-						this.FTPRepo.save(ftp);
-					}
-				}
-
-
-				NodeList confList = doc.getElementsByTagName("configurations");
-				this.configurationsRepo.truncate();
-				for (int temp = 0; temp < confList.getLength(); temp++) {
-					Configurations configurations = this.configurationsRepo.getOneOrCreateOne();
-					Node nNode = confList.item(temp);
-					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-						Element eElement = (Element) nNode;
-						if (eElement.getElementsByTagName("Server-Name").getLength() == 1) {
-							configurations.setServerName(eElement.getElementsByTagName("Server-Name").item(0).getTextContent());
-						}
-						if (eElement.getElementsByTagName("Username").getLength() == 1) {
-							configurations.setUsername(eElement.getElementsByTagName("Username").item(0).getTextContent());
-						}
-						if (eElement.getElementsByTagName("Password").getLength() == 1) {
-							configurations.setPassword(EncryptDecryptUtil.decrypt(eElement.getElementsByTagName("Password").item(0).getTextContent()));
-						}
-						if (eElement.getElementsByTagName("Port").getLength() == 1) {
-							configurations.setServerPort(eElement.getElementsByTagName("Port").item(0).getTextContent());
-						}
-						if (eElement.getElementsByTagName("Protocol").getLength() == 1) {
-							configurations.setServerProtocol(eElement.getElementsByTagName("Protocol").item(0).getTextContent());
-						}
-						if (eElement.getElementsByTagName("Email-Notification").getLength() == 1) {
-							configurations.setEmailNotifications(Boolean.valueOf(eElement.getElementsByTagName("Email-Notification").item(0).getTextContent()));
-						}
-					}
-					this.configurationsRepo.save(configurations);
-				}
-				message = message + "Successfully imported xml";
-
-			} catch (ParserConfigurationException ex) {
-				Logger.getLogger(CommonUtil.class.getName()).log(Level.SEVERE, null, ex);
-				return "";
-			} catch (SAXParseException ex) {
-				Logger.getLogger(CommonUtil.class.getName()).log(Level.SEVERE, null, ex);
-				return "";
-			} catch (SAXException ex) {
-				Logger.getLogger(CommonUtil.class.getName()).log(Level.SEVERE, null, ex);
-				return "";
-			} catch (IOException ex) {
-				Logger.getLogger(CommonUtil.class.getName()).log(Level.SEVERE, null, ex);
-				return "";
-			} catch (Exception ex) {
-				Logger.getLogger(CommonUtil.class.getName()).log(Level.SEVERE, null, ex);
-				return "";
 			}
-			return message;
+
+			NodeList recList = doc.getElementsByTagName("Recipients").item(0).getChildNodes();
+			this.recipientsRepo.truncate();
+			for (int temp = 0; temp < recList.getLength(); temp++) {
+				Recipients recipient = this.recipientsRepo.getOneOrCreateOne("");
+				Node nNode = recList.item(temp);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element eElement = (Element) nNode;
+					if (!eElement.getTextContent().isEmpty()) {
+						if (eElement.getTextContent().matches(EMAIL_REGEX)) {
+							recipient.setEmail(eElement.getTextContent());
+							this.recipientsRepo.save(recipient);
+						} else {
+							message = message + "Can't save " + eElement.getTextContent() + "because of invalid email format. ";
+						}
+					}
+				}
+			}
+
+			this.FTPRepo.truncate();
+			NodeList ftpList = doc.getElementsByTagName("FTP");
+			for (int temp = 0; temp < ftpList.getLength(); temp++) {
+				FTP ftp = this.FTPRepo.getOneOrCreateOne();
+				Node nNode = ftpList.item(temp);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element eElement = (Element) nNode;
+					if (eElement.getElementsByTagName("Host").getLength() == 1) {
+						ftp.setHostName(eElement.getElementsByTagName("Host").item(0).getTextContent());
+					}
+					if (eElement.getElementsByTagName("Username").getLength() == 1) {
+						ftp.setUsername(eElement.getElementsByTagName("Username").item(0).getTextContent());
+					}
+					if (eElement.getElementsByTagName("Password").getLength() == 1) {
+						ftp.setPassword(EncryptDecryptUtil.decrypt(eElement.getElementsByTagName("Password").item(0).getTextContent()));
+					}
+					if (eElement.getElementsByTagName("Port").getLength() == 1) {
+						ftp.setPort(Integer.parseInt(eElement.getElementsByTagName("Port").item(0).getTextContent()));
+					}
+					if (eElement.getElementsByTagName("Mode").getLength() == 1) {
+						ftp.setMode(eElement.getElementsByTagName("Mode").item(0).getTextContent());
+					}
+					if (eElement.getElementsByTagName("Destination").getLength() == 1) {
+						ftp.setDestination(eElement.getElementsByTagName("Destination").item(0).getTextContent());
+					}
+					this.FTPRepo.save(ftp);
+				}
+			}
+
+
+			NodeList confList = doc.getElementsByTagName("configurations");
+			this.configurationsRepo.truncate();
+			for (int temp = 0; temp < confList.getLength(); temp++) {
+				Configurations configurations = this.configurationsRepo.getOneOrCreateOne();
+				Node nNode = confList.item(temp);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element eElement = (Element) nNode;
+					if (eElement.getElementsByTagName("Server-Name").getLength() == 1) {
+						configurations.setServerName(eElement.getElementsByTagName("Server-Name").item(0).getTextContent());
+					}
+					if (eElement.getElementsByTagName("Username").getLength() == 1) {
+						configurations.setUsername(eElement.getElementsByTagName("Username").item(0).getTextContent());
+					}
+					if (eElement.getElementsByTagName("Password").getLength() == 1) {
+						configurations.setPassword(EncryptDecryptUtil.decrypt(eElement.getElementsByTagName("Password").item(0).getTextContent()));
+					}
+					if (eElement.getElementsByTagName("Port").getLength() == 1) {
+						configurations.setServerPort(eElement.getElementsByTagName("Port").item(0).getTextContent());
+					}
+					if (eElement.getElementsByTagName("Protocol").getLength() == 1) {
+						configurations.setServerProtocol(eElement.getElementsByTagName("Protocol").item(0).getTextContent());
+					}
+					if (eElement.getElementsByTagName("Email-Notification").getLength() == 1) {
+						configurations.setEmailNotifications(Boolean.valueOf(eElement.getElementsByTagName("Email-Notification").item(0).getTextContent()));
+					}
+				}
+				this.configurationsRepo.save(configurations);
+			}
+			message = message + "Successfully imported xml";
+
+		} catch (ParserConfigurationException ex) {
+			Logger.getLogger(CommonUtil.class.getName()).log(Level.SEVERE, null, ex);
+			return "";
+		} catch (SAXParseException ex) {
+			Logger.getLogger(CommonUtil.class.getName()).log(Level.SEVERE, null, ex);
+			return "";
+		} catch (SAXException ex) {
+			Logger.getLogger(CommonUtil.class.getName()).log(Level.SEVERE, null, ex);
+			return "";
+		} catch (IOException ex) {
+			Logger.getLogger(CommonUtil.class.getName()).log(Level.SEVERE, null, ex);
+			return "";
+		} catch (Exception ex) {
+			Logger.getLogger(CommonUtil.class.getName()).log(Level.SEVERE, null, ex);
+			return "";
+		}
+		return message;
 	}
 }
