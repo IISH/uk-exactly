@@ -10,7 +10,6 @@
  */
 package uk.sipperfly.ui;
 
-import uk.sipperfly.utils.FTPUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import org.apache.commons.net.ftp.FTP;
@@ -21,9 +20,7 @@ import java.io.OutputStream;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPConnectionClosedException;
 import org.apache.commons.net.ftp.FTPSClient;
 import static uk.sipperfly.ui.Exactly.GACOM;
 

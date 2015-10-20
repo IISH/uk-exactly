@@ -34,10 +34,7 @@ import gov.loc.repository.bagit.verify.impl.ParallelManifestChecksumVerifier;
 import gov.loc.repository.bagit.verify.impl.ValidVerifierImpl;
 
 import java.awt.Color;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 
 import java.security.NoSuchAlgorithmException;
@@ -280,7 +277,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 				Path target = TransferFiles();
 				if (this.isCancelled()) {
 					Logger.getLogger(GACOM).log(Level.INFO, "Canceling Transfer Files task.");
-					return -1;
+					return 1;
 				}
 				// bagit
 				this.parent.UpdateResult("Preparing Bag...", 0);
@@ -288,13 +285,13 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 				BagFolder();
 				if (this.isCancelled()) {
 					Logger.getLogger(GACOM).log(Level.INFO, "Canceling Bagit task.");
-					return -1;
+					return 1;
 				}
 
 				if (this.parent.ftpDelivery.isSelected()) {
 					if (this.isCancelled()) {
 						Logger.getLogger(GACOM).log(Level.INFO, "Canceling Upload data to FTP");
-						return -1;
+						return 1;
 					}
 					if (!ValidateFTPCredentials()) {
 						this.parent.UpdateResult("Credentials not valid. Please update FTP Settings.", 0);
@@ -302,10 +299,11 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 						return -1;
 
 					}
+
 					this.parent.jProgressBar2.setValue(this.parent.totalFiles + 1);
 					if (this.isCancelled()) {
 						Logger.getLogger(GACOM).log(Level.INFO, "Canceling Upload data to FTP");
-						return -1;
+						return 1;
 					}
 					this.parent.UpdateResult("Uploading data on FTP ...", 0);
 					Logger.getLogger(GACOM).log(Level.INFO, "Uploading data on FTP ...");
@@ -314,7 +312,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 				}
 				if (this.isCancelled()) {
 					Logger.getLogger(GACOM).log(Level.INFO, "Canceling send notification email(s).");
-					return -1;
+					return 1;
 				}
 				// send email to GA
 				if (this.config.getEmailNotifications()) {
@@ -323,7 +321,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 					SendMail(target);
 					if (this.isCancelled()) {
 						Logger.getLogger(GACOM).log(Level.INFO, "Canceling send notification email(s)");
-						return -1;
+						return 1;
 					}
 					if (this.parent.ftpDelivery.isSelected()) {
 						this.parent.jProgressBar2.setValue(this.parent.totalFiles + 3);
@@ -477,8 +475,11 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	 */
 	@Override
 	protected void done() {
+		System.out.println("here *****");
 		try {
 			// Transfer result already updated in worker thread
+			System.out.println("here ======== ");
+//			this.get();
 			if (this.get() < 0) {
 				return;
 			}
@@ -489,6 +490,8 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 			Logger.getLogger(GACOM).log(Level.SEVERE, "ExecutionException", ex);
 			return;
 		}
+		
+		System.out.println("out ======== ");
 		if (this.isCancelled()) {
 			this.parent.UpdateResult("Transfer canceled. Clean up partially copied directories.", 0);
 			Logger.getLogger(GACOM).log(Level.WARNING, "Transfer canceled. Clean up partially copied directories.");
@@ -613,7 +616,6 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		} catch (IOException ex) {
 			Logger.getLogger(GACOM).log(Level.SEVERE, "Error closing the bag", ex);
 		}
-
 		if (this.parent.totalFiles > this.parent.tranferredFiles) {
 			this.parent.UpdateProgressBar(this.parent.totalFiles);
 		}
@@ -633,6 +635,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 //			extra = 10;
 //		}
 		int totalFiles = this.parent.totalFiles;
+
 		Logger.getLogger(GACOM).log(Level.INFO, "Max Progress bar count: ".concat(Integer.toString(this.parent.totalFiles)));
 		if (this.parent.ftpDelivery.isSelected()) {
 			totalFiles = totalFiles + 2;
@@ -640,6 +643,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		if (this.config.getEmailNotifications()) {
 			totalFiles = totalFiles + 1;
 		}
+
 		this.parent.jProgressBar2.setMaximum(totalFiles);
 		for (String source : this.sources) {
 			File sourceFile = new File(source);
@@ -890,25 +894,25 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 			Attr attr1 = doc.createAttribute("xmlns:xsi");
 			attr1.setValue("http://www.w3.org/2001/XMLSchema-instance");
 			rootElement.setAttributeNode(attr1);
-			
+
 			Element payLoad = doc.createElement("Payload-Oxum");
 			payLoad.appendChild(doc.createTextNode(payload));
 			rootElement.appendChild(payLoad);
-			
+
 			Element baggingDate = doc.createElement("Bagging-Date");
 			baggingDate.appendChild(doc.createTextNode(date));
 			rootElement.appendChild(baggingDate);
-			
+
 			Element bagsize = doc.createElement("Bag-Size");
 			bagsize.appendChild(doc.createTextNode(size));
 			rootElement.appendChild(bagsize);
-			
+
 			BagInfoRepo bagInfoRepo = new BagInfoRepo();
 			List<BagInfo> bagInfo = bagInfoRepo.getOneOrCreateOne();
-			
+
 			for (BagInfo b : bagInfo) {
 				StringBuilder stringBuilder = new StringBuilder();
-				char[] txt =  Normalizer.normalize(b.getLabel(), Normalizer.Form.NFD).toCharArray();
+				char[] txt = Normalizer.normalize(b.getLabel(), Normalizer.Form.NFD).toCharArray();
 				for (int i = 0; i < b.getLabel().length(); i++) {
 					int check = 0;
 					for (int j = 0; j < charArray.length; j++) {

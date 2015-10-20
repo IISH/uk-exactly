@@ -1639,7 +1639,7 @@ public class Exactly extends javax.swing.JFrame {
 						size = size + FileUtils.sizeOf(f);
 						boolean ignore = commonUtil.checkIgnoreFiles(f.getName(), config.getFilters());
 						if (!ignore) {
-							this.totalFiles = 1;
+							this.totalFiles = this.totalFiles + 1;
 						}
 					} else {
 						size = size + FileUtils.sizeOfDirectory(f);
@@ -1687,15 +1687,15 @@ public class Exactly extends javax.swing.JFrame {
 		// TODO add your handling code here:
 		if (!this.bgw.isDone()) {
 			UpdateResult("Canceling transfer...", 1);
+			this.list.resetEntryList();
 			try {
-				this.bgw.cancel(false);
-			} catch (CancellationException ca) {
+				this.bgw.cancel(true);
+			} catch (CancellationException ca) {				
 				this.bgw.resetTransferFiles();
-				return;
-			}
+				Logger.getLogger(GACOM).log(Level.SEVERE, null, ca);
+			}			
 			this.bgw.resetTransferFiles();
 		}
-		return;
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void showTransferMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showTransferMouseClicked

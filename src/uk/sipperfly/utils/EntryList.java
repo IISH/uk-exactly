@@ -123,9 +123,9 @@ public class EntryList extends JPanel {
 			this.parent.jPanel8.remove(e);
 			int height =this.parent.jPanel8.getPreferredSize().height - 38;
 			this.parent.jPanel8.setPreferredSize(new Dimension(571, height));
-		}
+		}		
+		this.parent.jPanel1.revalidate();
 		this.parent.jPanel8.revalidate();
-		this.parent.jPanel1.revalidate();		
 		entries = new ArrayList<Entry>();
 	}
 }
