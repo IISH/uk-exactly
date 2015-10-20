@@ -12,16 +12,19 @@ package uk.sipperfly.ui;
 
 import uk.sipperfly.utils.FTPUtil;
 import java.io.File;
+import java.io.FileInputStream;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPReply;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPConnectionClosedException;
+import org.apache.commons.net.ftp.FTPSClient;
 import static uk.sipperfly.ui.Exactly.GACOM;
 
 public class FTPConnection {
@@ -58,7 +61,7 @@ public class FTPConnection {
 			int ftpPort = this.port;
 			String user = this.username;
 			String pass = this.password;
-			FTPClient ftp = new FTPClient();
+			FTPClient ftp = new FTPSClient();
 			ftp.connect(server, ftpPort);
 			System.out.println("Connected to " + server + ".");
 			if (ftp.login(user, pass)) {
@@ -101,17 +104,40 @@ public class FTPConnection {
 		} else {
 			InputStream srcStream = null;
 			try {
-				srcStream = src.toURI().toURL().openStream();
-				if (ftp.storeFile(src.getName(), srcStream)) {
-					Logger.getLogger(GACOM).log(Level.INFO, "UPLOADED a file to: ".concat(src.getAbsolutePath()));
-					System.out.println("UPLOADED a file to: " + src.getAbsolutePath());
-				} else {
-					System.out.println("COULD NOT create the directory: " + src.getAbsolutePath());
-					Logger.getLogger(GACOM).log(Level.INFO, "COULD NOT create the directory: ".concat(src.getAbsolutePath()));
-					return false;
-				}
+				 InputStream fis = new FileInputStream(src);
+                OutputStream os = ftp.storeFileStream(src.getName());
+                
+                byte buf[] = new byte[8192];
+				System.out.println("Nouman Bytes read: " + src.getAbsolutePath());
+                int bytesRead = fis.read(buf);
+                while (bytesRead != -1) {
+                    os.write(buf, 0, bytesRead);
+                    bytesRead = fis.read(buf);
+                }
+				System.out.println("Input file closing: ");
+                fis.close();
+				System.out.println("Input file closed: ");
+				System.out.println("Output file closing: ");
+                os.close();
+				System.out.println("Output file closed: ");
+				System.out.println("End Nouman: ");
+				System.out.println("UPLOADED a file to: " + src.getAbsolutePath());
+                ftp.completePendingCommand();
+				return true;
+//				srcStream = src.toURI().toURL().openStream();
+//				srcStream = new FileInputStream(src);
+//				if (ftp.storeFile(src.getName(), srcStream)) {
+//					srcStream.close();
+//					Logger.getLogger(GACOM).log(Level.INFO, "UPLOADED a file to: ".concat(src.getAbsolutePath()));
+//					System.out.println("UPLOADED a file to: " + src.getAbsolutePath());
+//				} else {
+//					System.out.println("COULD NOT create the directory: " + src.getAbsolutePath());
+//					Logger.getLogger(GACOM).log(Level.INFO, "COULD NOT create the directory: ".concat(src.getAbsolutePath()));
+//					return false;
+//				}
 			} finally {
-				IOUtils.closeQuietly(srcStream);
+				
+//				IOUtils.closeQuietly(srcStream);
 			}
 		}
 		return true;
@@ -126,7 +152,7 @@ public class FTPConnection {
 	 */
 	public boolean uploadFiles(String location, String type) throws IOException {
 		File localSrc = new File(location);
-		FTPClient ftp = new FTPClient();
+		FTPClient ftp = new FTPSClient();
 		ftp.connect(this.host, this.port);
 		if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
 			ftp.disconnect();
@@ -144,11 +170,27 @@ public class FTPConnection {
 		Logger.getLogger(GACOM).log(Level.INFO, ftp.getReplyString());
 
 		ftp.changeWorkingDirectory(this.destination);
+//		System.out.println(ftp.getControlKeepAliveReplyTimeout());
+//		System.out.println(ftp.getDataConnectionMode());
+//		System.out.println(ftp.getDefaultTimeout());
+//		System.out.println(ftp.getKeepAlive());
+//		System.out.println(ftp.getServerSocketFactory());
+//		System.out.println(ftp.getSystemType());
+//		System.out.println(ftp.getAutodetectUTF8());
+//		System.out.println(ftp.getConnectTimeout());
+//		System.out.println(ftp.getControlKeepAliveTimeout());
+//		System.out.println(ftp.getSoTimeout());
+//		System.out.println(ftp.getSoLinger());
+//		System.out.println(ftp.getTcpNoDelay());
+		
+		
+		
+		
 		ftp.setKeepAlive(true);
 		ftp.setFileType(FTP.BINARY_FILE_TYPE);
-		ftp.setFileTransferMode(FTP.BINARY_FILE_TYPE);
-		ftp.setControlKeepAliveTimeout(300);
-		ftp.setSoTimeout(0);
+//		ftp.setFileTransferMode(FTP.BINARY_FILE_TYPE);
+//		ftp.setControlKeepAliveTimeout(30);
+//		ftp.setSoTimeout(0);
 		try {
 			if (!upload(localSrc, ftp)) {
 				return false;
