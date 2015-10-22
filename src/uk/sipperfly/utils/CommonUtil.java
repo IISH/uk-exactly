@@ -211,8 +211,6 @@ public class CommonUtil {
 			String text = b.getLabel().concat(": ").concat(b.getValue()).replaceAll("\\s+", " ").trim();
 			int startIndex = 0;
 			int endIndex = 78;
-			int size = text.length() / 79;
-			System.out.println("text.length() == " + text.length());
 			if (text.length() > 79) {
 				String newString;
 				int i = 1;

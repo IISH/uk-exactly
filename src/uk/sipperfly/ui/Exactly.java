@@ -1684,7 +1684,7 @@ public class Exactly extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelPropertyChange
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-		// TODO add your handling code here:
+		
 		if (!this.bgw.isDone()) {
 			UpdateResult("Canceling transfer...", 1);
 			this.list.resetEntryList();
@@ -1694,6 +1694,10 @@ public class Exactly extends javax.swing.JFrame {
 				this.bgw.resetTransferFiles();
 				Logger.getLogger(GACOM).log(Level.SEVERE, null, ca);
 			}			
+			this.bgw.resetTransferFiles();
+		}		
+		if(this.bgw.isDone()){
+			this.list.resetEntryList();
 			this.bgw.resetTransferFiles();
 		}
     }//GEN-LAST:event_btnCancelActionPerformed

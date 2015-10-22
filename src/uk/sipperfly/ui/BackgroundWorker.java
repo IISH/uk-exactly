@@ -16,7 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Date;
 
-import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingWorker;
@@ -41,6 +40,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
@@ -163,8 +163,6 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 			}
 			if (this.process == 3 || this.process == 4) {
 				if (!this.inputFolder.isEmpty() || this.inputFolder != null) {
-//					Border border = BorderFactory.createLineBorder(Color.BLUE, 2);				
-
 					if (this.process == 4) {
 						this.parent.UpdateResult("Validating Bag Before Unbagging...", 1);
 						Logger.getLogger(GACOM).log(Level.INFO, "Validating bag before Unbagging");
@@ -269,6 +267,12 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 						return -1;
 					}
 				}
+				if (this.isCancelled()) {
+					Logger.getLogger(GACOM).log(Level.INFO, "Transfer canceled.");
+					this.parent.UpdateResult("Transfer canceled.", 0);
+					return -1;
+				}
+
 				// Set the tragetPath of bag.
 				this.setTragetPath();
 				//transfer
@@ -277,7 +281,9 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 				Path target = TransferFiles();
 				if (this.isCancelled()) {
 					Logger.getLogger(GACOM).log(Level.INFO, "Canceling Transfer Files task.");
-					return 1;
+					Logger.getLogger(GACOM).log(Level.INFO, "Transfer canceled.");
+					this.parent.UpdateResult("Transfer canceled.", 0);
+					return -1;
 				}
 				// bagit
 				this.parent.UpdateResult("Preparing Bag...", 0);
@@ -285,13 +291,13 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 				BagFolder();
 				if (this.isCancelled()) {
 					Logger.getLogger(GACOM).log(Level.INFO, "Canceling Bagit task.");
-					return 1;
+					return -1;
 				}
-
+				this.parent.btnCancel.setVisible(false);
 				if (this.parent.ftpDelivery.isSelected()) {
 					if (this.isCancelled()) {
 						Logger.getLogger(GACOM).log(Level.INFO, "Canceling Upload data to FTP");
-						return 1;
+						return -1;
 					}
 					if (!ValidateFTPCredentials()) {
 						this.parent.UpdateResult("Credentials not valid. Please update FTP Settings.", 0);
@@ -303,8 +309,9 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 					this.parent.jProgressBar2.setValue(this.parent.totalFiles + 1);
 					if (this.isCancelled()) {
 						Logger.getLogger(GACOM).log(Level.INFO, "Canceling Upload data to FTP");
-						return 1;
+						return -1;
 					}
+
 					this.parent.UpdateResult("Uploading data on FTP ...", 0);
 					Logger.getLogger(GACOM).log(Level.INFO, "Uploading data on FTP ...");
 					UploadFilesFTP();
@@ -312,7 +319,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 				}
 				if (this.isCancelled()) {
 					Logger.getLogger(GACOM).log(Level.INFO, "Canceling send notification email(s).");
-					return 1;
+					return -1;
 				}
 				// send email to GA
 				if (this.config.getEmailNotifications()) {
@@ -321,7 +328,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 					SendMail(target);
 					if (this.isCancelled()) {
 						Logger.getLogger(GACOM).log(Level.INFO, "Canceling send notification email(s)");
-						return 1;
+						return -1;
 					}
 					if (this.parent.ftpDelivery.isSelected()) {
 						this.parent.jProgressBar2.setValue(this.parent.totalFiles + 3);
@@ -329,8 +336,8 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 						this.parent.jProgressBar2.setValue(this.parent.totalFiles + 1);
 					}
 				}
+
 				Thread.sleep(2000);
-				this.parent.btnCancel.setVisible(false);
 				// update UI
 				this.parent.list.resetEntryList();
 				this.resetTransferFiles();
@@ -340,6 +347,11 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 			}
 			return 1;
 		} catch (Exception ex) {
+			if (this.isCancelled()) {
+				this.parent.UpdateResult("Transfer canceled. Clean up partially copied directories.", 0);
+				Logger.getLogger(GACOM).log(Level.INFO, "Transfer canceled. Clean up partially copied directories.");
+				return -1;
+			}
 			this.parent.UpdateResult("An error occurred. Please contact support.", 0);
 			Logger.getLogger(GACOM).log(Level.INFO, "An error occurred. Please contact support.", ex);
 			return -1;
@@ -475,11 +487,8 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	 */
 	@Override
 	protected void done() {
-		System.out.println("here *****");
 		try {
 			// Transfer result already updated in worker thread
-			System.out.println("here ======== ");
-//			this.get();
 			if (this.get() < 0) {
 				return;
 			}
@@ -490,8 +499,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 			Logger.getLogger(GACOM).log(Level.SEVERE, "ExecutionException", ex);
 			return;
 		}
-		
-		System.out.println("out ======== ");
+
 		if (this.isCancelled()) {
 			this.parent.UpdateResult("Transfer canceled. Clean up partially copied directories.", 0);
 			Logger.getLogger(GACOM).log(Level.WARNING, "Transfer canceled. Clean up partially copied directories.");
@@ -511,7 +519,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 			Logger.getLogger(GACOM).log(Level.INFO, "Valid Bag");
 		} else if (this.process == 4) {
 			this.parent.UpdateResult("Successfully unpacked Bagit bag at " + this.unbagDestination, 0);
-			Logger.getLogger(GACOM).log(Level.INFO, "Successfully unpacked Bagit bag at " + this.unbagDestination);
+			Logger.getLogger(GACOM).log(Level.INFO, "Successfully unpacked Bagit bag at ".concat(this.unbagDestination));
 		}
 		this.ftpProcess = 0;
 		this.unbagDestination = "";
