@@ -377,12 +377,15 @@ public class UIManager {
 	 * @throws IOException
 	 */
 	public boolean saveFTPSettings() throws IOException {
-		if (this.validateFTPSettings()) {
+		String result = this.validateFTPSettings();
+		if (result.equals("FTPES") || result.equals("FTP")) {
+
 			FTP ftp = this.FTPRepo.getOneOrCreateOne();
 			ftp.setHostName(mainFrame.ftpHost.getText());
 			ftp.setUsername(mainFrame.ftpUser.getText());
 			ftp.setPassword(new String(mainFrame.ftpPass.getPassword()));
 			ftp.setDestination(mainFrame.ftpDestination.getText());
+			ftp.setSecurityType(result);
 			int port = Integer.parseInt(mainFrame.ftpPort.getText());
 			ftp.setPort(port);
 			if (mainFrame.activeMode.isSelected()) {
@@ -403,7 +406,7 @@ public class UIManager {
 	 * @return
 	 * @throws IOException
 	 */
-	public Boolean validateFTPSettings() throws IOException {
+	public String validateFTPSettings() throws IOException {
 		String userName = mainFrame.ftpUser.getText();
 		String host = mainFrame.ftpHost.getText();
 		String destination = mainFrame.ftpDestination.getText();
@@ -414,7 +417,7 @@ public class UIManager {
 			port = Integer.parseInt(mainFrame.ftpPort.getText());
 		} catch (java.lang.NumberFormatException ex) {
 			Logger.getLogger(UIManager.class.getName()).log(Level.SEVERE, null, ex);
-			return false;
+			return "false";
 		}
 		String mode = "passive";
 		if (mainFrame.passiveMode.isSelected()) {
@@ -424,11 +427,10 @@ public class UIManager {
 		}
 
 		if (userName.isEmpty() || host.isEmpty() || password.isEmpty()) {
-			return false;
+			return "false";
 		}
-		FTPConnection ftp = new FTPConnection(host, userName, password, port, mode, destination);
+		FTPConnection ftp = new FTPConnection(host, userName, password, port, mode, destination,"FTPES");
 		return ftp.validateCon();
-
 
 	}
 

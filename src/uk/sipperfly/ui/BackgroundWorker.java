@@ -129,7 +129,8 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	/**
 	 * The main logic for the work that the background thread does.
 	 * This method is automatically called by the threading framework.
-	 * <p> The following actions are performed:
+	 * <p>
+	 * The following actions are performed:
 	 * 1. Recognize whether bag is organized in bagit structure or not.
 	 * 2. Validate bag.
 	 * 3. Validates the user can connect to the email server.
@@ -261,7 +262,8 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 					}
 				}
 				if (this.parent.ftpDelivery.isSelected()) {
-					if (!ValidateFTPCredentials()) {
+					String result = ValidateFTPCredentials();
+					if (!(result.equals("FTPES") || result.equals("FTP"))) {
 						this.parent.UpdateResult("Credentials not valid. Please update FTP Settings.", 0);
 						Logger.getLogger(GACOM).log(Level.SEVERE, "Credentials not valid. Please update FTP settings.");
 						return -1;
@@ -299,7 +301,8 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 						Logger.getLogger(GACOM).log(Level.INFO, "Canceling Upload data to FTP");
 						return -1;
 					}
-					if (!ValidateFTPCredentials()) {
+					String result = ValidateFTPCredentials();
+					if (!(result.equals("FTPES") || result.equals("FTP"))) {
 						this.parent.UpdateResult("Credentials not valid. Please update FTP Settings.", 0);
 						Logger.getLogger(GACOM).log(Level.SEVERE, "Credentials not valid. Please update FTP settings.");
 						return -1;
@@ -700,10 +703,11 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		String host = this.ftp.getHostName();
 		String destination = this.ftp.getDestination();
 		String password = this.ftp.getPassword();
+		String securityType = this.ftp.getSecurityType();
 		int port = this.ftp.getPort();
 		String mode = this.ftp.getMode();
 		String location = this.target.toString();
-		FTPConnection ftpCon = new FTPConnection(host, userName, password, port, mode, destination);
+		FTPConnection ftpCon = new FTPConnection(host, userName, password, port, mode, destination, securityType);
 		if (this.parent.serializeBag.isSelected()) {
 			location = location.concat(".zip");
 			if (ftpCon.uploadFiles(location, "zip")) {
@@ -729,7 +733,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean ValidateFTPCredentials() throws IOException {
+	public String ValidateFTPCredentials() throws IOException {
 
 		String userName = this.ftp.getUsername();
 		String host = this.ftp.getHostName();
@@ -737,11 +741,12 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		String password = this.ftp.getPassword();
 		int port = this.ftp.getPort();
 		String mode = this.ftp.getMode();
+		String securityType = this.ftp.getSecurityType();
 
 		if (userName == null) {
-			return false;
+			return "false";
 		}
-		FTPConnection ftpCon = new FTPConnection(host, userName, password, port, mode, destination);
+		FTPConnection ftpCon = new FTPConnection(host, userName, password, port, mode, destination, securityType);
 		return ftpCon.validateCon();
 	}
 

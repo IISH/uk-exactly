@@ -18,6 +18,7 @@ import javax.persistence.Id;
 
 @Entity
 public class FTP implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,7 +29,8 @@ public class FTP implements Serializable {
 	private String mode = "passive";
 	private String username;
 	private String password;
-	
+	private String securityType;
+
 	public Long getId() {
 		return id;
 	}
@@ -41,55 +43,63 @@ public class FTP implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	public String getHostName() {
 		return hostName;
 	}
-	
+
 	public void setHostName(String hostName) {
 		this.hostName = hostName;
 	}
-	
+
 	public String getDestination() {
 		return destination;
 	}
-	
+
 	public void setDestination(String destination) {
 		this.destination = destination;
 	}
-	
+
 	public String getUsername() {
 		return username;
 	}
-	
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	
+
 	public String getPassword() {
 		return password;
 	}
-	
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	public String getMode() {
 		return mode;
 	}
-	
+
 	public void setMode(String mode) {
 		this.mode = mode;
 	}
-	
+
 	public int getPort() {
 		return port;
 	}
-	
+
 	public void setPort(int port) {
 		this.port = port;
 	}
-	
+
+	public String getSecurityType() {
+		return securityType;
+	}
+
+	public void setSecurityType(String securityType) {
+		this.securityType = securityType;
+	}
+
 	@Override
 	public int hashCode() {
 		int hash = 0;
@@ -114,5 +124,5 @@ public class FTP implements Serializable {
 	public String toString() {
 		return "persistent.FTP[ id=" + id + " ]";
 	}
-	
+
 }

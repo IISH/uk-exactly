@@ -29,7 +29,16 @@ import it.sauronsoftware.ftp4j.FTPException;
 import it.sauronsoftware.ftp4j.FTPIllegalReplyException;
 import java.io.FileNotFoundException;
 import java.net.SocketTimeoutException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import static uk.sipperfly.ui.Exactly.GACOM;
+import uk.sipperfly.utils.MyTransferListener;
 
 public class FTPConnection {
 
@@ -39,8 +48,9 @@ public class FTPConnection {
 	public int port;
 	public String mode;
 	public String destination;
+	public String securityType = "FTPES";
 
-	public FTPConnection(String host, String username, String password, int port, String mode, String destination) {
+	public FTPConnection(String host, String username, String password, int port, String mode, String destination, String securityType) {
 		if (host == null || host.length() < 1 || username == null || username.length() < 1
 				|| password == null || password.length() < 1
 				|| mode == null || mode.length() < 1) {
@@ -52,6 +62,7 @@ public class FTPConnection {
 		this.port = port;
 		this.mode = mode;
 		this.destination = destination;
+		this.securityType = securityType;
 	}
 
 	/**
@@ -59,34 +70,34 @@ public class FTPConnection {
 	 *
 	 * @return true if connected successfully, false otherwise
 	 */
-	public boolean validateCon() {
-		try {
-			String server = this.host;
-			int ftpPort = this.port;
-			String user = this.username;
-			String pass = this.password;
-			FTPClient ftp = new FTPClient();
-			ftp.connect(server, ftpPort);
+	public String validateCon() {
 
-			System.out.println("Connected to " + server + ".");
-			ftp.login(user, pass);
+		try {
+
+			FTPClient ftp = this.connect(true);
 			ftp.disconnect(true);
-			return true;
+			return this.securityType;
 		} catch (SocketException ex) {
 			Logger.getLogger(FTPConnection.class.getName()).log(Level.SEVERE, null, ex);
-			return false;
+			return "false";
 		} catch (IOException ex) {
 			Logger.getLogger(FTPConnection.class.getName()).log(Level.SEVERE, null, ex);
-			return false;
+			return "false";
 		} catch (IllegalStateException ex) {
 			Logger.getLogger(FTPConnection.class.getName()).log(Level.SEVERE, null, ex);
-			return false;
+			return "false";
 		} catch (FTPIllegalReplyException ex) {
 			Logger.getLogger(FTPConnection.class.getName()).log(Level.SEVERE, null, ex);
-			return false;
+			return "false";
 		} catch (FTPException ex) {
+			System.out.println(ex.getMessage());
+			System.out.println(ex.getCode());
+			if (ex.getMessage().contains("SECURITY_FTPES cannot be applied")) {
+				this.securityType = "FTP";
+				return this.validateCon();
+			}
 			Logger.getLogger(FTPConnection.class.getName()).log(Level.SEVERE, null, ex);
-			return false;
+			return "false";
 		}
 	}
 
@@ -97,8 +108,8 @@ public class FTPConnection {
 				Logger.getLogger(GACOM).log(Level.INFO, "Directory created: ".concat(src.getName()));
 				ftp.changeDirectory(src.getName());
 				for (File file : src.listFiles()) {
-					Logger.getLogger(GACOM).log(Level.INFO, "About to upload the file: ".concat(file.getAbsolutePath()));
-					System.out.println("About to upload the file: " + file);
+//					Logger.getLogger(GACOM).log(Level.INFO, "About to upload the file: ".concat(file.getAbsolutePath()));
+//					System.out.println("About to upload the file: " + file);
 					upload(file, ftp, src.getName());
 				}
 				ftp.changeDirectoryUp();
@@ -116,22 +127,22 @@ public class FTPConnection {
 			try {
 				try {
 					ftp.setType(FTPClient.TYPE_BINARY);
-					ftp.upload(new java.io.File(src.getAbsolutePath()));
+					ftp.upload(new java.io.File(src.getAbsolutePath()), new MyTransferListener(src.getAbsolutePath()));
 				} catch (SocketTimeoutException e) {
 					Logger.getLogger(GACOM).log(Level.SEVERE, "Socket Timeout Exception ", e.getCause());
-					ftp = this.reconnect();
+					ftp = this.connect(false);
 					ftp.changeDirectory(ftpSrc);
 					ftp.setType(FTPClient.TYPE_BINARY);
 					ftp.upload(new java.io.File(src.getAbsolutePath()));
 				} catch (SocketException ex) {
 					Logger.getLogger(GACOM).log(Level.SEVERE, "Socket Exception ", ex.getCause());
-					ftp = this.reconnect();
+					ftp = this.connect(false);
 					ftp.changeDirectory(ftpSrc);
 					ftp.setType(FTPClient.TYPE_BINARY);
 					ftp.upload(new java.io.File(src.getAbsolutePath()));
 				}
-				System.out.println("UPLOADED a file to: " + src.getAbsolutePath());
-				Logger.getLogger(GACOM).log(Level.SEVERE, "UPLOADED a file to: ".concat(src.getAbsolutePath()));
+//				System.out.println("UPLOADED a file to: " + src.getAbsolutePath());
+//				Logger.getLogger(GACOM).log(Level.SEVERE, "UPLOADED a file to: ".concat(src.getAbsolutePath()));
 			} catch (IllegalStateException ex) {
 				Logger.getLogger(FTPConnection.class.getName()).log(Level.SEVERE, null, ex);
 				return false;
@@ -163,19 +174,10 @@ public class FTPConnection {
 	 * @return
 	 */
 	public boolean uploadFiles(String location, String type) throws IOException {
+
 		try {
+			FTPClient ftp = this.connect(false);
 			File localSrc = new File(location);
-			FTPClient ftp = new FTPClient();
-			ftp.setCharset("UTF-8");
-			ftp.connect(this.host, this.port);
-			ftp.login(this.username, this.password);
-			if (this.mode.equalsIgnoreCase("passive")) {
-				ftp.setPassive(true);
-			} else if (this.mode.equalsIgnoreCase("active")) {
-				ftp.setPassive(false);
-			}
-			Logger.getLogger(GACOM).log(Level.INFO, "Connected to server.");
-			ftp.changeDirectory(this.destination);
 			try {
 				if (!upload(localSrc, ftp, "")) {
 					return false;
@@ -200,18 +202,50 @@ public class FTPConnection {
 		}
 	}
 
-	private FTPClient reconnect() throws IllegalStateException, IOException, FTPIllegalReplyException, FTPException {
+	private FTPClient connect(boolean onlyValidate) throws IllegalStateException, IOException, FTPIllegalReplyException, FTPException {
+		TrustManager[] trustManager = new TrustManager[]{new X509TrustManager() {
+			public X509Certificate[] getAcceptedIssuers() {
+				return null;
+			}
+
+			public void checkClientTrusted(X509Certificate[] certs, String authType) {
+			}
+
+			public void checkServerTrusted(X509Certificate[] certs, String authType) {
+			}
+		}};
+		SSLContext sslContext = null;
+		try {
+			sslContext = SSLContext.getInstance("SSL");
+			sslContext.init(null, trustManager, new SecureRandom());
+		} catch (NoSuchAlgorithmException | KeyManagementException e) {
+			e.printStackTrace();
+		}
+		SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 		FTPClient ftp = new FTPClient();
+
 		ftp.setCharset("UTF-8");
+		ftp.setSSLSocketFactory(sslSocketFactory);
+
+		if (this.securityType.equalsIgnoreCase("FTPES")) {
+			ftp.setSSLSocketFactory(sslSocketFactory);
+			ftp.setSecurity(FTPClient.SECURITY_FTPES);
+
+		}
+
 		ftp.connect(this.host, this.port);
 		ftp.login(this.username, this.password);
+
 		if (this.mode.equalsIgnoreCase("passive")) {
 			ftp.setPassive(true);
 		} else if (this.mode.equalsIgnoreCase("active")) {
 			ftp.setPassive(false);
 		}
 		Logger.getLogger(GACOM).log(Level.INFO, "Connected to server.");
+		if(this.destination.isEmpty())
+			this.destination ="/";
 		ftp.changeDirectory(this.destination);
+
 		return ftp;
 	}
 }
