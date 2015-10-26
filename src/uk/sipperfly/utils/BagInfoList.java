@@ -66,10 +66,10 @@ public class BagInfoList extends JPanel {
 	 */
 	private void addItem(BagInfoEntry entry) {
 		entries.add(entry);
-		if (entry.getY() + 105 > this.parent.jPanel10.getHeight()) {
-			int height = this.parent.jPanel10.getPreferredSize().height + 100;
+		if (entry.getY() + 125 > this.parent.jPanel10.getHeight()) {
+			int height = this.parent.jPanel10.getPreferredSize().height + 120;
 			this.parent.jPanel10.setPreferredSize(new Dimension(571, height));
-			int pheight = this.parent.jPanel11.getPreferredSize().height + 100;
+			int pheight = this.parent.jPanel11.getPreferredSize().height + 120;
 			this.parent.jPanel11.setPreferredSize(new Dimension(571, pheight));
 		}
 		this.parent.jPanel10.add(entry);
@@ -86,9 +86,9 @@ public class BagInfoList extends JPanel {
 		this.resetBounds(index);
 		entries.remove(entry);
 		this.parent.jPanel10.remove(entry);
-		int height = this.parent.jPanel10.getPreferredSize().height - 100;
+		int height = this.parent.jPanel10.getPreferredSize().height - 120;
 		this.parent.jPanel10.setPreferredSize(new Dimension(571, height));
-		int pheight = this.parent.jPanel11.getPreferredSize().height - 100;
+		int pheight = this.parent.jPanel11.getPreferredSize().height - 120;
 		this.parent.jPanel11.setPreferredSize(new Dimension(571, pheight));
 		refresh();
 	}
@@ -116,7 +116,7 @@ public class BagInfoList extends JPanel {
 		for (int i = index; i < entries.size(); i++) {
 			int y = entries.get(i).getY();
 			int newYAxis = y - 100;
-			entries.get(i).setBounds(0, newYAxis, 571, 100);
+			entries.get(i).setBounds(0, newYAxis, 571, 120);
 		}
 	}
 

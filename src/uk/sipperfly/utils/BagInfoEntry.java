@@ -21,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
@@ -37,6 +38,8 @@ public class BagInfoEntry extends JPanel {
 	private JButton minus;
 	private BagInfoList parent;
 	private JScrollPane scrollPane;
+	private JSeparator separator;
+
 	/**
 	 * Create panel with label, jTextFields and button which is dynamically added to UI.
 	 *
@@ -55,18 +58,19 @@ public class BagInfoEntry extends JPanel {
 		this.label.setAlignmentY((float) 0.5);
 		this.label.setBounds(6, 6, 72, 28);
 
-
 		this.value = new JLabel("Value");
 		this.value.setFont(new java.awt.Font("Verdana", 0, 13));
 		this.value.setAlignmentX((float) 0.0);
 		this.value.setAlignmentY((float) 0.5);
 		this.value.setBounds(6, 6, 72, 28);
 
+		this.separator = new JSeparator(JSeparator.HORIZONTAL);
+		this.separator.setPreferredSize(new Dimension(550, 2));
 
 		this.minus = new JButton(new RemoveEntryAction());
 		this.minus.setFont(new java.awt.Font("Verdana", 0, 13));
 		this.minus.setPreferredSize(new Dimension(41, 35));
-		
+
 		this.parent = list;
 
 		this.labelField = new JTextField();
@@ -79,8 +83,6 @@ public class BagInfoEntry extends JPanel {
 		this.id = new JTextField(5);
 		this.id.setText(id);
 		this.id.setVisible(false);
-		
-
 
 		this.valueField = new JTextArea();
 		this.valueField.setSize(203, 30);
@@ -98,25 +100,24 @@ public class BagInfoEntry extends JPanel {
 		add(this.minus);
 		add(this.value);
 		add(this.scrollPane);
-		
-
+		add(this.separator);
 
 		this.setVisible(true);
-		this.setPreferredSize(new Dimension(571, 100));
+		this.setPreferredSize(new Dimension(571, 120));
 
 		int y_axis;
 		if (size == 0) {
 			y_axis = 0;
 		} else {
-			y_axis = size * 100;
+			y_axis = size * 120;
 		}
-		this.setBounds(0, y_axis, 571, 100);
+		this.setBounds(0, y_axis, 571, 120);
 		InputMap im = (InputMap) UIManager.get("TextField.focusInputMap");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction);
-}
+	}
 
 	/**
 	 *
