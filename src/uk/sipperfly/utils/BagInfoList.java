@@ -51,7 +51,6 @@ public class BagInfoList extends JPanel {
 	 * @param id    database id for label and value
 	 */
 	public void editEntry(String label, String value, String id) {
-		this.parent.jPanel11.setVisible(true);
 		int size = entries.size();
 		BagInfoEntry theClone = new BagInfoEntry(label, value, id, this, size);
 		addItem(theClone);
@@ -115,7 +114,7 @@ public class BagInfoList extends JPanel {
 	private void resetBounds(int index) {
 		for (int i = index; i < entries.size(); i++) {
 			int y = entries.get(i).getY();
-			int newYAxis = y - 100;
+			int newYAxis = y - 120;
 			entries.get(i).setBounds(0, newYAxis, 571, 120);
 		}
 	}

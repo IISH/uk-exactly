@@ -230,7 +230,6 @@ public class FTPConnection {
 		if (this.securityType.equalsIgnoreCase("FTPES")) {
 			ftp.setSSLSocketFactory(sslSocketFactory);
 			ftp.setSecurity(FTPClient.SECURITY_FTPES);
-
 		}
 
 		ftp.connect(this.host, this.port);

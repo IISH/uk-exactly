@@ -350,6 +350,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 			}
 			return 1;
 		} catch (Exception ex) {
+			this.parent.btnTransferFiles.setEnabled(true);
 			if (this.isCancelled()) {
 				this.parent.UpdateResult("Transfer canceled. Clean up partially copied directories.", 0);
 				Logger.getLogger(GACOM).log(Level.INFO, "Transfer canceled. Clean up partially copied directories.");
@@ -427,6 +428,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		this.parent.UpdateProgressBar(0);
 		this.parent.ftpDelivery.setSelected(false);
 		this.parent.btnCancel.setVisible(false);
+		this.parent.btnTransferFiles.setEnabled(true);
 	}
 
 	/**

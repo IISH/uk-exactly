@@ -572,6 +572,7 @@ public class CommonUtil {
 					if (eElement.getElementsByTagName("Destination").getLength() == 1) {
 						ftp.setDestination(eElement.getElementsByTagName("Destination").item(0).getTextContent());
 					}
+					ftp.setSecurityType("FTPES");
 					this.FTPRepo.save(ftp);
 				}
 			}

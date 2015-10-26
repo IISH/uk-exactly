@@ -429,7 +429,7 @@ public class UIManager {
 		if (userName.isEmpty() || host.isEmpty() || password.isEmpty()) {
 			return "false";
 		}
-		FTPConnection ftp = new FTPConnection(host, userName, password, port, mode, destination,"FTPES");
+		FTPConnection ftp = new FTPConnection(host, userName, password, port, mode, destination, "FTPES");
 		return ftp.validateCon();
 
 	}
