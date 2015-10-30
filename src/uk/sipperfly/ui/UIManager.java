@@ -39,6 +39,7 @@ public class UIManager {
 	Exactly mainFrame;
 	FTPRepo FTPRepo;
 	CommonUtil commonUtil;
+	private String defaultTemplate = "";
 
 	/**
 	 * Constructor for UIManager.
@@ -479,7 +480,7 @@ public class UIManager {
 		Configurations configurations = this.configurationsRepo.getOneOrCreateOne();
 		List<Recipients> recipients = this.recipientsRepo.getAll();
 		FTP ftp = this.FTPRepo.getOneOrCreateOne();
-		this.commonUtil.createXMLExport(recipients, ftp, configurations, bagInfo, path);
+		this.commonUtil.createXMLExport(recipients, ftp, configurations, bagInfo, path, false);
 		return true;
 	}
 
@@ -515,20 +516,6 @@ public class UIManager {
 				}
 			}
 		}
-//		else {
-//			List l = this.mainFrame.bagInfo.getList();
-//			List<BagInfoEntry> newList = new ArrayList<BagInfoEntry>();
-//			for (Object e : l) {
-//				for (String s : allFields) {
-//					if (this.mainFrame.bagInfo.getJfieldTextLabel(e).equals(s)) {
-//						newList.add((BagInfoEntry) e);
-//					}
-//				}
-//			}			
-//			for(BagInfoEntry b: newList){
-//				this.mainFrame.bagInfo.removeItem(b);
-//			}
-//		}
 	}
 
 	/**
@@ -538,8 +525,16 @@ public class UIManager {
 	 * @return
 	 */
 	public String importXml(String path) {
-		String result = this.commonUtil.importXML(path);
-		if (result != "") {
+		this.mainFrame.jPanel11.setVisible(false);
+		if (this.defaultTemplate.equals("")) {
+			List<BagInfo> bagInfo = this.bagInfoRepo.getOneOrCreateOne();
+			Configurations configurations = this.configurationsRepo.getOneOrCreateOne();
+			List<Recipients> recipients = this.recipientsRepo.getAll();
+			FTP ftp = this.FTPRepo.getOneOrCreateOne();
+			this.defaultTemplate = this.commonUtil.createXMLExport(recipients, ftp, configurations, bagInfo, "", true);
+		}
+		String result = this.commonUtil.importXML(path, "");
+		if (!result.equals("")) {
 			this.mainFrame.bagInfo.resetEntryList();
 			this.mainFrame.email.resetEntryList();
 			this.setBagInfoFields();
@@ -553,9 +548,38 @@ public class UIManager {
 				this.mainFrame.hide.setVisible(false);
 				this.mainFrame.showTransfer.setVisible(false);
 				this.mainFrame.jPanel11.setVisible(true);
+				this.mainFrame.note.setVisible(true);
 			}
 			return result;
 		}
 		return "Invalid xml format";
+	}
+
+	public void resetDefaultTemplate() {
+		this.mainFrame.jPanel11.setVisible(false);
+		String result = this.commonUtil.importXML("", this.defaultTemplate);
+		if (!result.equals("")) {
+			this.mainFrame.bagInfo.resetEntryList();
+			this.mainFrame.email.resetEntryList();
+			this.setBagInfoFields();
+			this.setConfigurationFields();
+			this.setFtpFields();
+			this.setEmailFields();
+			List<BagInfo> bagInfo = this.bagInfoRepo.getOneOrCreateOne();
+			if (bagInfo.size() > 0) {
+				this.mainFrame.hideTransfer.setVisible(true);
+				this.mainFrame.show.setVisible(true);
+				this.mainFrame.hide.setVisible(false);
+				this.mainFrame.showTransfer.setVisible(false);
+				this.mainFrame.jPanel11.setVisible(true);
+				this.mainFrame.note.setVisible(true);
+			}
+		}
+	}
+
+	public void saveEmailNotification() {
+		Configurations configurations = this.configurationsRepo.getOneOrCreateOne();
+		configurations.setEmailNotifications(mainFrame.emailNotifications.isSelected());
+		this.configurationsRepo.save(configurations);
 	}
 }

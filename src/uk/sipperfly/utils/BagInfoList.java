@@ -56,6 +56,7 @@ public class BagInfoList extends JPanel {
 		addItem(theClone);
 		this.parent.jPanel1.revalidate();
 		this.parent.jPanel11.setVisible(false);
+		this.parent.note.setVisible(false);
 	}
 
 	/**
@@ -104,6 +105,12 @@ public class BagInfoList extends JPanel {
 		this.parent.jPanel11.revalidate();
 		this.parent.jPanel1.revalidate();
 		this.parent.jPanel11.setVisible(true);
+		this.parent.note.setVisible(true);
+		if (this.parent.jPanel11.getPreferredSize().height > 500) {
+			this.parent.addFieldsButton.setVisible(true);
+		}else{
+			this.parent.addFieldsButton.setVisible(false);
+		}
 	}
 
 	/**

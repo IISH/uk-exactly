@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -40,6 +42,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import uk.sipperfly.persistent.BagInfo;
@@ -351,7 +354,7 @@ public class CommonUtil {
 	 * @param bagInfo
 	 * @param path
 	 */
-	public void createXMLExport(List<Recipients> recipient, FTP ftp, Configurations config, List<BagInfo> bagInfo, String path) {
+	public String createXMLExport(List<Recipients> recipient, FTP ftp, Configurations config, List<BagInfo> bagInfo, String path, Boolean template) {
 		try {
 			char[] charArray = {'<', '>', '&', '"', '\\', '!', '#', '$', '%', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '=', '?', '@', '[', ']', '^', '`', '{', '|', '}', '~'};
 			String name = "Exactly_Configuration_" + System.currentTimeMillis() + ".xml";
@@ -487,13 +490,21 @@ public class CommonUtil {
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(path + File.separator + name));
-			transformer.transform(source, result);
+			if (template) {
+				StringWriter writer = new StringWriter();
+				transformer.transform(source, new StreamResult(writer));
+				String output = writer.getBuffer().toString();
+				return output;
+			} else {
+				StreamResult result = new StreamResult(new File(path + File.separator + name));
+				transformer.transform(source, result);
+			}
 		} catch (ParserConfigurationException ex) {
 			Logger.getLogger(CommonUtil.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (Exception ex) {
 			Logger.getLogger(CommonUtil.class.getName()).log(Level.SEVERE, null, ex);
 		}
+		return "XML exported";
 	}
 
 	/**
@@ -502,17 +513,21 @@ public class CommonUtil {
 	 * @param path input xml file location
 	 * @return message string whether import is successful or not
 	 */
-	public String importXML(String path) {
+	public String importXML(String path, String defaultTemplate) {
 		String message = "";
 		try {
-
-			String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w-]+\\.)+[\\w]+[\\w]$";
-			File fXmlFile = new File(path);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			dbFactory.setValidating(true);
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			dBuilder.setErrorHandler(new SimpleErrorHandler());
-			Document doc = dBuilder.parse(fXmlFile);
+			Document doc;
+			String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w-]+\\.)+[\\w]+[\\w]$";
+			if (!defaultTemplate.equals("")) {
+				doc = dBuilder.parse(new InputSource(new StringReader(defaultTemplate)));
+			} else {
+				File fXmlFile = new File(path);
+				doc = dBuilder.parse(fXmlFile);
+			}
 			doc.getDocumentElement().normalize();
 			NodeList nList = doc.getElementsByTagName("Metadata").item(0).getChildNodes();
 			this.bagInfoRepo.truncate();
@@ -576,7 +591,6 @@ public class CommonUtil {
 					this.FTPRepo.save(ftp);
 				}
 			}
-
 
 			NodeList confList = doc.getElementsByTagName("configurations");
 			this.configurationsRepo.truncate();
