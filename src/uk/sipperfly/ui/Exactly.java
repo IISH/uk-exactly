@@ -84,6 +84,7 @@ public class Exactly extends javax.swing.JFrame {
 		this.uIManager.setEmailFields();
 		this.uIManager.setFtpFields();
 		this.uIManager.setBagInfoFields();
+		this.uIManager.setTemplate();
 		ImageIcon img = new ImageIcon(Exactly.class.getClass().getResource("/uk/sipperfly/ui/resources/Exactly-logo.png"));
 		this.setIconImage(img.getImage());
 		String osName = System.getProperty("os.name").toLowerCase();
@@ -235,7 +236,7 @@ public class Exactly extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         currentTemplate = new javax.swing.JTextArea();
-        jButton6 = new javax.swing.JButton();
+        clearTempButton = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu4 = new javax.swing.JMenu();
         export = new javax.swing.JMenuItem();
@@ -1235,16 +1236,16 @@ public class Exactly extends javax.swing.JFrame {
         });
         jScrollPane4.setViewportView(currentTemplate);
 
-        jButton6.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        jButton6.setText("Clear Template");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        clearTempButton.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        clearTempButton.setText("Clear Template");
+        clearTempButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                clearTempButtonActionPerformed(evt);
             }
         });
-        jButton6.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+        clearTempButton.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                jButton6PropertyChange(evt);
+                clearTempButtonPropertyChange(evt);
             }
         });
 
@@ -1338,7 +1339,7 @@ public class Exactly extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton6, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(clearTempButton, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -1358,8 +1359,7 @@ public class Exactly extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(clearTempButton))
                     .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -1878,7 +1878,7 @@ public class Exactly extends javax.swing.JFrame {
 				String message = this.uIManager.importXml(file.getAbsolutePath().toString());
 				if (!message.equalsIgnoreCase("Invalid xml format")) {
 					this.currentTemplate.setText("Current Template: ".concat(file.getName()));
-					this.jButton6.setVisible(true);
+					this.clearTempButton.setVisible(true);
 				}
 				UpdateResult(message, 0);
 			} else {
@@ -1917,16 +1917,16 @@ public class Exactly extends javax.swing.JFrame {
 		caret.setUpdatePolicy(ALWAYS_UPDATE);
     }//GEN-LAST:event_currentTemplatePropertyChange
 
-    private void jButton6PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jButton6PropertyChange
-		this.jButton6.setVisible(false);
-    }//GEN-LAST:event_jButton6PropertyChange
+    private void clearTempButtonPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_clearTempButtonPropertyChange
+		this.clearTempButton.setVisible(false);
+    }//GEN-LAST:event_clearTempButtonPropertyChange
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void clearTempButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearTempButtonActionPerformed
 		this.uIManager.resetDefaultTemplate();
 		this.currentTemplate.setText("Current Template: None");
-		this.jButton6.setVisible(false);
+		this.clearTempButton.setVisible(false);
 		this.UpdateResult("Reset to default template.", 1);
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }//GEN-LAST:event_clearTempButtonActionPerformed
 
 	/**
 	 * Validates the folder string and verifies that an actual folder exists in the file system.
@@ -2059,7 +2059,8 @@ public class Exactly extends javax.swing.JFrame {
     private javax.swing.JButton chooseDestDir;
     private javax.swing.JButton chooseDir;
     private javax.swing.JButton clearLog;
-    private javax.swing.JTextArea currentTemplate;
+    public javax.swing.JButton clearTempButton;
+    public javax.swing.JTextArea currentTemplate;
     public javax.swing.JTextField destDirLocation;
     public javax.swing.JTextArea editCurrentStatus;
     public javax.swing.JTextField editInputDir;
@@ -2086,7 +2087,6 @@ public class Exactly extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;

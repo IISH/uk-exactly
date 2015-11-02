@@ -6,6 +6,7 @@
     <class>uk.sipperfly.persistent.Recipients</class>
     <class>uk.sipperfly.persistent.BagInfo</class>
     <class>uk.sipperfly.persistent.FTP</class>
+    <class>uk.sipperfly.persistent.DefaultTemplate</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:derby:ukexactly;create=true"/>
       <property name="javax.persistence.jdbc.user" value="transfertools"/>

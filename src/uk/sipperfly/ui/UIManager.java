@@ -10,6 +10,7 @@
  */
 package uk.sipperfly.ui;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +19,12 @@ import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import uk.sipperfly.persistent.BagInfo;
 import uk.sipperfly.persistent.Configurations;
+import uk.sipperfly.persistent.DefaultTemplate;
 import uk.sipperfly.persistent.FTP;
 import uk.sipperfly.persistent.Recipients;
 import uk.sipperfly.repository.BagInfoRepo;
 import uk.sipperfly.repository.ConfigurationsRepo;
+import uk.sipperfly.repository.DefaultTemplateRepo;
 import uk.sipperfly.repository.RecipientsRepo;
 import uk.sipperfly.repository.FTPRepo;
 import uk.sipperfly.utils.BagInfoEntry;
@@ -39,7 +42,7 @@ public class UIManager {
 	Exactly mainFrame;
 	FTPRepo FTPRepo;
 	CommonUtil commonUtil;
-	private String defaultTemplate = "";
+	DefaultTemplateRepo defaultTemplateRepo;
 
 	/**
 	 * Constructor for UIManager.
@@ -53,6 +56,19 @@ public class UIManager {
 		this.bagInfoRepo = new BagInfoRepo();
 		this.mainFrame = mainFrame;
 		this.commonUtil = new CommonUtil();
+		this.defaultTemplateRepo = new DefaultTemplateRepo();
+	}
+
+	/**
+	 * Set email settings to UI.
+	 *
+	 */
+	public void setTemplate() {
+		DefaultTemplate template = this.defaultTemplateRepo.getOneOrCreateOne();
+		if (!template.getCurrentTemplate().equals("")) {
+			mainFrame.currentTemplate.setText("Current Template: ".concat(template.getCurrentTemplate()));
+			mainFrame.clearTempButton.setVisible(true);
+		}
 	}
 
 	/**
@@ -526,12 +542,20 @@ public class UIManager {
 	 */
 	public String importXml(String path) {
 		this.mainFrame.jPanel11.setVisible(false);
-		if (this.defaultTemplate.equals("")) {
+		DefaultTemplate defaultTemplate = this.defaultTemplateRepo.getOneOrCreateOne();
+		if (defaultTemplate.getTemplate().equals("")) {
+			File file = new File(path);
 			List<BagInfo> bagInfo = this.bagInfoRepo.getOneOrCreateOne();
 			Configurations configurations = this.configurationsRepo.getOneOrCreateOne();
 			List<Recipients> recipients = this.recipientsRepo.getAll();
 			FTP ftp = this.FTPRepo.getOneOrCreateOne();
-			this.defaultTemplate = this.commonUtil.createXMLExport(recipients, ftp, configurations, bagInfo, "", true);
+			defaultTemplate.setCurrentTemplate(file.getName());
+			defaultTemplate.setTemplate(this.commonUtil.createXMLExport(recipients, ftp, configurations, bagInfo, "", true));
+			this.defaultTemplateRepo.save(defaultTemplate);
+		} else {
+			File file = new File(path);
+			defaultTemplate.setCurrentTemplate(file.getName());
+			this.defaultTemplateRepo.save(defaultTemplate);
 		}
 		String result = this.commonUtil.importXML(path, "");
 		if (!result.equals("")) {
@@ -541,6 +565,11 @@ public class UIManager {
 			this.setConfigurationFields();
 			this.setFtpFields();
 			this.setEmailFields();
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException ex) {
+				Logger.getLogger(UIManager.class.getName()).log(Level.SEVERE, null, ex);
+			}
 			List<BagInfo> bagInfo = this.bagInfoRepo.getOneOrCreateOne();
 			if (bagInfo.size() > 0) {
 				this.mainFrame.hideTransfer.setVisible(true);
@@ -557,7 +586,8 @@ public class UIManager {
 
 	public void resetDefaultTemplate() {
 		this.mainFrame.jPanel11.setVisible(false);
-		String result = this.commonUtil.importXML("", this.defaultTemplate);
+		DefaultTemplate defaultTemplate = this.defaultTemplateRepo.getOneOrCreateOne();
+		String result = this.commonUtil.importXML("", defaultTemplate.getTemplate());
 		if (!result.equals("")) {
 			this.mainFrame.bagInfo.resetEntryList();
 			this.mainFrame.email.resetEntryList();
@@ -565,16 +595,14 @@ public class UIManager {
 			this.setConfigurationFields();
 			this.setFtpFields();
 			this.setEmailFields();
-			List<BagInfo> bagInfo = this.bagInfoRepo.getOneOrCreateOne();
-			if (bagInfo.size() > 0) {
-				this.mainFrame.hideTransfer.setVisible(true);
-				this.mainFrame.show.setVisible(true);
-				this.mainFrame.hide.setVisible(false);
-				this.mainFrame.showTransfer.setVisible(false);
-				this.mainFrame.jPanel11.setVisible(true);
-				this.mainFrame.note.setVisible(true);
-			}
+			this.mainFrame.jPanel11.setVisible(false);
+			this.mainFrame.hideTransfer.setVisible(false);
+			this.mainFrame.show.setVisible(false);
+			this.mainFrame.hide.setVisible(true);
+			this.mainFrame.showTransfer.setVisible(true);
+			this.mainFrame.note.setVisible(false);
 		}
+		this.defaultTemplateRepo.truncate();
 	}
 
 	public void saveEmailNotification() {
