@@ -17,6 +17,7 @@
 <li>java-mail-1.4.4</li>
 <li>derbyrun</li>
 <li>org-apache-commons-lang</li>
+<li>ftp4j/li>
 </ul>
 <b>Contributors:</b>
 <ul>
