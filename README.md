@@ -19,7 +19,7 @@
 <li>org-apache-commons-lang</li>
 <li>ftp4j</li>
 </ul>
-<b>[License and Copyright](documentation/license.md)</b></br>
+<b>[License and Copyright](license.md)</b></br>
 <b>Contributors:</b>
 <ul>
 <li>Nouman Tayyab <a href="mailto:nouman@avpreserve.com">nouman@avpreserve.com</a></li>
