@@ -896,7 +896,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	 */
 	public void createXML(String payload, String date, String size) {
 		try {
-			char[] charArray = {'<', '>', '&', '"', '\\', '!', '#', '$', '%', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '=', '?', '@', '[', ']', '^', '`', '{', '|', '}', '~'};
+			char[] charArray = {'<', '>', '&', '"', '\\', '!', '#', '$', '%', '\'', '(', ')', '*', '.',':','+', ',',  '/', ';', '=', '?', '@', '[', ']', '^', '`', '{', '|', '}', '~'};
 			//		List<char[]> asList = Arrays.asList(charArray);
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();

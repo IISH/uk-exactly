@@ -356,7 +356,7 @@ public class CommonUtil {
 	 */
 	public String createXMLExport(List<Recipients> recipient, FTP ftp, Configurations config, List<BagInfo> bagInfo, String path, Boolean template) {
 		try {
-			char[] charArray = {'<', '>', '&', '"', '\\', '!', '#', '$', '%', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '=', '?', '@', '[', ']', '^', '`', '{', '|', '}', '~'};
+			char[] charArray = {'<', '>', '&', '"', '\\', '!', '#', '$', '%', '\'','.', '(', ')', '*', '+', ',', '/',':', ';', '=', '?', '@', '[', ']', '^', '`', '{', '|', '}', '~'};
 			String name = "Exactly_Configuration_" + System.currentTimeMillis() + ".xml";
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
