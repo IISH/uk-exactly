@@ -17,7 +17,9 @@
 <li>java-mail-1.4.4</li>
 <li>derbyrun</li>
 <li>org-apache-commons-lang</li>
+<li>ftp4j</li>
 </ul>
+<b>[License and Copyright](license.md)</b></br>
 <b>Contributors:</b>
 <ul>
 <li>Nouman Tayyab <a href="mailto:nouman@avpreserve.com">nouman@avpreserve.com</a></li>
