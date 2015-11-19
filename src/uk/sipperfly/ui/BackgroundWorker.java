@@ -6,7 +6,9 @@
  * Requires: JDK 1.7 or higher
  * Description: This tool transfers digital files to the UK Exactly
  * Support: info@avpreserve.com
- * Copyright Audio Visual Preservation Solutions, Inc
+ * License: Apache 2.0
+ * Copyright: University of Kentucky (http://www.uky.edu). All Rights Reserved
+ *
  */
 package uk.sipperfly.ui;
 
@@ -896,7 +898,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	 */
 	public void createXML(String payload, String date, String size) {
 		try {
-			char[] charArray = {'<', '>', '&', '"', '\\', '!', '#', '$', '%', '\'', '(', ')', '*', '.',':','+', ',',  '/', ';', '=', '?', '@', '[', ']', '^', '`', '{', '|', '}', '~'};
+			char[] charArray = {'<', '>', '&', '"', '\\', '!', '#', '$', '%', '\'', '(', ')', '*', '.', ':', '+', ',', '/', ';', '=', '?', '@', '[', ']', '^', '`', '{', '|', '}', '~'};
 			//		List<char[]> asList = Arrays.asList(charArray);
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -941,8 +943,9 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 					}
 				}
 				Element firstname = doc.createElement(stringBuilder.toString().replace(" ", "-"));
-				firstname.appendChild(doc.createTextNode(b.getValue().trim()));
+				firstname.appendChild(doc.createTextNode(b.getValue().trim()));		
 				rootElement.appendChild(firstname);
+
 			}
 			// write the content into xml file
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();

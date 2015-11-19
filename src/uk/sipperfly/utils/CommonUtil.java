@@ -6,7 +6,9 @@
  * Requires: JDK 1.7 or higher
  * Description: This tool transfers digital files to the UK Exactly
  * Support: info@avpreserve.com
- * Copyright Audio Visual Preservation Solutions, Inc
+ * License: Apache 2.0
+ * Copyright: University of Kentucky (http://www.uky.edu). All Rights Reserved
+ *
  */
 package uk.sipperfly.utils;
 
@@ -38,6 +40,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.apache.commons.io.FileUtils;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -356,7 +359,7 @@ public class CommonUtil {
 	 */
 	public String createXMLExport(List<Recipients> recipient, FTP ftp, Configurations config, List<BagInfo> bagInfo, String path, Boolean template) {
 		try {
-			char[] charArray = {'<', '>', '&', '"', '\\', '!', '#', '$', '%', '\'','.', '(', ')', '*', '+', ',', '/',':', ';', '=', '?', '@', '[', ']', '^', '`', '{', '|', '}', '~'};
+			char[] charArray = {'<', '>', '&', '"', '\\', '!', '#', '$', '%', '\'', '(', ')', '*','+', ',', '/',':', ';', '=', '?', '@', '[', ']', '^', '`', '{', '|', '}', '~'};
 			String name = "Exactly_Configuration_" + System.currentTimeMillis() + ".xml";
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -384,6 +387,9 @@ public class CommonUtil {
 				}
 				Element firstname = doc.createElement(stringBuilder.toString().replace(" ", "-"));
 				firstname.appendChild(doc.createTextNode(b.getValue()));
+				Attr attr = doc.createAttribute("label");
+				attr.setValue(Normalizer.normalize(b.getLabel(), Normalizer.Form.NFD).toString());
+				firstname.setAttributeNode(attr);
 				bagElement.appendChild(firstname);
 			}
 			//////emails
@@ -537,7 +543,11 @@ public class CommonUtil {
 					Element eElement = (Element) nNode;
 					BagInfo bagInfo = new BagInfo();
 					if (!eElement.getNodeName().isEmpty()) {
-						bagInfo.setLabel(eElement.getNodeName().replace("-", " "));
+						if(eElement.getAttribute("label").isEmpty()){
+							bagInfo.setLabel(eElement.getNodeName().replace("-", " "));
+						}else{
+							bagInfo.setLabel(eElement.getAttribute("label"));
+						}
 						bagInfo.setValue(eElement.getTextContent().replaceAll("\\s+", " ").trim());
 						this.bagInfoRepo.save(bagInfo);
 					}

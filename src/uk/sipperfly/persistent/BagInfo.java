@@ -6,12 +6,13 @@
  * Requires: JDK 1.7 or higher
  * Description: This tool transfers digital files to the UK Exactly
  * Support: info@avpreserve.com
- * Copyright Audio Visual Preservation Solutions, Inc
+ * License: Apache 2.0
+ * Copyright: University of Kentucky (http://www.uky.edu). All Rights Reserved
+ *
  */
 package uk.sipperfly.persistent;
 
 import java.io.Serializable;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

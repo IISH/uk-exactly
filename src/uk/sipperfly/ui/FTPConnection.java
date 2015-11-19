@@ -6,23 +6,18 @@
  * Requires: JDK 1.7 or higher
  * Description: This tool transfers digital files to the UK Exactly
  * Support: info@avpreserve.com
- * Copyright Audio Visual Preservation Solutions, Inc
+ * License: Apache 2.0
+ * Copyright: University of Kentucky (http://www.uky.edu). All Rights Reserved
+ *
  */
 package uk.sipperfly.ui;
 
 import it.sauronsoftware.ftp4j.FTPAbortedException;
 import java.io.File;
-import java.io.FileInputStream;
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPReply;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-//import org.apache.commons.net.ftp.FTPClient;
-//import org.apache.commons.net.ftp.FTPSClient;
 import it.sauronsoftware.ftp4j.FTPClient;
 import it.sauronsoftware.ftp4j.FTPDataTransferException;
 import it.sauronsoftware.ftp4j.FTPException;

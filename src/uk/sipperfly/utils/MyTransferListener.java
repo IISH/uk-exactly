@@ -1,11 +1,14 @@
-/*
- * UK Exactly
- * Author: Nouman Tayyab
- * Version: 1.0
+/* 
+ * Exactly
+ * Author: Nouman Tayyab (nouman@avpreserve.com)
+ * Author: Rimsha Khalid (rimsha@avpreserve.com)
+ * Version: 0.1
  * Requires: JDK 1.7 or higher
- * Description: This tool transfers digital files to the AVPreserve
+ * Description: This tool transfers digital files to the UK Exactly
  * Support: info@avpreserve.com
- * Copyright 2015 AVPreserve
+ * License: Apache 2.0
+ * Copyright: University of Kentucky (http://www.uky.edu). All Rights Reserved
+ *
  */
 package uk.sipperfly.utils;
 

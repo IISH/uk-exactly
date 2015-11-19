@@ -6,7 +6,9 @@
  * Requires: JDK 1.7 or higher
  * Description: This tool transfers digital files to the UK Exactly
  * Support: info@avpreserve.com
- * Copyright Audio Visual Preservation Solutions, Inc
+ * License: Apache 2.0
+ * Copyright: University of Kentucky (http://www.uky.edu). All Rights Reserved
+ *
  */
 package uk.sipperfly.ui;
 
@@ -1198,7 +1200,7 @@ public class Exactly extends javax.swing.JFrame {
 
         jScrollPane2.setViewportView(jPanel7);
 
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/uk/sipperfly/ui/resources/Exactly.png"))); // NOI18N
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/uk/sipperfly/ui/resources/Exactly1.png"))); // NOI18N
 
         currentTemplate.setBackground(new java.awt.Color(240, 240, 240));
         currentTemplate.setColumns(20);
@@ -1362,7 +1364,7 @@ public class Exactly extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel3)
-                        .addGap(63, 63, 63))))
+                        .addGap(82, 82, 82))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
