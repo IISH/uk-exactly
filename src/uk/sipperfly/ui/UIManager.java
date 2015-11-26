@@ -8,7 +8,6 @@
  * Support: info@avpreserve.com
  * License: Apache 2.0
  * Copyright: University of Kentucky (http://www.uky.edu). All Rights Reserved
- *
  */
 package uk.sipperfly.ui;
 
@@ -44,6 +43,7 @@ public class UIManager {
 	FTPRepo FTPRepo;
 	CommonUtil commonUtil;
 	DefaultTemplateRepo defaultTemplateRepo;
+	private int[] bag_size;
 
 	/**
 	 * Constructor for UIManager.
@@ -58,6 +58,7 @@ public class UIManager {
 		this.mainFrame = mainFrame;
 		this.commonUtil = new CommonUtil();
 		this.defaultTemplateRepo = new DefaultTemplateRepo();
+//		this.bag_size = new int[0];
 	}
 
 	/**
@@ -124,7 +125,7 @@ public class UIManager {
 	 * Set bag info to UI.
 	 *
 	 */
-	public void setBagInfoFields() {
+	public void setBagInfoFields(boolean condition) {
 		int counter = 0;
 		List<BagInfo> bagInfo = this.bagInfoRepo.getOneOrCreateOne();
 		int size = bagInfo.size();
@@ -133,12 +134,17 @@ public class UIManager {
 			try {
 				this.mainFrame.bagInfo.editEntry(b.getLabel(), b.getValue(), String.valueOf(b.getId()));
 				int x = b.getId().intValue();
+
 				this.mainFrame.idList[counter] = x;
 			} catch (NullPointerException p) {
 				Logger.getLogger(UIManager.class.getName()).log(Level.SEVERE, null, p);
 				System.out.println(p);
 			}
 			counter++;
+		}
+		if (condition) {
+			this.bag_size = new int[size];
+			this.bag_size = this.mainFrame.idList;
 		}
 	}
 
@@ -562,17 +568,23 @@ public class UIManager {
 		if (!result.equals("")) {
 			this.mainFrame.bagInfo.resetEntryList();
 			this.mainFrame.email.resetEntryList();
-			this.setBagInfoFields();
+			this.setBagInfoFields(false);
 			this.setConfigurationFields();
 			this.setFtpFields();
 			this.setEmailFields();
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 			} catch (InterruptedException ex) {
 				Logger.getLogger(UIManager.class.getName()).log(Level.SEVERE, null, ex);
 			}
 			List<BagInfo> bagInfo = this.bagInfoRepo.getOneOrCreateOne();
+			this.bag_size = new int[bagInfo.size()];
 			if (bagInfo.size() > 0) {
+				int counter = 0;
+				for (BagInfo bag : bagInfo) {
+					this.bag_size[counter] = bag.getId().intValue();
+					counter++;
+				}
 				this.mainFrame.hideTransfer.setVisible(true);
 				this.mainFrame.show.setVisible(true);
 				this.mainFrame.hide.setVisible(false);
@@ -592,7 +604,7 @@ public class UIManager {
 		if (!result.equals("")) {
 			this.mainFrame.bagInfo.resetEntryList();
 			this.mainFrame.email.resetEntryList();
-			this.setBagInfoFields();
+			this.setBagInfoFields(false);
 			this.setConfigurationFields();
 			this.setFtpFields();
 			this.setEmailFields();
@@ -604,11 +616,79 @@ public class UIManager {
 			this.mainFrame.note.setVisible(false);
 		}
 		this.defaultTemplateRepo.truncate();
+//		this.bag_size = new int[0];
 	}
 
 	public void saveEmailNotification() {
 		Configurations configurations = this.configurationsRepo.getOneOrCreateOne();
 		configurations.setEmailNotifications(mainFrame.emailNotifications.isSelected());
 		this.configurationsRepo.save(configurations);
+	}
+
+	public void resetMetadataValues(boolean condition) {
+		List<BagInfo> bagInfo = this.bagInfoRepo.getOneOrCreateOne();
+		for (BagInfo b : bagInfo) {
+			b.setValue("");
+			this.bagInfoRepo.save(b);
+		}
+		if (condition) {
+			this.mainFrame.bagInfo.resetEntryList();
+			this.setBagInfoFields(false);
+//			try {
+//				Thread.sleep(500);
+//			} catch (InterruptedException ex) {
+//				Logger.getLogger(UIManager.class.getName()).log(Level.SEVERE, null, ex);
+//			}
+			List<BagInfo> bagInfo1 = this.bagInfoRepo.getOneOrCreateOne();
+			if (bagInfo1.size() > 0) {
+				this.mainFrame.hideTransfer.setVisible(true);
+				this.mainFrame.show.setVisible(true);
+				this.mainFrame.hide.setVisible(false);
+				this.mainFrame.showTransfer.setVisible(false);
+				this.mainFrame.jPanel11.setVisible(true);
+				this.mainFrame.note.setVisible(true);
+			}
+		}
+	}
+
+	public void resetMetadata(boolean condition) {
+		if (this.bag_size.length > 0) {
+			int[] ids = this.bag_size;
+			String myIds = "(";
+			for (int i = 0; i < ids.length; i++) {
+				if (i == ids.length - 1) {
+					myIds = myIds + ids[i] + ")";
+				} else {
+					myIds = myIds + ids[i] + ",";
+				}
+			}
+			this.bagInfoRepo.deleteRecordById(myIds);
+			if (condition) {
+				this.mainFrame.bagInfo.resetEntryList();
+				this.setBagInfoFields(false);
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException ex) {
+					Logger.getLogger(UIManager.class.getName()).log(Level.SEVERE, null, ex);
+				}
+				List<BagInfo> bagInfo = this.bagInfoRepo.getOneOrCreateOne();
+				if (bagInfo.size() > 0) {
+					this.mainFrame.hideTransfer.setVisible(true);
+					this.mainFrame.show.setVisible(true);
+					this.mainFrame.hide.setVisible(false);
+					this.mainFrame.showTransfer.setVisible(false);
+					this.mainFrame.jPanel11.setVisible(true);
+					this.mainFrame.note.setVisible(true);
+				}
+			}
+		}
+	}
+
+	public boolean isDefaultTemplate() {
+		DefaultTemplate defaultTemplate = this.defaultTemplateRepo.getOneOrCreateOne();
+		if (defaultTemplate.getTemplate().equals("")) {
+			return true;
+		}
+		return false;
 	}
 }

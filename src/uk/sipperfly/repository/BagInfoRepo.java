@@ -62,9 +62,9 @@ public class BagInfoRepo {
 
 	/**
 	 * delete bagInfo
-	 * 
+	 *
 	 * @param bagInfo
-	 * @return 
+	 * @return
 	 */
 	public boolean delete(BagInfo bagInfo) {
 		this.entityManager.getTransaction().begin();
@@ -92,9 +92,9 @@ public class BagInfoRepo {
 
 	/**
 	 * delete record by id
-	 * 
+	 *
 	 * @param delId
-	 * @return 
+	 * @return
 	 */
 	public boolean deleteRecord(int delId) {
 		String selectQuery = "SELECT bi FROM BagInfo bi";
@@ -109,9 +109,9 @@ public class BagInfoRepo {
 
 	/**
 	 * get record by id
-	 * 
+	 *
 	 * @param id
-	 * @return 
+	 * @return
 	 */
 	public BagInfo getOneRecord(int id) {
 		BagInfo bagInfo = null;
@@ -133,5 +133,19 @@ public class BagInfoRepo {
 		em.getTransaction().begin();
 		em.createNativeQuery("truncate table BagInfo").executeUpdate();
 		em.getTransaction().commit();
+	}
+
+	/**
+	 *
+	 * @param delId
+	 * @return
+	 */
+	public boolean deleteRecordById(String delId) {
+		String selectQuery = "SELECT bi FROM BagInfo bi WHERE bi.id NOT IN " + delId;
+		List<BagInfo> bagsToRemove = entityManager.createQuery(selectQuery).getResultList();
+		for (BagInfo m : bagsToRemove) {
+			this.delete(m);
+		}
+		return true;
 	}
 }

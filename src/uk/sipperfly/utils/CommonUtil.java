@@ -343,6 +343,9 @@ public class CommonUtil {
 		File sourceDir = new File(source + File.separator + "data");
 		File target = new File(destination);
 		FileUtils.copyDirectory(sourceDir, target);
+		FileUtils.copyFile(new File(source + File.separator + "bag-info.txt"), new File(target + File.separator + "bag-info.txt"));
+		FileUtils.copyFile(new File(source + File.separator + "bag-info.xml"), new File(target + File.separator + "bag-info.xml"));
+		FileUtils.copyFile(new File(source + File.separator + "bag-info.xml"), new File(target + File.separator + "bag-info.csv"));
 		FileUtils.deleteDirectory(workDir);
 		File dir = new File(target.getParent() + File.separator + folder);
 		target.renameTo(dir);
@@ -359,7 +362,7 @@ public class CommonUtil {
 	 */
 	public String createXMLExport(List<Recipients> recipient, FTP ftp, Configurations config, List<BagInfo> bagInfo, String path, Boolean template) {
 		try {
-			char[] charArray = {'<', '>', '&', '"', '\\', '!', '#', '$', '%', '\'', '(', ')', '*','+', ',', '/',':', ';', '=', '?', '@', '[', ']', '^', '`', '{', '|', '}', '~'};
+			char[] charArray = {'<', '>', '&', '"', '\\', '!', '#', '$', '%', '\'', '(', ')', '*', '+', ',', '/', ':', ';', '=', '?', '@', '[', ']', '^', '`', '{', '|', '}', '~'};
 			String name = "Exactly_Configuration_" + System.currentTimeMillis() + ".xml";
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -543,12 +546,16 @@ public class CommonUtil {
 					Element eElement = (Element) nNode;
 					BagInfo bagInfo = new BagInfo();
 					if (!eElement.getNodeName().isEmpty()) {
-						if(eElement.getAttribute("label").isEmpty()){
+						if (eElement.getAttribute("label").isEmpty()) {
 							bagInfo.setLabel(eElement.getNodeName().replace("-", " "));
-						}else{
+						} else {
 							bagInfo.setLabel(eElement.getAttribute("label"));
 						}
-						bagInfo.setValue(eElement.getTextContent().replaceAll("\\s+", " ").trim());
+						if (!defaultTemplate.equals("")) {
+							bagInfo.setValue("");
+						} else {
+							bagInfo.setValue(eElement.getTextContent().replaceAll("\\s+", " ").trim());
+						}
 						this.bagInfoRepo.save(bagInfo);
 					}
 				}

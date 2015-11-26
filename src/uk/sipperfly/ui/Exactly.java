@@ -85,7 +85,7 @@ public class Exactly extends javax.swing.JFrame {
 		this.uIManager.setConfigurationFields();
 		this.uIManager.setEmailFields();
 		this.uIManager.setFtpFields();
-		this.uIManager.setBagInfoFields();
+		this.uIManager.setBagInfoFields(true);
 		this.uIManager.setTemplate();
 		ImageIcon img = new ImageIcon(Exactly.class.getClass().getResource("/uk/sipperfly/ui/resources/Exactly-logo.png"));
 		this.setIconImage(img.getImage());
@@ -268,6 +268,11 @@ public class Exactly extends javax.swing.JFrame {
         setTitle("Exactly 0.1");
         setBackground(new java.awt.Color(255, 255, 255));
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
         addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 formPropertyChange(evt);
@@ -1427,9 +1432,9 @@ public class Exactly extends javax.swing.JFrame {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
 		// TODO add your handling code here:
 		this.jTabbedPane1.setVisible(true);
-		if(this.jTabbedPane1.getSelectedIndex() == 0){
+		if (this.jTabbedPane1.getSelectedIndex() == 0) {
 			this.jPanel6.setVisible(true);
-		}else{
+		} else {
 			this.jPanel6.setVisible(false);
 		}
 		this.jScrollPane2.setVisible(false);
@@ -1551,9 +1556,9 @@ public class Exactly extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
 		// TODO add your handling code here:
 		this.jTabbedPane1.setVisible(true);
-		if(this.jTabbedPane1.getSelectedIndex() == 0){
+		if (this.jTabbedPane1.getSelectedIndex() == 0) {
 			this.jPanel6.setVisible(true);
-		}else{
+		} else {
 			this.jPanel6.setVisible(false);
 		}
 		this.jPanel9.setVisible(false);
@@ -1620,9 +1625,9 @@ public class Exactly extends javax.swing.JFrame {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
 		// TODO add your handling code here:
 		this.jTabbedPane1.setVisible(true);
-		if(this.jTabbedPane1.getSelectedIndex() == 0){
+		if (this.jTabbedPane1.getSelectedIndex() == 0) {
 			this.jPanel6.setVisible(true);
-		}else{
+		} else {
 			this.jPanel6.setVisible(false);
 		}
 		this.jPanel9.setVisible(false);
@@ -1654,7 +1659,12 @@ public class Exactly extends javax.swing.JFrame {
     }//GEN-LAST:event_formPropertyChange
 
     private void quitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitActionPerformed
-		this.dispose();
+		if (this.uIManager.isDefaultTemplate()) {
+			this.uIManager.resetMetadataValues(false);
+		} else {
+			this.uIManager.resetMetadata(false);
+		}
+		System.exit(0);
     }//GEN-LAST:event_quitActionPerformed
 
     private void activeModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_activeModeActionPerformed
@@ -1784,6 +1794,7 @@ public class Exactly extends javax.swing.JFrame {
 		defaults.put("ProgressBar[Enabled+Finished].foregroundPainter", new MyPainter(new Color(0, 102, 0)));
 		this.jProgressBar2.putClientProperty("Nimbus.Overrides.InheritDefaults", Boolean.TRUE);
 		this.jProgressBar2.putClientProperty("Nimbus.Overrides", defaults);
+
 		try {
 			bgw = new BackgroundWorker(validDirs, this, 1);
 			bgw.execute();
@@ -1984,6 +1995,14 @@ public class Exactly extends javax.swing.JFrame {
 		}
     }//GEN-LAST:event_jTabbedPane1MouseClicked
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+		if (this.uIManager.isDefaultTemplate()) {
+			this.uIManager.resetMetadataValues(false);
+		} else {
+			this.uIManager.resetMetadata(false);
+		}
+    }//GEN-LAST:event_formWindowClosing
+
 	/**
 	 * Validates the folder string and verifies that an actual folder exists in the file system.
 	 *
@@ -2101,7 +2120,6 @@ public class Exactly extends javax.swing.JFrame {
 				new Exactly().setVisible(true);
 			}
 		});
-
 
 	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
