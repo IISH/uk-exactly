@@ -38,8 +38,12 @@ import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 
 import java.security.NoSuchAlgorithmException;
 import java.text.Normalizer;
@@ -104,6 +108,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	private int ftpProcess = 0;
 	private String unbagDestination = "";
 	private UIManager uIManager;
+	String content = "";
 
 	/**
 	 * Constructor for BackgroundWorker
@@ -131,7 +136,6 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		this.destFolder = this.parent.destDirLocation.getText();
 		this.process = process;
 		this.uIManager = new UIManager(parent);
-
 	}
 
 	/**
@@ -326,7 +330,11 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 					this.parent.UpdateResult("Uploading data on FTP ...", 0);
 					Logger.getLogger(GACOM).log(Level.INFO, "Uploading data on FTP ...");
 					UploadFilesFTP();
-					this.parent.jProgressBar2.setValue(this.parent.totalFiles + 2);
+//					if (this.parent.serializeBag.isSelected()) {
+//						this.parent.jProgressBar2.setValue(this.parent.totalFiles + 2);
+//					} else {
+//						this.parent.jProgressBar2.setValue(this.parent.totalFiles + 8);
+//					}
 				}
 				if (this.isCancelled()) {
 					Logger.getLogger(GACOM).log(Level.INFO, "Canceling send notification email(s).");
@@ -342,12 +350,12 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 						return -1;
 					}
 					if (this.parent.ftpDelivery.isSelected()) {
-						this.parent.jProgressBar2.setValue(this.parent.totalFiles + 3);
+						this.parent.jProgressBar2.setValue(this.parent.totalFiles + 9);
 					} else {
 						this.parent.jProgressBar2.setValue(this.parent.totalFiles + 1);
 					}
 				}
-
+				this.parent.jProgressBar2.setValue(this.parent.jProgressBar2.getMaximum());
 				Thread.sleep(2000);
 				// update UI
 				this.parent.list.resetEntryList();
@@ -440,7 +448,6 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		if (this.uIManager.isDefaultTemplate()) {
 			this.uIManager.resetMetadataValues(true);
 		} else {
-			System.out.println("egurtuetur");
 			this.uIManager.resetMetadata(true);
 		}
 	}
@@ -552,8 +559,9 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	 *
 	 * @see* http://www.digitalpreservation.gov/documents/bagitspec.pdf
 	 */
-	public void BagFolder() throws NoSuchAlgorithmException {
-
+	public void BagFolder() throws NoSuchAlgorithmException, FileNotFoundException, IOException {
+//		String content;
+		Charset charset;
 		// bag the folder
 		BagFactory bagFactory = new BagFactory();
 
@@ -626,6 +634,9 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 //				this.parent.UpdateResult("Bag creation failed. Contact support.");
 //				Logger.getLogger(GACOM).log(Level.SEVERE, "Bag creation failed. Contact support.");
 //			}
+			Path path = Paths.get(this.target + File.separator + "manifest-md5.txt");
+			charset = StandardCharsets.UTF_8;
+			this.content = new String(Files.readAllBytes(path), charset);
 			if (this.parent.serializeBag.isSelected()) {
 				this.parent.UpdateResult("Serializing bag...", 0);
 				Logger.getLogger(GACOM).log(Level.INFO, "Serializing bag...");
@@ -635,14 +646,11 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 				zipUtil.setBagName(this.parent.bagNameField.getText());
 				zipUtil.zip();
 				FileUtils.deleteDirectory(this.target.toFile());
-//				ZipWriter zipWriter = new ZipWriter(bagFactory);
-//				zipWriter.write(bag, bag.getFile());
-
-//				this.parent.tranferredFiles += 5;
-//				this.parent.UpdateProgressBar(this.parent.tranferredFiles);
 			}
 		} catch (IOException ex) {
 			Logger.getLogger(GACOM).log(Level.SEVERE, "Error closing the bag", ex);
+			File newManifest = new File(this.target.toString() + File.separator + "manifest-md5.txt");
+			Files.write(newManifest.toPath(), this.content.getBytes(StandardCharsets.UTF_8));
 		}
 		if (this.parent.totalFiles > this.parent.tranferredFiles) {
 			this.parent.UpdateProgressBar(this.parent.totalFiles);
@@ -663,15 +671,16 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 //			extra = 10;
 //		}
 		int totalFiles = this.parent.totalFiles;
-
 		Logger.getLogger(GACOM).log(Level.INFO, "Max Progress bar count: ".concat(Integer.toString(this.parent.totalFiles)));
-		if (this.parent.ftpDelivery.isSelected()) {
+		if (this.parent.ftpDelivery.isSelected() && this.parent.serializeBag.isSelected()) {
 			totalFiles = totalFiles + 2;
+		} else {
+			int newCount = totalFiles + 8;
+			totalFiles = totalFiles + newCount;
 		}
 		if (this.config.getEmailNotifications()) {
 			totalFiles = totalFiles + 1;
 		}
-
 		this.parent.jProgressBar2.setMaximum(totalFiles);
 		for (String source : this.sources) {
 			File sourceFile = new File(source);
@@ -723,7 +732,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		int port = this.ftp.getPort();
 		String mode = this.ftp.getMode();
 		String location = this.target.toString();
-		FTPConnection ftpCon = new FTPConnection(host, userName, password, port, mode, destination, securityType);
+		FTPConnection ftpCon = new FTPConnection(this.parent, host, userName, password, port, mode, destination, securityType);
 		if (this.parent.serializeBag.isSelected()) {
 			location = location.concat(".zip");
 			if (ftpCon.uploadFiles(location, "zip")) {
@@ -762,7 +771,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		if (userName == null) {
 			return "false";
 		}
-		FTPConnection ftpCon = new FTPConnection(host, userName, password, port, mode, destination, securityType);
+		FTPConnection ftpCon = new FTPConnection(this.parent, host, userName, password, port, mode, destination, securityType);
 		return ftpCon.validateCon();
 	}
 
@@ -817,9 +826,17 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 			int i = 0;
 			while (i != 3) {
 				line = in.readLine();
-				message = message + line + "\n";
+				String[] text = line.split(":");
+				message = message + text[0].replace("-", " ") + ": " + text[1] + "\n";
 				i = i + 1;
 			}
+			BagInfoRepo bagInfoRepo = new BagInfoRepo();
+			List<BagInfo> bagInfo = bagInfoRepo.getOneOrCreateOne();
+
+			for (BagInfo b : bagInfo) {
+				message = message + b.getLabel() + ": " + b.getValue() + "\n";
+			}
+			
 			if (this.ftpProcess == 1) {
 				msg = "FTP transfer failed.";
 			}
@@ -857,6 +874,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 						+ "\n" + message;
 				ms.SetMessage(from, toEmail, "Exactly Digital Transfer", whole_message);
 			}
+			String result;
 			String name = this.target.getFileName().toString();
 			Date dNow = new Date();
 			SimpleDateFormat ft = new SimpleDateFormat("yyyyMMdd");
@@ -868,7 +886,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 				Logger.getLogger(BackgroundWorker.class.getName()).log(Level.SEVERE, null, ex);
 			}
 			ms.AttachFile(this.target.toString() + File.separator + myFile);
-			String result = ms.Send();
+			result = ms.Send();
 			this.parent.UpdateResult(result, 0);
 			file.delete();
 			Logger.getLogger(GACOM).log(Level.INFO, "Mail send result: {0}", result);

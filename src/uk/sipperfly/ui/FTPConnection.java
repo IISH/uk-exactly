@@ -44,9 +44,10 @@ public class FTPConnection {
 	public String mode;
 	public String destination;
 	public String securityType = "FTPES";
+	private final Exactly parent;
 
-	public FTPConnection(String host, String username, String password, int port, String mode, String destination, String securityType) {
-		if (host == null || host.length() < 1 || username == null || username.length() < 1
+	public FTPConnection(Exactly parent, String host, String username, String password, int port, String mode, String destination, String securityType) {
+		if (parent == null || host == null || host.length() < 1 || username == null || username.length() < 1
 				|| password == null || password.length() < 1
 				|| mode == null || mode.length() < 1) {
 			throw new IllegalArgumentException();
@@ -58,6 +59,7 @@ public class FTPConnection {
 		this.mode = mode;
 		this.destination = destination;
 		this.securityType = securityType;
+		this.parent = parent;
 	}
 
 	/**
@@ -103,8 +105,6 @@ public class FTPConnection {
 				Logger.getLogger(GACOM).log(Level.INFO, "Directory created: ".concat(src.getName()));
 				ftp.changeDirectory(src.getName());
 				for (File file : src.listFiles()) {
-//					Logger.getLogger(GACOM).log(Level.INFO, "About to upload the file: ".concat(file.getAbsolutePath()));
-//					System.out.println("About to upload the file: " + file);
 					upload(file, ftp, src.getName());
 				}
 				ftp.changeDirectoryUp();
@@ -123,6 +123,8 @@ public class FTPConnection {
 				try {
 					ftp.setType(FTPClient.TYPE_BINARY);
 					ftp.upload(new java.io.File(src.getAbsolutePath()), new MyTransferListener(src.getAbsolutePath()));
+					this.parent.uploadedFiles = this.parent.uploadedFiles + 1;
+					this.parent.UpdateProgressBar(this.parent.uploadedFiles);
 				} catch (SocketTimeoutException e) {
 					Logger.getLogger(GACOM).log(Level.SEVERE, "Socket Timeout Exception ", e.getCause());
 					ftp = this.connect(false);
@@ -136,8 +138,6 @@ public class FTPConnection {
 					ftp.setType(FTPClient.TYPE_BINARY);
 					ftp.upload(new java.io.File(src.getAbsolutePath()));
 				}
-//				System.out.println("UPLOADED a file to: " + src.getAbsolutePath());
-//				Logger.getLogger(GACOM).log(Level.SEVERE, "UPLOADED a file to: ".concat(src.getAbsolutePath()));
 			} catch (IllegalStateException ex) {
 				Logger.getLogger(FTPConnection.class.getName()).log(Level.SEVERE, null, ex);
 				return false;
@@ -199,16 +199,16 @@ public class FTPConnection {
 
 	private FTPClient connect(boolean onlyValidate) throws IllegalStateException, IOException, FTPIllegalReplyException, FTPException {
 		TrustManager[] trustManager = new TrustManager[]{new X509TrustManager() {
-			public X509Certificate[] getAcceptedIssuers() {
-				return null;
-			}
+				public X509Certificate[] getAcceptedIssuers() {
+					return null;
+				}
 
-			public void checkClientTrusted(X509Certificate[] certs, String authType) {
-			}
+				public void checkClientTrusted(X509Certificate[] certs, String authType) {
+				}
 
-			public void checkServerTrusted(X509Certificate[] certs, String authType) {
-			}
-		}};
+				public void checkServerTrusted(X509Certificate[] certs, String authType) {
+				}
+			}};
 		SSLContext sslContext = null;
 		try {
 			sslContext = SSLContext.getInstance("SSL");
@@ -236,8 +236,9 @@ public class FTPConnection {
 			ftp.setPassive(false);
 		}
 		Logger.getLogger(GACOM).log(Level.INFO, "Connected to server.");
-		if(this.destination.isEmpty())
-			this.destination ="/";
+		if (this.destination.isEmpty()) {
+			this.destination = "/";
+		}
 		ftp.changeDirectory(this.destination);
 
 		return ftp;

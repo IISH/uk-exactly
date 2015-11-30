@@ -43,7 +43,7 @@ public class UIManager {
 	FTPRepo FTPRepo;
 	CommonUtil commonUtil;
 	DefaultTemplateRepo defaultTemplateRepo;
-	private int[] bag_size;
+	
 
 	/**
 	 * Constructor for UIManager.
@@ -58,7 +58,7 @@ public class UIManager {
 		this.mainFrame = mainFrame;
 		this.commonUtil = new CommonUtil();
 		this.defaultTemplateRepo = new DefaultTemplateRepo();
-//		this.bag_size = new int[0];
+//		this.bag_size = new int[1];
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class UIManager {
 		} else {
 			mainFrame.noneProtocol.setSelected(true);
 		}
-//		mainFrame.filterField.setText(configurations.getFilters());
+		
 		mainFrame.emailNotifications.setSelected(configurations.getEmailNotifications());
 		mainFrame.editInputDir1.setText(configurations.getDropLocation());
 	}
@@ -134,7 +134,6 @@ public class UIManager {
 			try {
 				this.mainFrame.bagInfo.editEntry(b.getLabel(), b.getValue(), String.valueOf(b.getId()));
 				int x = b.getId().intValue();
-
 				this.mainFrame.idList[counter] = x;
 			} catch (NullPointerException p) {
 				Logger.getLogger(UIManager.class.getName()).log(Level.SEVERE, null, p);
@@ -143,8 +142,8 @@ public class UIManager {
 			counter++;
 		}
 		if (condition) {
-			this.bag_size = new int[size];
-			this.bag_size = this.mainFrame.idList;
+			this.mainFrame.bag_size = new int[size];
+			System.arraycopy(this.mainFrame.idList, 0, this.mainFrame.bag_size, 0, size);
 		}
 	}
 
@@ -453,7 +452,7 @@ public class UIManager {
 		if (userName.isEmpty() || host.isEmpty() || password.isEmpty()) {
 			return "false";
 		}
-		FTPConnection ftp = new FTPConnection(host, userName, password, port, mode, destination, "FTPES");
+		FTPConnection ftp = new FTPConnection(this.mainFrame, host, userName, password, port, mode, destination, "FTPES");
 		return ftp.validateCon();
 
 	}
@@ -578,11 +577,11 @@ public class UIManager {
 				Logger.getLogger(UIManager.class.getName()).log(Level.SEVERE, null, ex);
 			}
 			List<BagInfo> bagInfo = this.bagInfoRepo.getOneOrCreateOne();
-			this.bag_size = new int[bagInfo.size()];
+			this.mainFrame.bag_size = new int[bagInfo.size()];
 			if (bagInfo.size() > 0) {
 				int counter = 0;
 				for (BagInfo bag : bagInfo) {
-					this.bag_size[counter] = bag.getId().intValue();
+					this.mainFrame.bag_size[counter] = bag.getId().intValue();
 					counter++;
 				}
 				this.mainFrame.hideTransfer.setVisible(true);
@@ -616,7 +615,6 @@ public class UIManager {
 			this.mainFrame.note.setVisible(false);
 		}
 		this.defaultTemplateRepo.truncate();
-//		this.bag_size = new int[0];
 	}
 
 	public void saveEmailNotification() {
@@ -652,8 +650,9 @@ public class UIManager {
 	}
 
 	public void resetMetadata(boolean condition) {
-		if (this.bag_size.length > 0) {
-			int[] ids = this.bag_size;
+		if (this.mainFrame.bag_size.length > 0) {
+			int[] ids = new int[this.mainFrame.bag_size.length];
+			System.arraycopy(this.mainFrame.bag_size, 0, ids, 0, this.mainFrame.bag_size.length);
 			String myIds = "(";
 			for (int i = 0; i < ids.length; i++) {
 				if (i == ids.length - 1) {
@@ -662,15 +661,16 @@ public class UIManager {
 					myIds = myIds + ids[i] + ",";
 				}
 			}
+			
 			this.bagInfoRepo.deleteRecordById(myIds);
 			if (condition) {
 				this.mainFrame.bagInfo.resetEntryList();
 				this.setBagInfoFields(false);
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException ex) {
-					Logger.getLogger(UIManager.class.getName()).log(Level.SEVERE, null, ex);
-				}
+//				try {
+//					Thread.sleep(1000);
+//				} catch (InterruptedException ex) {
+//					Logger.getLogger(UIManager.class.getName()).log(Level.SEVERE, null, ex);
+//				}
 				List<BagInfo> bagInfo = this.bagInfoRepo.getOneOrCreateOne();
 				if (bagInfo.size() > 0) {
 					this.mainFrame.hideTransfer.setVisible(true);

@@ -62,6 +62,7 @@ public class Exactly extends javax.swing.JFrame {
 	private UIManager uIManager;
 	public int totalFiles = 0;
 	public int tranferredFiles = 0;
+	public int uploadedFiles = 0;
 	public int nameCounter = 3;
 	public int fieldCounter = 0;
 	public EntryList list;
@@ -70,6 +71,7 @@ public class Exactly extends javax.swing.JFrame {
 	public int[] idList;
 	public int[] emailIdList;
 	private int MetadataReminder = 0;
+	public int[] bag_size;
 
 	/**
 	 * Creates new form MainFrame
@@ -1775,6 +1777,7 @@ public class Exactly extends javax.swing.JFrame {
 				}
 			}
 		}
+		this.uploadedFiles = this.totalFiles;
 
 		size = commonUtil.convertBytestoGB(size);
 
