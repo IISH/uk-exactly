@@ -19,6 +19,8 @@
 <li>org-apache-commons-lang</li>
 <li>ftp4j</li>
 </ul>
+<p>License Apache 2.0</p>
+<p>Copyright (c) University of Kentucky (http://www.uky.edu). All Rights Reserved.</p>
 <b>[License and Copyright](license.md)</b></br>
 <b>Contributors:</b>
 <ul>
