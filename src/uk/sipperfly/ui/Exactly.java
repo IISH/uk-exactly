@@ -13,6 +13,8 @@
 package uk.sipperfly.ui;
 
 import java.awt.Color;
+import java.awt.Desktop;
+import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -43,6 +45,8 @@ import java.awt.Toolkit;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 /**
  * This is the main UI class for the tool.
@@ -91,6 +95,7 @@ public class Exactly extends javax.swing.JFrame {
 		this.uIManager.setTemplate();
 		ImageIcon img = new ImageIcon(Exactly.class.getClass().getResource("/uk/sipperfly/ui/resources/Exactly-logo.png"));
 		this.setIconImage(img.getImage());
+		this.about.setIconImage(img.getImage());
 		String osName = System.getProperty("os.name").toLowerCase();
 		boolean isMacOs = osName.startsWith("mac os x");
 		if (isMacOs) {
@@ -149,6 +154,22 @@ public class Exactly extends javax.swing.JFrame {
     private void initComponents() {
 
         jInternalFrame1 = new javax.swing.JInternalFrame();
+        about = new javax.swing.JDialog();
+        aboutPanel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        aboutArea = new javax.swing.JEditorPane();
+        jButton6 = new javax.swing.JButton();
+        jButton10 = new javax.swing.JButton();
+        jButton12 = new javax.swing.JButton();
+        authorPanel = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        authorArea = new javax.swing.JEditorPane();
+        contactPanel = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        contactArea = new javax.swing.JEditorPane();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -246,6 +267,7 @@ public class Exactly extends javax.swing.JFrame {
         jMenu4 = new javax.swing.JMenu();
         export = new javax.swing.JMenuItem();
         importXml = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         quit = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         emailNotification = new javax.swing.JMenuItem();
@@ -264,6 +286,215 @@ public class Exactly extends javax.swing.JFrame {
         jInternalFrame1Layout.setVerticalGroup(
             jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 4, Short.MAX_VALUE)
+        );
+
+        about.setTitle("About");
+        about.setMinimumSize(new java.awt.Dimension(700, 535));
+        about.setName("About"); // NOI18N
+        about.setPreferredSize(new java.awt.Dimension(700, 535));
+        about.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                aboutPropertyChange(evt);
+            }
+        });
+
+        jLabel1.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel1.setFont(new java.awt.Font("Verdana", 1, 13)); // NOI18N
+        jLabel1.setText("Description");
+        jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
+
+        aboutArea.setMinimumSize(new java.awt.Dimension(106, 150));
+        aboutArea.setPreferredSize(new java.awt.Dimension(106, 150));
+        aboutArea.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
+            public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
+                aboutAreaHyperlinkUpdate(evt);
+            }
+        });
+        aboutArea.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                aboutAreaPropertyChange(evt);
+            }
+        });
+        jScrollPane6.setViewportView(aboutArea);
+
+        javax.swing.GroupLayout aboutPanelLayout = new javax.swing.GroupLayout(aboutPanel);
+        aboutPanel.setLayout(aboutPanelLayout);
+        aboutPanelLayout.setHorizontalGroup(
+            aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, aboutPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 484, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        aboutPanelLayout.setVerticalGroup(
+            aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(aboutPanelLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane6)
+                .addContainerGap())
+        );
+
+        jButton6.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+        jButton6.setText("About");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
+        jButton10.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        jButton10.setText("Author and License");
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
+
+        jButton12.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+        jButton12.setText("Contact");
+        jButton12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton12ActionPerformed(evt);
+            }
+        });
+
+        authorPanel.setMinimumSize(new java.awt.Dimension(517, 445));
+        authorPanel.setPreferredSize(new java.awt.Dimension(517, 445));
+        authorPanel.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                authorPanelPropertyChange(evt);
+            }
+        });
+
+        jLabel4.setFont(new java.awt.Font("Verdana", 1, 13)); // NOI18N
+        jLabel4.setText("Author and License");
+        jLabel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        authorArea.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        authorArea.setMinimumSize(new java.awt.Dimension(106, 150));
+        authorArea.setPreferredSize(new java.awt.Dimension(106, 150));
+        authorArea.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
+            public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
+                authorAreaHyperlinkUpdate(evt);
+            }
+        });
+        authorArea.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                authorAreaPropertyChange(evt);
+            }
+        });
+        jScrollPane7.setViewportView(authorArea);
+
+        javax.swing.GroupLayout authorPanelLayout = new javax.swing.GroupLayout(authorPanel);
+        authorPanel.setLayout(authorPanelLayout);
+        authorPanelLayout.setHorizontalGroup(
+            authorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(authorPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(authorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jScrollPane7)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        authorPanelLayout.setVerticalGroup(
+            authorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(authorPanelLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        contactPanel.setMinimumSize(new java.awt.Dimension(517, 445));
+        contactPanel.setPreferredSize(new java.awt.Dimension(517, 445));
+        contactPanel.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                contactPanelPropertyChange(evt);
+            }
+        });
+
+        jLabel5.setFont(new java.awt.Font("Verdana", 1, 13)); // NOI18N
+        jLabel5.setText("Contact");
+        jLabel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        contactArea.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        contactArea.setMinimumSize(new java.awt.Dimension(500, 418));
+        contactArea.setPreferredSize(new java.awt.Dimension(500, 22));
+        contactArea.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
+            public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
+                contactAreaHyperlinkUpdate(evt);
+            }
+        });
+        contactArea.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                contactAreaPropertyChange(evt);
+            }
+        });
+        jScrollPane8.setViewportView(contactArea);
+
+        javax.swing.GroupLayout contactPanelLayout = new javax.swing.GroupLayout(contactPanel);
+        contactPanel.setLayout(contactPanelLayout);
+        contactPanelLayout.setHorizontalGroup(
+            contactPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(contactPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(contactPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
+                    .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        contactPanelLayout.setVerticalGroup(
+            contactPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(contactPanelLayout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane8)
+                .addGap(23, 23, 23))
+        );
+
+        javax.swing.GroupLayout aboutLayout = new javax.swing.GroupLayout(about.getContentPane());
+        about.getContentPane().setLayout(aboutLayout);
+        aboutLayout.setHorizontalGroup(
+            aboutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(aboutLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(aboutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(contactPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(authorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(aboutPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(23, Short.MAX_VALUE))
+        );
+        aboutLayout.setVerticalGroup(
+            aboutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, aboutLayout.createSequentialGroup()
+                .addGroup(aboutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, aboutLayout.createSequentialGroup()
+                        .addGap(53, 53, 53)
+                        .addComponent(jButton6)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton12)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, aboutLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(aboutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(contactPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+                            .addComponent(authorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+                            .addComponent(aboutPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(52, 52, 52))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -1296,6 +1527,14 @@ public class Exactly extends javax.swing.JFrame {
         });
         jMenu4.add(importXml);
 
+        jMenuItem1.setText("About");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem1);
+
         quit.setText("Quit");
         quit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2006,6 +2245,126 @@ public class Exactly extends javax.swing.JFrame {
 		}
     }//GEN-LAST:event_formWindowClosing
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+		this.about.setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void authorPanelPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_authorPanelPropertyChange
+		this.authorPanel.setVisible(false);
+    }//GEN-LAST:event_authorPanelPropertyChange
+
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+		this.authorPanel.setVisible(true);
+		this.aboutPanel.setVisible(false);
+		this.contactPanel.setVisible(false);
+    }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+		this.authorPanel.setVisible(false);
+		this.aboutPanel.setVisible(true);
+		this.contactPanel.setVisible(false);
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
+		this.authorPanel.setVisible(false);
+		this.aboutPanel.setVisible(false);
+		this.contactPanel.setVisible(true);
+    }//GEN-LAST:event_jButton12ActionPerformed
+
+    private void contactPanelPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_contactPanelPropertyChange
+		this.contactPanel.setVisible(false);
+    }//GEN-LAST:event_contactPanelPropertyChange
+
+    private void contactAreaPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_contactAreaPropertyChange
+		this.contactArea.setEditable(false);
+		this.contactArea.setContentType("text/html");
+		try {
+			this.contactArea.setPage("https://github.com/avpreserve/uk-exactly/issues");
+		} catch (IOException ex) {
+			Logger.getLogger(Exactly.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		this.contactArea.setText("<html>Please post issues and feature requests at <a href='https://github.com/avpreserve/uk-exactly/issues'> https://github.com/avpreserve/uk-exactly/issues</a>.<br><br> Please send questions, comments or feedback to info@avpreserve.com.</html>");
+    }//GEN-LAST:event_contactAreaPropertyChange
+
+    private void aboutPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_aboutPropertyChange
+		this.about.setModal(true);
+    }//GEN-LAST:event_aboutPropertyChange
+
+    private void authorAreaPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_authorAreaPropertyChange
+		this.authorArea.setEditable(false);
+		this.authorArea.setContentType("text/html");
+		try {
+			this.authorArea.setPage("http://www.apache.org/licenses/LICENSE-2.0");
+		} catch (IOException ex) {
+			Logger.getLogger(Exactly.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		this.authorArea.setText("<html><b>Exactly Copyright and License</b><br><br>"
+				+ "Copyright (C) 2015-2016 University of Kentucky Libraries.<br><br>"
+				+ "Exactly is licensed under an Apache License."
+				+ "<p>Exactly is a simple and easy to use application for remotely and safely transferring any born-digital material to the archive. Exactly is a user-friendly application that utilizes the BagIt File Packaging Format (an Internet Engineering Task-Force standard, developed by the Library of Congress and the California Digital Library, with current support from George Washington University and the University of Maryland), supports FTP transfer, as well as standard network transfers, and integrates into desktop-based file sharing workflows such as Dropbox or Google Drive. Additionally, Exactly allows the archive to create customized metadata templates for the donor to fill out before submission. With structured metadata coming into the archive with the digital object, the accessioning process will be a quick importing activity. Exactly can send email notifications when files have been delivered to the archive. Exactly is addressing one of the Nunn Center’s greatest workflow challenges, but also one of the greatest challenges facing any archive working with born-digital material.</p>"
+				+ "<br><b>Exactly License</b><br>"
+				+ "<br>Apache License, Version 2<br>"
+				+ "<br>Copyright (c) 2015-2016 University of Kentucky<br>"
+				+ "<p>Licensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License.</p>"
+				+ "You may obtain a copy of the License at<br><br>"
+				+ "<a href='http://www.apache.org/licenses/LICENSE-2.0'>http://www.apache.org/licenses/LICENSE-2.0</a><br>"
+				+ "<p>Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. </p>"
+				+ "See the License for the specific language governing permissions and limitations under the License."
+				+ "</html>");
+    }//GEN-LAST:event_authorAreaPropertyChange
+
+    private void aboutAreaPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_aboutAreaPropertyChange
+		this.aboutArea.setEditable(false);
+		this.aboutArea.setContentType("text/html");
+		try {
+			this.aboutArea.setPage("https://github.com/avpreserve/uk-exactly");
+			this.aboutArea.setPage("https://www.avpreserve.com/tools");
+		} catch (IOException ex) {
+			Logger.getLogger(Exactly.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		this.aboutArea.setText("<html>Exactly 0.1<br>"
+				+ "<p>Exactly was developed by the Louie B. Nunn Center at the University of Kentucky Libraries and AVPreserve and can be found at <a href='https://www.avpreserve.com/tools'>www.avpreserve.com/tools</a>.</p><br>"
+				+ "The GitHub repository for Exactly can be found at <a href='https://github.com/avpreserve/uk-exactly'>https://github.com/avpreserve/uk-exactly</a>.<br><br>"
+				+ "<p>Exactly is a simple and easy to use application for remotely and safely transferring any born-digital material to the archive. Exactly is a user-friendly application that utilizes the BagIt File Packaging Format, supports FTP transfer, as well as standard network transfers, and integrates into desktop-based file sharing workflows such as Dropbox or Google Drive. Additionally, Exactly allows the archive to create preset configurations, as well as customized metadata templates for the donor to fill out before submission. With structured metadata coming into the archive with the digital object, the accessioning process can be much more efficiently. Exactly can send email notifications when files have been delivered to the archive. Exactly is addressing one of the Nunn Center’s greatest workflow challenges, but also one of the greatest challenges facing any archive working with born-digital material.</p>"
+				+ "</html>");
+    }//GEN-LAST:event_aboutAreaPropertyChange
+
+    private void aboutAreaHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_aboutAreaHyperlinkUpdate
+		if (HyperlinkEvent.EventType.ACTIVATED.equals(evt.getEventType())) {
+			System.out.println(evt.getURL());
+			Desktop desktop = Desktop.getDesktop();
+			try {
+				desktop.browse(evt.getURL().toURI());
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+    }//GEN-LAST:event_aboutAreaHyperlinkUpdate
+
+    private void authorAreaHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_authorAreaHyperlinkUpdate
+		if (HyperlinkEvent.EventType.ACTIVATED.equals(evt.getEventType())) {
+			System.out.println(evt.getURL());
+			Desktop desktop = Desktop.getDesktop();
+			try {
+				desktop.browse(evt.getURL().toURI());
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+    }//GEN-LAST:event_authorAreaHyperlinkUpdate
+
+    private void contactAreaHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_contactAreaHyperlinkUpdate
+		if (HyperlinkEvent.EventType.ACTIVATED.equals(evt.getEventType())) {
+			System.out.println(evt.getURL());
+			Desktop desktop = Desktop.getDesktop();
+			try {
+				desktop.browse(evt.getURL().toURI());
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+    }//GEN-LAST:event_contactAreaHyperlinkUpdate
+
 	/**
 	 * Validates the folder string and verifies that an actual folder exists in the file system.
 	 *
@@ -2126,8 +2485,13 @@ public class Exactly extends javax.swing.JFrame {
 
 	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JDialog about;
+    private javax.swing.JEditorPane aboutArea;
+    private javax.swing.JPanel aboutPanel;
     public javax.swing.JRadioButton activeMode;
     public javax.swing.JButton addFieldsButton;
+    private javax.swing.JEditorPane authorArea;
+    private javax.swing.JPanel authorPanel;
     public javax.swing.JTextField bagNameField;
     public javax.swing.JButton btnCancel;
     private javax.swing.JButton btnDirChoose;
@@ -2137,6 +2501,8 @@ public class Exactly extends javax.swing.JFrame {
     private javax.swing.JButton chooseDir;
     private javax.swing.JButton clearLog;
     public javax.swing.JButton clearTempButton;
+    private javax.swing.JEditorPane contactArea;
+    private javax.swing.JPanel contactPanel;
     public javax.swing.JTextArea currentTemplate;
     public javax.swing.JTextField destDirLocation;
     public javax.swing.JTextArea editCurrentStatus;
@@ -2159,15 +2525,19 @@ public class Exactly extends javax.swing.JFrame {
     private javax.swing.JMenuItem importXml;
     public javax.swing.JTextField inputLocationDir;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
+    private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
     private javax.swing.JInternalFrame jInternalFrame1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
@@ -2182,6 +2552,7 @@ public class Exactly extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel36;
     private javax.swing.JLabel jLabel39;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel40;
     private javax.swing.JLabel jLabel41;
     private javax.swing.JLabel jLabel42;
@@ -2189,12 +2560,14 @@ public class Exactly extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel47;
     private javax.swing.JLabel jLabel48;
     private javax.swing.JLabel jLabel49;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     public javax.swing.JPanel jPanel1;
     public javax.swing.JPanel jPanel10;
     public javax.swing.JPanel jPanel11;
@@ -2211,6 +2584,9 @@ public class Exactly extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     public javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JTabbedPane jTabbedPane1;
     public javax.swing.JTextField mailServerField;
     public javax.swing.JCheckBox noneProtocol;
