@@ -240,6 +240,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 				if (this.validateBagName()) {
 					this.parent.UpdateResult("Folder already existed in destination with this title. Please change the title.", 0);
 					Logger.getLogger(GACOM).log(Level.SEVERE, "Folder already existed in destination with this title. Please change the title.");
+					this.parent.btnTransferFiles.setEnabled(true);
 					return -1;
 				}
 				this.parent.UpdateResult("Verifying Transfer...", 1);
@@ -248,6 +249,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 					if (!ValidateCredentials()) {
 						this.parent.UpdateResult("Credentials not valid. Please update Email Settings.", 0);
 						Logger.getLogger(GACOM).log(Level.SEVERE, "Credentials not valid. Please update Email settings.");
+						this.parent.btnTransferFiles.setEnabled(true);
 						return -1;
 					}
 				}
@@ -256,12 +258,14 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 				if (this.parent.editInputDir1.getText() == null || this.parent.editInputDir1.getText().isEmpty()) {
 					this.parent.UpdateResult("Please select Transfer destination.", 0);
 					Logger.getLogger(GACOM).log(Level.SEVERE, "Please select Transfer destination.");
+					this.parent.btnTransferFiles.setEnabled(true);
 					return -1;
 				}
 				// validate bag name.
 				if (this.parent.bagNameField.getText() == null || this.parent.bagNameField.getText().isEmpty()) {
 					this.parent.UpdateResult("Please provide Transfer name.", 0);
 					Logger.getLogger(GACOM).log(Level.SEVERE, "Please provide Transfer name.");
+					this.parent.btnTransferFiles.setEnabled(true);
 					return -1;
 				}
 				if (this.config.getEmailNotifications()) {
@@ -270,6 +274,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 					if (recipients.size() < 1) {
 						this.parent.UpdateResult("Please add at least one recipient.", 0);
 						Logger.getLogger(GACOM).log(Level.SEVERE, "Please add at least one recipient.");
+						this.parent.btnTransferFiles.setEnabled(true);
 						return -1;
 					}
 				}
@@ -278,6 +283,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 					if (!(result.equals("FTPES") || result.equals("FTP"))) {
 						this.parent.UpdateResult("Credentials not valid. Please update FTP Settings.", 0);
 						Logger.getLogger(GACOM).log(Level.SEVERE, "Credentials not valid. Please update FTP settings.");
+						this.parent.btnTransferFiles.setEnabled(true);
 						return -1;
 					}
 				}
@@ -317,6 +323,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 					if (!(result.equals("FTPES") || result.equals("FTP"))) {
 						this.parent.UpdateResult("Credentials not valid. Please update FTP Settings.", 0);
 						Logger.getLogger(GACOM).log(Level.SEVERE, "Credentials not valid. Please update FTP settings.");
+						this.parent.btnTransferFiles.setEnabled(true);
 						return -1;
 
 					}

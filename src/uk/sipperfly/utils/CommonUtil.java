@@ -342,10 +342,13 @@ public class CommonUtil {
 		File workDir = new File(source);
 		File sourceDir = new File(source + File.separator + "data");
 		File target = new File(destination);
+		File metadata = new File(destination + File.separator + folder + "_metadata");
 		FileUtils.copyDirectory(sourceDir, target);
-		FileUtils.copyFile(new File(source + File.separator + "bag-info.txt"), new File(target + File.separator + "bag-info.txt"));
-		FileUtils.copyFile(new File(source + File.separator + "bag-info.xml"), new File(target + File.separator + "bag-info.xml"));
-		FileUtils.copyFile(new File(source + File.separator + "bag-info.xml"), new File(target + File.separator + "bag-info.csv"));
+		FileUtils.copyFile(new File(source + File.separator + "bag-info.txt"), new File(metadata + File.separator + "bag-info.txt"));
+		FileUtils.copyFile(new File(source + File.separator + "bag-info.xml"), new File(metadata + File.separator + "bag-info.xml"));
+		FileUtils.copyFile(new File(source + File.separator + "bag-info.xml"), new File(metadata + File.separator + "bag-info.csv"));
+		FileUtils.copyFile(new File(source + File.separator + "manifest-md5.txt"), new File(metadata + File.separator + "manifest-md5.txt"));
+		FileUtils.copyFile(new File(source + File.separator + "TransferComplete.txt"), new File(metadata + File.separator + "TransferComplete.txt"));
 		FileUtils.deleteDirectory(workDir);
 		File dir = new File(target.getParent() + File.separator + folder);
 		target.renameTo(dir);
@@ -657,5 +660,4 @@ public class CommonUtil {
 		}
 		return message;
 	}
-	
 }
