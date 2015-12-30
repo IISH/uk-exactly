@@ -14,7 +14,7 @@ package uk.sipperfly.ui;
 
 import java.awt.Color;
 import java.awt.Desktop;
-import java.awt.Dimension;
+import java.awt.Dialog;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -42,11 +42,13 @@ import uk.sipperfly.utils.EntryList;
 import uk.sipperfly.utils.MyPainter;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import javax.swing.JOptionPane;
+import javax.swing.WindowConstants;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 
 /**
  * This is the main UI class for the tool.
@@ -76,6 +78,7 @@ public class Exactly extends javax.swing.JFrame {
 	public int[] emailIdList;
 	private int MetadataReminder = 0;
 	public int[] bag_size;
+	public int metadateUpdated = 0;
 
 	/**
 	 * Creates new form MainFrame
@@ -170,6 +173,11 @@ public class Exactly extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jScrollPane8 = new javax.swing.JScrollPane();
         contactArea = new javax.swing.JEditorPane();
+        warning = new javax.swing.JDialog();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jButton13 = new javax.swing.JButton();
+        jButton14 = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -494,6 +502,68 @@ public class Exactly extends javax.swing.JFrame {
                             .addComponent(authorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
                             .addComponent(aboutPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(52, 52, 52))
+        );
+
+        warning.setTitle("Warning");
+        warning.setMinimumSize(new java.awt.Dimension(450, 175));
+        warning.setPreferredSize(new java.awt.Dimension(450, 175));
+        warning.setResizable(false);
+
+        jLabel8.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        jLabel8.setText("No metadata values have been changed from the previous transfer.");
+
+        jLabel9.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        jLabel9.setText(" Are you sure that you want to proceed?");
+
+        jButton13.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+        jButton13.setText("No");
+        jButton13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton13ActionPerformed(evt);
+            }
+        });
+
+        jButton14.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+        jButton14.setText("Yes");
+        jButton14.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton14ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout warningLayout = new javax.swing.GroupLayout(warning.getContentPane());
+        warning.getContentPane().setLayout(warningLayout);
+        warningLayout.setHorizontalGroup(
+            warningLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(warningLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(warningLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(warningLayout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, warningLayout.createSequentialGroup()
+                        .addGap(0, 1, Short.MAX_VALUE)
+                        .addComponent(jLabel8)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, warningLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton14)
+                .addGap(12, 12, 12))
+        );
+        warningLayout.setVerticalGroup(
+            warningLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(warningLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(warningLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton13)
+                    .addComponent(jButton14))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -1899,11 +1969,11 @@ public class Exactly extends javax.swing.JFrame {
     }//GEN-LAST:event_formPropertyChange
 
     private void quitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitActionPerformed
-		if (this.uIManager.isDefaultTemplate()) {
-			this.uIManager.resetMetadataValues(false);
-		} else {
-			this.uIManager.resetMetadata(false);
-		}
+//		if (this.uIManager.isDefaultTemplate()) {
+//			this.uIManager.resetMetadataValues(false);
+//		} else {
+//			this.uIManager.resetMetadata(false);
+//		}
 		System.exit(0);
     }//GEN-LAST:event_quitActionPerformed
 
@@ -1976,8 +2046,7 @@ public class Exactly extends javax.swing.JFrame {
 			UpdateResult("Save Metadata before starting Transfer.", 1);
 			return;
 		}
-		this.btnTransferFiles.setEnabled(false);
-		this.btnCancel.setVisible(true);
+
 		if (!this.setDropLocation()) {
 			this.btnTransferFiles.setEnabled(true);
 			this.btnCancel.setVisible(false);
@@ -1985,7 +2054,6 @@ public class Exactly extends javax.swing.JFrame {
 		}
 		CommonUtil commonUtil = new CommonUtil();
 		Boolean isSelected = false;
-		List<String> validDirs = new ArrayList<String>();
 		List<String> directories = new ArrayList<String>();
 		directories = this.uIManager.getInputDirectories();
 		directories.add(editInputDir.getText());
@@ -2010,39 +2078,25 @@ public class Exactly extends javax.swing.JFrame {
 						size = size + FileUtils.sizeOfDirectory(f);
 						this.totalFiles = this.totalFiles + commonUtil.countFilesInDirectory(f, config.getFilters());
 					}
-					validDirs.add(directory);
-
 				}
 			}
 		}
 		this.uploadedFiles = this.totalFiles;
-
 		size = commonUtil.convertBytestoGB(size);
 
 		if (size > 200) {
 			UpdateResult("Directories size exceed from 200 GB.", 1);
-			this.btnCancel.setVisible(false);
 			return;
 		}
+
 		if (!isSelected) {
 			UpdateResult("Must choose an input folder.", 1);
-			this.btnCancel.setVisible(false);
 			return;
 		}
-
-		UIDefaults defaults = new UIDefaults();
-		defaults.put("ProgressBar[Enabled].foregroundPainter", new MyPainter(new Color(0, 102, 0)));
-		defaults.put("ProgressBar[Enabled+Finished].foregroundPainter", new MyPainter(new Color(0, 102, 0)));
-		this.jProgressBar2.putClientProperty("Nimbus.Overrides.InheritDefaults", Boolean.TRUE);
-		this.jProgressBar2.putClientProperty("Nimbus.Overrides", defaults);
-
-		try {
-			bgw = new BackgroundWorker(validDirs, this, 1);
-			bgw.execute();
-		} catch (IOException ex) {
-			this.btnCancel.setVisible(false);
-			this.btnTransferFiles.setEnabled(true);
-			Logger.getLogger(GACOM).log(Level.SEVERE, null, ex);
+		if (this.metadateUpdated == 0) {
+			this.warning.setVisible(true);
+		} else {
+			this.jButton14ActionPerformed(evt);
 		}
     }//GEN-LAST:event_btnTransferFilesActionPerformed
 
@@ -2119,6 +2173,7 @@ public class Exactly extends javax.swing.JFrame {
 		if (this.uIManager.validateBageInfo()) {
 			if (this.uIManager.saveBagInfo()) {
 				UpdateResult("Metadata saved successfully.", 0);
+				this.metadateUpdated = 1;
 				return;
 			} else {
 				UpdateResult("Something went wrong. Please try agian.", 0);
@@ -2236,11 +2291,11 @@ public class Exactly extends javax.swing.JFrame {
     }//GEN-LAST:event_jTabbedPane1MouseClicked
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-		if (this.uIManager.isDefaultTemplate()) {
-			this.uIManager.resetMetadataValues(false);
-		} else {
-			this.uIManager.resetMetadata(false);
-		}
+//		if (this.uIManager.isDefaultTemplate()) {
+//			this.uIManager.resetMetadataValues(false);
+//		} else {
+//			this.uIManager.resetMetadata(false);
+//		}
     }//GEN-LAST:event_formWindowClosing
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -2362,6 +2417,40 @@ public class Exactly extends javax.swing.JFrame {
 			}
 		}
     }//GEN-LAST:event_contactAreaHyperlinkUpdate
+
+    private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
+		this.warning.setVisible(false);
+		this.btnTransferFiles.setEnabled(false);
+		this.btnCancel.setVisible(true);
+		List<String> validDirs = new ArrayList<String>();
+		List<String> directories = new ArrayList<String>();
+		directories = this.uIManager.getInputDirectories();
+		directories.add(editInputDir.getText());
+		for (String directory : directories) {
+			if (!directory.isEmpty()) {
+				validDirs.add(directory);
+			}
+		}
+
+		UIDefaults defaults = new UIDefaults();
+		defaults.put("ProgressBar[Enabled].foregroundPainter", new MyPainter(new Color(0, 102, 0)));
+		defaults.put("ProgressBar[Enabled+Finished].foregroundPainter", new MyPainter(new Color(0, 102, 0)));
+		this.jProgressBar2.putClientProperty("Nimbus.Overrides.InheritDefaults", Boolean.TRUE);
+		this.jProgressBar2.putClientProperty("Nimbus.Overrides", defaults);
+
+		try {
+			bgw = new BackgroundWorker(validDirs, this, 1);
+			bgw.execute();
+		} catch (IOException ex) {
+			this.btnCancel.setVisible(false);
+			this.btnTransferFiles.setEnabled(true);
+			Logger.getLogger(GACOM).log(Level.SEVERE, null, ex);
+		}
+    }//GEN-LAST:event_jButton14ActionPerformed
+
+    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
+		this.warning.setVisible(false);
+    }//GEN-LAST:event_jButton13ActionPerformed
 
 	/**
 	 * Validates the folder string and verifies that an actual folder exists in the file system.
@@ -2526,6 +2615,8 @@ public class Exactly extends javax.swing.JFrame {
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
+    private javax.swing.JButton jButton13;
+    private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -2561,6 +2652,8 @@ public class Exactly extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu4;
@@ -2604,5 +2697,6 @@ public class Exactly extends javax.swing.JFrame {
     public javax.swing.JProgressBar unBaggingProgress;
     public javax.swing.JTextField userNameField;
     private javax.swing.JButton validBagit;
+    private javax.swing.JDialog warning;
     // End of variables declaration//GEN-END:variables
 }

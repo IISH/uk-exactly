@@ -452,11 +452,12 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		this.parent.ftpDelivery.setSelected(false);
 		this.parent.btnCancel.setVisible(false);
 		this.parent.btnTransferFiles.setEnabled(true);
-		if (this.uIManager.isDefaultTemplate()) {
-			this.uIManager.resetMetadataValues(true);
-		} else {
-			this.uIManager.resetMetadata(true);
-		}
+		this.parent.metadateUpdated = 0;
+//		if (this.uIManager.isDefaultTemplate()) {
+//			this.uIManager.resetMetadataValues(true);
+//		} else {
+//			this.uIManager.resetMetadata(true);
+//		}
 	}
 
 	/**
