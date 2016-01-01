@@ -109,6 +109,9 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	private String unbagDestination = "";
 	private UIManager uIManager;
 	String content = "";
+	String payLoad = "";
+	String bagDate = "";
+	String bagitSize = "";
 
 	/**
 	 * Constructor for BackgroundWorker
@@ -615,6 +618,10 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		} catch (IOException e) {
 			Logger.getLogger(GACOM).log(Level.INFO, "Issue while updating tagmanifest-md5.txt", e);
 		}
+		this.payLoad = bagInfoTxt.getPayloadOxum();
+		this.bagDate = bagInfoTxt.getBaggingDate();
+		this.bagitSize = bagInfoTxt.getBagSize();
+
 		this.generateCsvFile(bagInfoTxt.getPayloadOxum(), bagInfoTxt.getBaggingDate(), bagInfoTxt.getBagSize());
 		this.createXML(bagInfoTxt.getPayloadOxum(), bagInfoTxt.getBaggingDate(), bagInfoTxt.getBagSize());
 
@@ -818,71 +825,76 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	 * @param toEmail string
 	 */
 	public void PrepareAndSendMail(MailSender ms, String toEmail) {
-		BufferedReader in = null;
-		try {
-			String from = this.config.getUsername();
-			String transferName = this.parent.bagNameField.getText();
-			String targetS = this.target.toString();
-			if (this.parent.serializeBag.isSelected()) {
-				transferName = transferName + ".zip";
-				targetS = targetS + ".zip";
-			}
-			String msg = "";
-			in = new BufferedReader(new FileReader(this.target.toString() + File.separator + "bag-info.txt"));
-			String line;
-			String message = "";
-			int i = 0;
-			while (i != 3) {
-				line = in.readLine();
-				String[] text = line.split(":");
-				message = message + text[0].replace("-", " ") + ": " + text[1] + "\n";
-				i = i + 1;
-			}
-			BagInfoRepo bagInfoRepo = new BagInfoRepo();
-			List<BagInfo> bagInfo = bagInfoRepo.getOneOrCreateOne();
+		String from = this.config.getUsername();
+		String transferName = this.parent.bagNameField.getText();
+		String targetS = this.target.toString();
+		if (this.parent.serializeBag.isSelected()) {
+			transferName = transferName + ".zip";
+			targetS = targetS + ".zip";
+		}
+		String msg = "";
+//			in = new BufferedReader(new FileReader(this.target.toString() + File.separator + "bag-info.txt"));
+//			String line;
+		String message = "";
+//			int i = 0;
+//			while (i != 3) {
+//				line = in.readLine();
+//				String[] text = line.split(":");
+//				message = message + text[0].replace("-", " ") + ": " + text[1] + "\n";
+//				i = i + 1;
+//			}
+		BagInfoRepo bagInfoRepo = new BagInfoRepo();
+		List<BagInfo> bagInfo = bagInfoRepo.getOneOrCreateOne();
 
-			for (BagInfo b : bagInfo) {
-				message = message + b.getLabel() + ": " + b.getValue() + "\n";
+		for (BagInfo b : bagInfo) {
+			message = message + b.getLabel() + ": " + b.getValue() + "\n";
+		}
+
+		if (this.ftpProcess == 1) {
+			msg = "FTP transfer failed.";
+		}
+		// from, to, subject, body
+		if (this.parent.ftpDelivery.isSelected()) {
+			String ftpLocation = this.ftp.getDestination();
+			if (!ftpLocation.startsWith("/")) {
+				ftpLocation = "/" + ftpLocation;
 			}
-			
-			if (this.ftpProcess == 1) {
-				msg = "FTP transfer failed.";
-			}
-			// from, to, subject, body
-			if (this.parent.ftpDelivery.isSelected()) {
-				String ftpLocation = this.ftp.getDestination();
-				if (!ftpLocation.startsWith("/")) {
-					ftpLocation = "/" + ftpLocation;
-				}
-				if (ftpLocation.endsWith("/")) {
-					ftpLocation = ftpLocation + transferName;
-				} else {
-					ftpLocation = ftpLocation + "/" + transferName;
-				}
-				String whole_message =
-						"Transfer completed: " + new Date()
-						+ "\nTransfer Name: " + transferName
-						+ "\nTarget: " + targetS
-						+ "\nFTP Target: " + ftpLocation
-						+ "\nApplication Used: Exactly"
-						+ "\nUser: " + this.parent.userNameField.getText()
-						+ "\nTotal File count: " + this.bagCount
-						+ "\nTotal Bytes: " + this.bagSize
-						+ "\n" + message
-						+ "\n" + msg;
-				ms.SetMessage(from, toEmail, "Exactly Digital Transfer", whole_message);
+			if (ftpLocation.endsWith("/")) {
+				ftpLocation = ftpLocation + transferName;
 			} else {
-				String whole_message = "Transfer completed: " + new Date()
-						+ "\nTransfer Name: " + transferName
-						+ "\nTarget: " + targetS
-						+ "\nApplication Used: Exactly"
-						+ "\nUser: " + this.parent.userNameField.getText()
-						+ "\nTotal File count: " + this.bagCount
-						+ "\nTotal Bytes: " + this.bagSize
-						+ "\n" + message;
-				ms.SetMessage(from, toEmail, "Exactly Digital Transfer", whole_message);
+				ftpLocation = ftpLocation + "/" + transferName;
 			}
-			String result;
+			String whole_message =
+					"Transfer completed: " + new Date()
+					+ "\nTransfer Name: " + transferName
+					+ "\nTarget: " + targetS
+					+ "\nFTP Target: " + ftpLocation
+					+ "\nApplication Used: Exactly"
+					+ "\nUser: " + this.parent.userNameField.getText()
+					+ "\nTotal File count: " + this.bagCount
+					+ "\nTotal Bytes: " + this.bagSize
+					+ "\nPayload Oxum: " + this.payLoad
+					+ "\nBagging Date: " + this.bagDate
+					+ "\nBag Size: " + this.bagitSize
+					+ "\n" + message
+					+ "\n" + msg;
+			ms.SetMessage(from, toEmail, "Exactly Digital Transfer", whole_message);
+		} else {
+			String whole_message = "Transfer completed: " + new Date()
+					+ "\nTransfer Name: " + transferName
+					+ "\nTarget: " + targetS
+					+ "\nApplication Used: Exactly"
+					+ "\nUser: " + this.parent.userNameField.getText()
+					+ "\nTotal File count: " + this.bagCount
+					+ "\nTotal Bytes: " + this.bagSize
+					+ "\nPayload Oxum: " + this.payLoad
+					+ "\nBagging Date: " + this.bagDate
+					+ "\nBag Size: " + this.bagitSize
+					+ "\n" + message;
+			ms.SetMessage(from, toEmail, "Exactly Digital Transfer", whole_message);
+		}
+		String result;
+		if (!this.parent.serializeBag.isSelected()) {
 			String name = this.target.getFileName().toString();
 			Date dNow = new Date();
 			SimpleDateFormat ft = new SimpleDateFormat("yyyyMMdd");
@@ -897,18 +909,12 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 			result = ms.Send();
 			this.parent.UpdateResult(result, 0);
 			file.delete();
-			Logger.getLogger(GACOM).log(Level.INFO, "Mail send result: {0}", result);
-		} catch (FileNotFoundException ex) {
-			Logger.getLogger(BackgroundWorker.class.getName()).log(Level.SEVERE, null, ex);
-		} catch (IOException ex) {
-			Logger.getLogger(BackgroundWorker.class.getName()).log(Level.SEVERE, null, ex);
-		} finally {
-			try {
-				in.close();
-			} catch (IOException ex) {
-				Logger.getLogger(BackgroundWorker.class.getName()).log(Level.SEVERE, null, ex);
-			}
+		} else {
+			result = ms.Send();
+			this.parent.UpdateResult(result, 0);
 		}
+		Logger.getLogger(GACOM).log(Level.INFO, "Mail send result: {0}", result);
+
 	}
 
 	/**
