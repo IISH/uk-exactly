@@ -10,6 +10,23 @@
 <project name="UKExactly" default="default" basedir=".">
     <description>Builds, tests, and runs the project UKExactly.</description>
     <import file="nbproject/build-impl.xml"/>
+	
+	<condition property="isWindows">
+	<os family="windows" />
+    </condition>
+    
+    <!-- override build-launcher to replace the icon for the Windows launcher exe. 
+    <target name="build-launchers" depends="suite.build-launchers">            
+        <antcall target="replaceWindowsLauncherIcon"/>
+    </target>    
+    -->
+    <!-- Windows-only target that replaces the icon for the launcher exe with our own icon.
+    <target name="replaceWindowsLauncherIcon" if="isWindows" description="Replace the icon for the Windows launcher exe">
+        <echo message="Replacing icon of Windows launcher executable."/>
+        <exec executable="ReplaceVistaIcon.exe" resolveexecutable="true">
+            <arg line="build/launcher/bin/${app.name}.exe ${app.name}.ico"/>
+        </exec>
+    </target> -->
     <!--
 
     There exist several targets which are by default empty and which can be 
@@ -69,5 +86,5 @@
     properties which you can use, check the target you are overriding in the
     nbproject/build-impl.xml file. 
 
-    -->
+	-->
 </project>
