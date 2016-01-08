@@ -632,7 +632,7 @@ Portions Copyrighted 2013 Sun Microsystems, Inc.
                 if(defined(appversion)) {
                     app.setVersion(appversion);
                 } else {
-                    app.setVersion("1.0");
+                    app.setVersion("2.0");
                 }
 
                 // fx:resources

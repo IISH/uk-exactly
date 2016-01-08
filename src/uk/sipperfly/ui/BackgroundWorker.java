@@ -952,6 +952,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		boolean result = true;
 		File file = new File(path);
 		Bag cbag = bagfactory.createBag(file);//(Bag) file;
+
 		List<String> errorMessages = cbag.verifyComplete().getMessages();
 		int index = errorMessages.size();
 		if (index != 0) {

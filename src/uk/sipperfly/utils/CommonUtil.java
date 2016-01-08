@@ -197,7 +197,9 @@ public class CommonUtil {
 					ps.printf("Transfer completed: %s %nTransfer name: %s %nTarget: %s %nApplication used: %s %nUser: %s %nTotal File count: %s%nTotal Bytes: %s\n",
 							new Date(), transferName, target, "Exactly", username, bagCount, bagSize);
 				}
-			}
+				ps.flush();
+				ps.close();		        
+			}			
 			return true;
 		} catch (IOException ex) {
 			Logger.getLogger(GACOM).log(Level.SEVERE, "Failed to create transfer complete semaphore", ex);
@@ -310,6 +312,7 @@ public class CommonUtil {
 			while ((numOfBytesRead = fis.read(buffer)) > 0) {
 				md.update(buffer, 0, numOfBytesRead);
 			}
+			fis.close();
 			byte[] hash = md.digest();
 			StringBuffer hexString = new StringBuffer();
 			for (int i = 0; i < hash.length; i++) {
