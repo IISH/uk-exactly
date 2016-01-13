@@ -1,6 +1,7 @@
 dist
 build
 exactly
+ukexactly
 *.log
 .DS_Store
 logfile.txt
