@@ -178,7 +178,7 @@ public class CommonUtil {
 			semaphore.createNewFile();
 			String target = source.toString();
 			if (zip == 1) {
-				transferName = transferName + ".zip";
+//				transferName = transferName + ".zip";
 				target = target + ".zip";
 			}
 			try (PrintStream ps = new PrintStream(semaphore)) {
@@ -349,7 +349,7 @@ public class CommonUtil {
 		FileUtils.copyDirectory(sourceDir, target);
 		FileUtils.copyFile(new File(source + File.separator + "bag-info.txt"), new File(metadata + File.separator + "bag-info.txt"));
 		FileUtils.copyFile(new File(source + File.separator + "bag-info.xml"), new File(metadata + File.separator + "bag-info.xml"));
-		FileUtils.copyFile(new File(source + File.separator + "bag-info.xml"), new File(metadata + File.separator + "bag-info.csv"));
+		FileUtils.copyFile(new File(source + File.separator + "bag-info.csv"), new File(metadata + File.separator + "bag-info.csv"));
 		FileUtils.copyFile(new File(source + File.separator + "manifest-md5.txt"), new File(metadata + File.separator + "manifest-md5.txt"));
 		FileUtils.copyFile(new File(source + File.separator + "TransferComplete.txt"), new File(metadata + File.separator + "TransferComplete.txt"));
 		FileUtils.deleteDirectory(workDir);

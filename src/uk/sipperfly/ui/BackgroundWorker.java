@@ -12,6 +12,7 @@
  */
 package uk.sipperfly.ui;
 
+import com.opencsv.CSVWriter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -51,6 +52,7 @@ import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -1041,32 +1043,29 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	}
 
 	private void generateCsvFile(String payload, String date, String size) {
-		File file = new File(this.target.toString() + File.separator + "bag-info.csv");
 		BagInfoRepo bagInfoRepo = new BagInfoRepo();
+		List<String> labels = new ArrayList<String>();
+		List<String> values = new ArrayList<String>();
+		labels.add("Payload Oxum");
+		labels.add("Bagging Date");
+		labels.add("Bag Size");
+		values.add(payload);
+		values.add(date);
+		values.add(size);
 		List<BagInfo> bagInfo = bagInfoRepo.getOneOrCreateOne();
 		try {
-			FileWriter writer = new FileWriter(file.getAbsoluteFile());
-			writer.append("Payload Oxum");
-			writer.append(',');
-			writer.append(payload);
-			writer.append('\n');
-
-			writer.append("Bagging Date");
-			writer.append(',');
-			writer.append(date);
-			writer.append('\n');
-
-			writer.append("Bag Size");
-			writer.append(',');
-			writer.append(size);
-			writer.append('\n');
-
+			CSVWriter writer = new CSVWriter(new FileWriter(this.target.toString() + File.separator + "bag-info.csv"));
 			for (BagInfo b : bagInfo) {
-				writer.append(b.getLabel().toString());
-				writer.append(',');
-				writer.append(b.getValue().toString());
-				writer.append('\n');
+				labels.add(b.getLabel().toString());
+				values.add(b.getValue().toString());
 			}
+			labels.toArray();
+			String[] newLabels = new String[labels.size()];
+			newLabels = labels.toArray(newLabels);
+			String[] newValues = new String[values.size()];
+			newValues = values.toArray(newValues);
+			writer.writeNext(newLabels);
+			writer.writeNext(newValues);
 			writer.flush();
 			writer.close();
 		} catch (IOException e) {
