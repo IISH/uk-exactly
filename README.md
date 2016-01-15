@@ -9,6 +9,9 @@ Building on work originally begun by the Gates Archive, AVPreserve and the Louie
 <li><a href="https://www.avpreserve.com/wp-content/uploads/2016/01/Quickstart-Guide-Delivery.pdf">EXACTLY USER GUIDE - VERSION 0.1 (PDF, 865 KB)</a></li>
 <li><a href="https://www.avpreserve.com/wp-content/uploads/2016/01/ExactlyUserGuide.pdf">EXACTLY QUICKSTART GUIDE - DELIVERY (PDF, 956 KB)</a></li>
 
+<b>Users Group</b>
+<li><a href="https://groups.google.com/d/forum/exactly-users">EXACTLY USERS GOOGLE GROUP</a></li>
+
 <b>Version:</b> 0.1
 <br />
 <b>Requirement:</b> JDK 1.7 or higher
