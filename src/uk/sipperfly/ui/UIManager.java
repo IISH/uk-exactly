@@ -367,7 +367,6 @@ public class UIManager {
 	 */
 	public boolean validateEmails() {
 		String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w-]+\\.)+[\\w]+[\\w]$";
-//		String EMAIL_REGEX = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 		List<String> emails = new ArrayList<String>();
 		List l = this.mainFrame.email.getList();
 		for (Object e : l) {

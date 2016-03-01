@@ -13,6 +13,8 @@
 package uk.sipperfly.ui;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Desktop;
 import java.awt.Dialog;
 import java.io.File;
@@ -46,6 +48,8 @@ import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 import javax.swing.event.HyperlinkEvent;
@@ -84,7 +88,6 @@ public class Exactly extends javax.swing.JFrame {
 	 * Creates new form MainFrame
 	 */
 	public Exactly() {
-//		this.emailIdList = new int[10];
 		this.list = new EntryList(this);
 		this.bagInfo = new BagInfoList(this);
 		this.email = new EmailList(this);
@@ -506,7 +509,6 @@ public class Exactly extends javax.swing.JFrame {
 
         warning.setTitle("Warning");
         warning.setMinimumSize(new java.awt.Dimension(450, 175));
-        warning.setPreferredSize(new java.awt.Dimension(450, 175));
         warning.setResizable(false);
 
         jLabel8.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
@@ -1969,11 +1971,6 @@ public class Exactly extends javax.swing.JFrame {
     }//GEN-LAST:event_formPropertyChange
 
     private void quitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitActionPerformed
-//		if (this.uIManager.isDefaultTemplate()) {
-//			this.uIManager.resetMetadataValues(false);
-//		} else {
-//			this.uIManager.resetMetadata(false);
-//		}
 		System.exit(0);
     }//GEN-LAST:event_quitActionPerformed
 
@@ -1988,8 +1985,9 @@ public class Exactly extends javax.swing.JFrame {
     private void exportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportActionPerformed
 
 		fileChooser = new javax.swing.JFileChooser();
-		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);//FILES_AND_DIRECTORIES
 		fileChooser.setApproveButtonText("Export");
+		removeFileTypeComponents(fileChooser);
 		int returnVal = fileChooser.showOpenDialog(this);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = fileChooser.getSelectedFile();
@@ -2008,6 +2006,31 @@ public class Exactly extends javax.swing.JFrame {
 		}
 
     }//GEN-LAST:event_exportActionPerformed
+
+	private void removeFileTypeComponents(Container con) {
+		Component[] components = con.getComponents();
+		for (Component component : components) {
+			if (component instanceof JComboBox) {
+				Object sel = ((JComboBox) component).getSelectedItem();
+				if (sel.toString().contains("AcceptAllFileFilter")) {
+//               component.setVisible(false);
+					// OR
+					con.remove(component);
+				}
+			}
+			if (component instanceof JLabel) {
+				String text = ((JLabel) component).getText();
+				if (text.equals("Files of Type:")) {
+//               component.setVisible(false);
+					// OR
+					con.remove(component);
+				}
+			}
+			if (component instanceof Container) {
+				removeFileTypeComponents((Container) component);
+			}
+		}
+	}
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
 		this.list.addEntry("");
@@ -2067,17 +2090,15 @@ public class Exactly extends javax.swing.JFrame {
 				if (!f.exists()) {
 					UpdateResult("Must choose a valid input folder(s).", 1);
 					return;
-				} else {
-					if (f.isFile()) {
-						size = size + FileUtils.sizeOf(f);
-						boolean ignore = commonUtil.checkIgnoreFiles(f.getName(), config.getFilters());
-						if (!ignore) {
-							this.totalFiles = this.totalFiles + 1;
-						}
-					} else {
-						size = size + FileUtils.sizeOfDirectory(f);
-						this.totalFiles = this.totalFiles + commonUtil.countFilesInDirectory(f, config.getFilters());
+				} else if (f.isFile()) {
+					size = size + FileUtils.sizeOf(f);
+					boolean ignore = commonUtil.checkIgnoreFiles(f.getName(), config.getFilters());
+					if (!ignore) {
+						this.totalFiles = this.totalFiles + 1;
 					}
+				} else {
+					size = size + FileUtils.sizeOfDirectory(f);
+					this.totalFiles = this.totalFiles + commonUtil.countFilesInDirectory(f, config.getFilters());
 				}
 			}
 		}
@@ -2541,7 +2562,7 @@ public class Exactly extends javax.swing.JFrame {
 
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+		/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
 		 * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
 		 */
 		try {

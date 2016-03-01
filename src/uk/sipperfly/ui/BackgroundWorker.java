@@ -930,7 +930,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	public int ValidateBag(String path) {
 		BagFactory bagfactory = new BagFactory();
 		File file = new File(path);
-		Bag cbag = bagfactory.createBag(file);//(Bag) file;
+		Bag cbag = bagfactory.createBag(file);
 		CompleteVerifierImpl completeVerifier = new CompleteVerifierImpl();
 		ParallelManifestChecksumVerifier manifestVerifier = new ParallelManifestChecksumVerifier();
 		ValidVerifierImpl validVerifier = new ValidVerifierImpl(completeVerifier, manifestVerifier);
