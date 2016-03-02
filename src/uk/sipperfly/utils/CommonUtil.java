@@ -352,6 +352,7 @@ public class CommonUtil {
 		FileUtils.copyFile(new File(source + File.separator + "bag-info.csv"), new File(metadata + File.separator + "bag-info.csv"));
 		FileUtils.copyFile(new File(source + File.separator + "manifest-md5.txt"), new File(metadata + File.separator + "manifest-md5.txt"));
 		FileUtils.copyFile(new File(source + File.separator + "TransferComplete.txt"), new File(metadata + File.separator + "TransferComplete.txt"));
+		FileUtils.copyFile(new File(source + File.separator + "FileSystemData.txt"), new File(metadata + File.separator + "FileSystemData.txt"));
 		FileUtils.deleteDirectory(workDir);
 		File dir = new File(target.getParent() + File.separator + folder);
 		target.renameTo(dir);

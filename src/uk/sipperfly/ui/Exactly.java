@@ -85,6 +85,7 @@ public class Exactly extends javax.swing.JFrame {
 	private int MetadataReminder = 0;
 	public int[] bag_size;
 	public int metadateUpdated = 0;
+	public StringBuilder fileSystem;
 
 	/**
 	 * Creates new form MainFrame
@@ -95,6 +96,7 @@ public class Exactly extends javax.swing.JFrame {
 		this.email = new EmailList(this);
 		initComponents();
 		initLogger();
+		this.fileSystem = new StringBuilder();
 		this.uIManager = new UIManager(this);
 		this.uIManager.setConfigurationFields();
 		this.uIManager.setEmailFields();
@@ -2071,12 +2073,12 @@ public class Exactly extends javax.swing.JFrame {
 			UpdateResult("Save Metadata before starting Transfer.", 1);
 			return;
 		}
-
 		if (!this.setDropLocation()) {
 			this.btnTransferFiles.setEnabled(true);
 			this.btnCancel.setVisible(false);
 			return;
 		}
+		this.fileSystem = new StringBuilder();
 		CommonUtil commonUtil = new CommonUtil();
 		Boolean isSelected = false;
 		List<String> directories = new ArrayList<String>();
@@ -2095,6 +2097,8 @@ public class Exactly extends javax.swing.JFrame {
 				} else if (f.isFile()) {
 					size = size + FileUtils.sizeOf(f);
 					boolean ignore = commonUtil.checkIgnoreFiles(f.getName(), config.getFilters());
+					this.fileSystem.append(f.getAbsolutePath());
+					this.fileSystem.append(System.getProperty("line.separator"));
 					if (!ignore) {
 						this.totalFiles = this.totalFiles + 1;
 					}
@@ -2102,29 +2106,28 @@ public class Exactly extends javax.swing.JFrame {
 					String s;
 					Process p;
 					try {
-						System.out.println("f.getAbsolutePath(): " + f.getAbsolutePath());
-						System.out.println("f.getPath(): " + f.getPath());
 						String osName = System.getProperty("os.name").toLowerCase();
 						boolean isMacOs = osName.startsWith("mac os x");
 						if (isMacOs) {
-							p = Runtime.getRuntime().exec("/bin/sh ls -lR " + f.getAbsolutePath());
+							p = Runtime.getRuntime().exec("ls -lR \"" + f.getAbsolutePath() + "\"");
+							this.fileSystem.append(f.getAbsolutePath());
+							this.fileSystem.append(System.getProperty("line.separator"));
 						} else {
-							p = Runtime.getRuntime().exec("cmd /c dir " + f.getAbsolutePath());
+							p = Runtime.getRuntime().exec("cmd /c dir \"" + f.getAbsolutePath() + "\" /S");
 						}
 						BufferedReader br = new BufferedReader(
 								new InputStreamReader(p.getInputStream()));
 						while ((s = br.readLine()) != null) {
-							System.out.println("line: " + s);
+							this.fileSystem.append(s);
+							this.fileSystem.append(System.getProperty("line.separator"));
 						}
 						p.waitFor();
-						System.out.println("exit: " + p.exitValue());
 						p.destroy();
 					} catch (Exception e) {
 						System.out.println("error: " + e.toString());
 					}
-					return;
-//					size = size + FileUtils.sizeOfDirectory(f);
-//					this.totalFiles = this.totalFiles + commonUtil.countFilesInDirectory(f, config.getFilters());
+					size = size + FileUtils.sizeOfDirectory(f);
+					this.totalFiles = this.totalFiles + commonUtil.countFilesInDirectory(f, config.getFilters());
 				}
 			}
 		}

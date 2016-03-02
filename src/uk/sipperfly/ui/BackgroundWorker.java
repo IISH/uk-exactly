@@ -619,13 +619,12 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		this.bagitSize = bagInfoTxt.getBagSize();
 		String payloadManifest = bag.getPayloadManifest(Manifest.Algorithm.MD5).toString();
 		this.manifest = payloadManifest.substring(1, payloadManifest.length() - 1);
-
+		this.generateSystemDataFile();
 		this.generateCsvFile(bagInfoTxt.getPayloadOxum(), bagInfoTxt.getBaggingDate(), bagInfoTxt.getBagSize());
 		this.createXML(bagInfoTxt.getPayloadOxum(), bagInfoTxt.getBaggingDate(), bagInfoTxt.getBagSize());
 
 		//		this.parent.UpdateProgressBar(this.parent.tranferredFiles);
 		//		this.parent.UpdateProgressBar(this.parent.tranferredFiles);
-
 		try {
 			bag.makeComplete();
 			bag.close();
@@ -754,13 +753,11 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 				this.ftpProcess = 1;
 				this.parent.UpdateResult("An error occured while uploading on FTP. Cannot upload file.", 0);
 			}
+		} else if (ftpCon.uploadFiles(location, "")) {
+			this.parent.UpdateResult("File uploaded successfully.", 0);
 		} else {
-			if (ftpCon.uploadFiles(location, "")) {
-				this.parent.UpdateResult("File uploaded successfully.", 0);
-			} else {
-				this.ftpProcess = 1;
-				this.parent.UpdateResult("An error occured while uploading on FTP. Cannot upload folder.", 0);
-			}
+			this.ftpProcess = 1;
+			this.parent.UpdateResult("An error occured while uploading on FTP. Cannot upload folder.", 0);
 		}
 
 	}
@@ -853,8 +850,8 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 				} else {
 					ftpLocation = ftpLocation + "/" + transferName;
 				}
-				String whole_message =
-						"Transfer completed: " + new Date()
+				String whole_message
+						= "Transfer completed: " + new Date()
 						+ "\nTransfer Name: " + transferName
 						+ "\nTarget: " + targetS
 						+ "\nFTP Target: " + ftpLocation
@@ -1029,6 +1026,19 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 			Logger.getLogger(BackgroundWorker.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (DOMException ex) {
 			Logger.getLogger(BackgroundWorker.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
+	private void generateSystemDataFile() {
+		try {
+			FileWriter fileWritter = new FileWriter(this.target.toString().concat("/FileSystemData.txt"), true);
+			BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
+			String fileSystem = this.parent.fileSystem.toString();
+			bufferWritter.write(fileSystem);
+			bufferWritter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			Logger.getLogger(GACOM).log(Level.INFO, "Issue while writing file.", e);
 		}
 	}
 
