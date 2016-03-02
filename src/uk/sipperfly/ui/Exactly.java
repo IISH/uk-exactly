@@ -45,6 +45,8 @@ import uk.sipperfly.utils.MyPainter;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -2097,8 +2099,32 @@ public class Exactly extends javax.swing.JFrame {
 						this.totalFiles = this.totalFiles + 1;
 					}
 				} else {
-					size = size + FileUtils.sizeOfDirectory(f);
-					this.totalFiles = this.totalFiles + commonUtil.countFilesInDirectory(f, config.getFilters());
+					String s;
+					Process p;
+					try {
+						System.out.println("f.getAbsolutePath(): " + f.getAbsolutePath());
+						System.out.println("f.getPath(): " + f.getPath());
+						String osName = System.getProperty("os.name").toLowerCase();
+						boolean isMacOs = osName.startsWith("mac os x");
+						if (isMacOs) {
+							p = Runtime.getRuntime().exec("/bin/sh ls -lR " + f.getAbsolutePath());
+						} else {
+							p = Runtime.getRuntime().exec("cmd /c dir " + f.getAbsolutePath());
+						}
+						BufferedReader br = new BufferedReader(
+								new InputStreamReader(p.getInputStream()));
+						while ((s = br.readLine()) != null) {
+							System.out.println("line: " + s);
+						}
+						p.waitFor();
+						System.out.println("exit: " + p.exitValue());
+						p.destroy();
+					} catch (Exception e) {
+						System.out.println("error: " + e.toString());
+					}
+					return;
+//					size = size + FileUtils.sizeOfDirectory(f);
+//					this.totalFiles = this.totalFiles + commonUtil.countFilesInDirectory(f, config.getFilters());
 				}
 			}
 		}

@@ -346,11 +346,6 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 					this.parent.UpdateResult("Uploading data on FTP ...", 0);
 					Logger.getLogger(GACOM).log(Level.INFO, "Uploading data on FTP ...");
 					UploadFilesFTP();
-//					if (this.parent.serializeBag.isSelected()) {
-//						this.parent.jProgressBar2.setValue(this.parent.totalFiles + 2);
-//					} else {
-//						this.parent.jProgressBar2.setValue(this.parent.totalFiles + 8);
-//					}
 				}
 				if (this.isCancelled()) {
 					Logger.getLogger(GACOM).log(Level.INFO, "Canceling send notification email(s).");
@@ -462,11 +457,6 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		this.parent.btnCancel.setVisible(false);
 		this.parent.btnTransferFiles.setEnabled(true);
 		this.parent.metadateUpdated = 0;
-//		if (this.uIManager.isDefaultTemplate()) {
-//			this.uIManager.resetMetadataValues(true);
-//		} else {
-//			this.uIManager.resetMetadata(true);
-//		}
 	}
 
 	/**
