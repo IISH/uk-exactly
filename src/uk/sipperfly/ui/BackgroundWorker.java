@@ -1038,7 +1038,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 			bufferWritter.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-			Logger.getLogger(GACOM).log(Level.INFO, "Issue while writing file.", e);
+			Logger.getLogger(GACOM).log(Level.INFO, "Issue while writing file system.", e);
 		}
 	}
 

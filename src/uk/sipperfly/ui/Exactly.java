@@ -2109,14 +2109,13 @@ public class Exactly extends javax.swing.JFrame {
 						String osName = System.getProperty("os.name").toLowerCase();
 						boolean isMacOs = osName.startsWith("mac os x");
 						if (isMacOs) {
-							p = Runtime.getRuntime().exec("ls -lR \"" + f.getAbsolutePath() + "\"");
+							p = Runtime.getRuntime().exec("ls -lR " + f.getAbsolutePath().replace(" ", "\\ "));
 							this.fileSystem.append(f.getAbsolutePath());
 							this.fileSystem.append(System.getProperty("line.separator"));
 						} else {
 							p = Runtime.getRuntime().exec("cmd /c dir \"" + f.getAbsolutePath() + "\" /S");
 						}
-						BufferedReader br = new BufferedReader(
-								new InputStreamReader(p.getInputStream()));
+						BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
 						while ((s = br.readLine()) != null) {
 							this.fileSystem.append(s);
 							this.fileSystem.append(System.getProperty("line.separator"));
