@@ -126,13 +126,15 @@ public class FTPConnection {
 					this.parent.uploadedFiles = this.parent.uploadedFiles + 1;
 					this.parent.UpdateProgressBar(this.parent.uploadedFiles);
 				} catch (SocketTimeoutException e) {
-					Logger.getLogger(GACOM).log(Level.SEVERE, "Socket Timeout Exception ", e.getCause());
+					Logger.getLogger(GACOM).log(Level.SEVERE, "Socket Timeout Exception ", e.getCause());	
+					ftp.disconnect(true);
 					ftp = this.connect(false);
 					ftp.changeDirectory(ftpSrc);
 					ftp.setType(FTPClient.TYPE_BINARY);
 					ftp.upload(new java.io.File(src.getAbsolutePath()));
 				} catch (SocketException ex) {
 					Logger.getLogger(GACOM).log(Level.SEVERE, "Socket Exception ", ex.getCause());
+					ftp.disconnect(true);
 					ftp = this.connect(false);
 					ftp.changeDirectory(ftpSrc);
 					ftp.setType(FTPClient.TYPE_BINARY);

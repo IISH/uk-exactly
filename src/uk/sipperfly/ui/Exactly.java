@@ -8,7 +8,6 @@
  * Support: info@avpreserve.com
  * License: Apache 2.0
  * Copyright: University of Kentucky (http://www.uky.edu). All Rights Reserved
- *
  */
 package uk.sipperfly.ui;
 
@@ -55,6 +54,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 import javax.swing.event.HyperlinkEvent;
+import javax.tools.FileObject;
+import net.sf.vfsjfilechooser.VFSJFileChooser;
+import net.sf.vfsjfilechooser.VFSJFileChooser.RETURN_TYPE;
+import net.sf.vfsjfilechooser.VFSJFileChooser.SELECTION_MODE;
+import net.sf.vfsjfilechooser.accessories.DefaultAccessoriesPanel;
+import net.sf.vfsjfilechooser.utils.VFSUtils;
 
 /**
  * This is the main UI class for the tool.
@@ -63,7 +68,7 @@ import javax.swing.event.HyperlinkEvent;
  */
 public class Exactly extends javax.swing.JFrame {
 
-	private JFileChooser fileChooser;
+	private VFSJFileChooser fileChooser;
 	private String inputDirPath;
 	public String targetPath;
 	private BackgroundWorker bgw;
@@ -1777,10 +1782,14 @@ public class Exactly extends javax.swing.JFrame {
 
     private void chooseDestDirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseDestDirActionPerformed
 		// TODO add your handling code here:
-		fileChooser = new javax.swing.JFileChooser();
-		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-		int returnVal = fileChooser.showOpenDialog(this);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
+//		fileChooser = new javax.swing.JFileChooser();
+//		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+//		int returnVal = fileChooser.showOpenDialog(this);
+		fileChooser = new VFSJFileChooser();
+		fileChooser.setMultiSelectionEnabled(false);
+		fileChooser.setFileSelectionMode(SELECTION_MODE.FILES_AND_DIRECTORIES);
+		VFSJFileChooser.RETURN_TYPE returnVal = fileChooser.showOpenDialog(this);
+		if (returnVal == RETURN_TYPE.APPROVE) {
 			File file = fileChooser.getSelectedFile();
 			targetPath = file.getAbsolutePath();
 			destDirLocation.setText(targetPath);
@@ -1840,11 +1849,16 @@ public class Exactly extends javax.swing.JFrame {
     }//GEN-LAST:event_validBagitActionPerformed
 
     private void chooseDirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseDirActionPerformed
-		fileChooser = new javax.swing.JFileChooser();
-		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-		int returnVal = fileChooser.showOpenDialog(this);
+//		fileChooser = new javax.swing.JFileChooser();
+//		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+//		int returnVal = fileChooser.showOpenDialog(this);
 		List<String> validDirs = new ArrayList<String>();
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
+		fileChooser = new VFSJFileChooser();
+		fileChooser.setMultiSelectionEnabled(false);
+		fileChooser.setFileSelectionMode(SELECTION_MODE.FILES_AND_DIRECTORIES);
+		VFSJFileChooser.RETURN_TYPE returnVal = fileChooser.showOpenDialog(this);
+		if (returnVal == RETURN_TYPE.APPROVE) {
+//		if (returnVal == JFileChooser.APPROVE_OPTION) {
 
 			File file = fileChooser.getSelectedFile();
 			inputDirPath = file.getAbsolutePath();
@@ -1988,12 +2002,17 @@ public class Exactly extends javax.swing.JFrame {
 
     private void exportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportActionPerformed
 
-		fileChooser = new javax.swing.JFileChooser();
-		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);//FILES_AND_DIRECTORIES
+//		fileChooser = new javax.swing.JFileChooser();
+//		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);//FILES_AND_DIRECTORIES
 		fileChooser.setApproveButtonText("Export");
 		removeFileTypeComponents(fileChooser);
-		int returnVal = fileChooser.showOpenDialog(this);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
+//		int returnVal = fileChooser.showOpenDialog(this);
+		fileChooser = new VFSJFileChooser();
+		fileChooser.setMultiSelectionEnabled(false);
+		fileChooser.setFileSelectionMode(SELECTION_MODE.FILES_AND_DIRECTORIES);
+		VFSJFileChooser.RETURN_TYPE returnVal = fileChooser.showOpenDialog(this);
+		if (returnVal == RETURN_TYPE.APPROVE) {
+//		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = fileChooser.getSelectedFile();
 			String exportPath = file.getAbsolutePath().toString();
 			try {
@@ -2042,11 +2061,17 @@ public class Exactly extends javax.swing.JFrame {
 
     private void btnDirChooseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDirChooseActionPerformed
 		// TODO add your handling code here:
-		fileChooser = new javax.swing.JFileChooser();
-		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+//		fileChooser = new javax.swing.JFileChooser();
+//		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+
+		fileChooser = new VFSJFileChooser();		
 		fileChooser.setMultiSelectionEnabled(true);
-		int returnVal = fileChooser.showOpenDialog(this);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
+		fileChooser.setFileSelectionMode(SELECTION_MODE.FILES_AND_DIRECTORIES);
+		VFSJFileChooser.RETURN_TYPE returnVal = fileChooser.showOpenDialog(this);
+		if (returnVal == RETURN_TYPE.APPROVE) {
+//		int returnVal = fileChooser.showOpenDialog(this);
+//		if (returnVal == JFileChooser.APPROVE_OPTION) {
+//			File[] files = fileChooser.getSelectedFiles();
 			File[] files = fileChooser.getSelectedFiles();
 			if (files.length >= 1) {
 				inputDirPath = files[0].getAbsolutePath();
@@ -2233,10 +2258,16 @@ public class Exactly extends javax.swing.JFrame {
 
     private void btnDirChoose1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDirChoose1ActionPerformed
 		// TODO add your handling code here:
-		fileChooser = new javax.swing.JFileChooser();
-		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-		int returnVal = fileChooser.showOpenDialog(this);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
+//		fileChooser = new javax.swing.JFileChooser();
+//		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+//		int returnVal = fileChooser.showOpenDialog(this);
+//		if (returnVal == JFileChooser.APPROVE_OPTION) {
+		fileChooser = new VFSJFileChooser();
+		fileChooser.setMultiSelectionEnabled(false);
+		fileChooser.setAccessory(new DefaultAccessoriesPanel(fileChooser));
+		fileChooser.setFileSelectionMode(SELECTION_MODE.FILES_AND_DIRECTORIES);
+		VFSJFileChooser.RETURN_TYPE returnVal = fileChooser.showOpenDialog(this);
+		if (returnVal == RETURN_TYPE.APPROVE) {
 			File file = fileChooser.getSelectedFile();
 			inputDirPath = file.getAbsolutePath();
 			editInputDir1.setText(inputDirPath);
@@ -2268,10 +2299,15 @@ public class Exactly extends javax.swing.JFrame {
     }//GEN-LAST:event_enableBagFieldsActionPerformed
 
     private void importXmlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importXmlActionPerformed
-		fileChooser = new javax.swing.JFileChooser();
-		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);//FILES_AND_DIRECTORIES
-		int returnVal = fileChooser.showOpenDialog(this);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
+//		fileChooser = new javax.swing.JFileChooser();
+//		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);//FILES_AND_DIRECTORIES
+//		int returnVal = fileChooser.showOpenDialog(this);
+//		if (returnVal == JFileChooser.APPROVE_OPTION) {
+		fileChooser = new VFSJFileChooser();
+		fileChooser.setMultiSelectionEnabled(false);
+		fileChooser.setFileSelectionMode(SELECTION_MODE.FILES_ONLY);
+		VFSJFileChooser.RETURN_TYPE returnVal = fileChooser.showOpenDialog(this);
+		if (returnVal == RETURN_TYPE.APPROVE) {
 			File file = fileChooser.getSelectedFile();
 			if (file.getName().indexOf("xml") > 0) {
 				UpdateResult("Importing xml.", 0);
