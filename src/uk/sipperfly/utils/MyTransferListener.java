@@ -12,7 +12,11 @@
  */
 package uk.sipperfly.utils;
 
+import it.sauronsoftware.ftp4j.FTPClient;
 import it.sauronsoftware.ftp4j.FTPDataTransferListener;
+import it.sauronsoftware.ftp4j.FTPException;
+import it.sauronsoftware.ftp4j.FTPIllegalReplyException;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import uk.sipperfly.ui.FTPConnection;
@@ -25,9 +29,11 @@ public class MyTransferListener implements FTPDataTransferListener {
 
 	private static String GACOM = "com.UKExactly";
 	private String filePath;
+	private FTPClient client;
 
-	public MyTransferListener(String filePath) {
+	public MyTransferListener(String filePath, FTPClient ftp) {
 		this.filePath = filePath;
+		this.client = ftp;
 	}
 
 	public void started() {
@@ -36,8 +42,18 @@ public class MyTransferListener implements FTPDataTransferListener {
 	}
 
 	public void transferred(int length) {
-		// Yet other length bytes has been transferred since the last time this
-		// method was called
+//		try {
+			System.out.println("file transferred: "+ length);
+//			this.client.noop();
+//		} catch (IllegalStateException ex) {
+//			Logger.getLogger(MyTransferListener.class.getName()).log(Level.SEVERE, null, ex);
+//		} catch (IOException ex) {
+//			Logger.getLogger(MyTransferListener.class.getName()).log(Level.SEVERE, null, ex);
+//		} catch (FTPIllegalReplyException ex) {
+//			Logger.getLogger(MyTransferListener.class.getName()).log(Level.SEVERE, null, ex);
+//		} catch (FTPException ex) {
+//			Logger.getLogger(MyTransferListener.class.getName()).log(Level.SEVERE, null, ex);
+//		}
 	}
 
 	public void completed() {

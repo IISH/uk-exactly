@@ -122,11 +122,12 @@ public class FTPConnection {
 			try {
 				try {
 					ftp.setType(FTPClient.TYPE_BINARY);
-					ftp.upload(new java.io.File(src.getAbsolutePath()), new MyTransferListener(src.getAbsolutePath()));
+					ftp.upload(new java.io.File(src.getAbsolutePath()), new MyTransferListener(src.getAbsolutePath(), ftp));
 					this.parent.uploadedFiles = this.parent.uploadedFiles + 1;
 					this.parent.UpdateProgressBar(this.parent.uploadedFiles);
 				} catch (SocketTimeoutException e) {
-					Logger.getLogger(GACOM).log(Level.SEVERE, "Socket Timeout Exception ", e.getCause());	
+					System.out.println("path== " + src.getAbsolutePath());
+					Logger.getLogger(GACOM).log(Level.SEVERE, "Socket Timeout Exception ", e.getCause());
 					ftp.disconnect(true);
 					ftp = this.connect(false);
 					ftp.changeDirectory(ftpSrc);
@@ -201,16 +202,16 @@ public class FTPConnection {
 
 	private FTPClient connect(boolean onlyValidate) throws IllegalStateException, IOException, FTPIllegalReplyException, FTPException {
 		TrustManager[] trustManager = new TrustManager[]{new X509TrustManager() {
-				public X509Certificate[] getAcceptedIssuers() {
-					return null;
-				}
+			public X509Certificate[] getAcceptedIssuers() {
+				return null;
+			}
 
-				public void checkClientTrusted(X509Certificate[] certs, String authType) {
-				}
+			public void checkClientTrusted(X509Certificate[] certs, String authType) {
+			}
 
-				public void checkServerTrusted(X509Certificate[] certs, String authType) {
-				}
-			}};
+			public void checkServerTrusted(X509Certificate[] certs, String authType) {
+			}
+		}};
 		SSLContext sslContext = null;
 		try {
 			sslContext = SSLContext.getInstance("SSL");
@@ -218,9 +219,11 @@ public class FTPConnection {
 		} catch (NoSuchAlgorithmException | KeyManagementException e) {
 			e.printStackTrace();
 		}
+
 		SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 		FTPClient ftp = new FTPClient();
-
+//		ftp.setType(FTPClient.TYPE_BINARY);
+		ftp.setAutoNoopTimeout(10000);
 		ftp.setCharset("UTF-8");
 		ftp.setSSLSocketFactory(sslSocketFactory);
 
@@ -228,7 +231,6 @@ public class FTPConnection {
 			ftp.setSSLSocketFactory(sslSocketFactory);
 			ftp.setSecurity(FTPClient.SECURITY_FTPES);
 		}
-
 		ftp.connect(this.host, this.port);
 		ftp.login(this.username, this.password);
 
@@ -237,6 +239,8 @@ public class FTPConnection {
 		} else if (this.mode.equalsIgnoreCase("active")) {
 			ftp.setPassive(false);
 		}
+		ftp.noop();
+//		System.out.println("timeout: "+ftp.getAutoNoopTimeout());
 		Logger.getLogger(GACOM).log(Level.INFO, "Connected to server.");
 		if (this.destination.isEmpty()) {
 			this.destination = "/";
