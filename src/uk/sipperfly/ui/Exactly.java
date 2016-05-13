@@ -2087,6 +2087,7 @@ public class Exactly extends javax.swing.JFrame {
 		List<String> directories = new ArrayList<String>();
 		directories = this.uIManager.getInputDirectories();
 		directories.add(editInputDir.getText());
+		
 		long size = 0;
 		ConfigurationsRepo configRepo = new ConfigurationsRepo();
 		Configurations config = configRepo.getOneOrCreateOne();
@@ -2094,9 +2095,7 @@ public class Exactly extends javax.swing.JFrame {
 			if (!directory.isEmpty()) {
 				isSelected = true;
 				File f = new File(directory);
-				if (!f.exists()) {
-					System.out.println("name == " + f.getName());
-					System.out.println("path == " + f.getAbsolutePath());
+				if (!f.exists()) {					
 					UpdateResult("Must choose a valid input folder(s).", 1);
 					return;
 				} else if (f.isFile()) {

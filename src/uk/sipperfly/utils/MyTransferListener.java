@@ -30,6 +30,7 @@ public class MyTransferListener implements FTPDataTransferListener {
 	private static String GACOM = "com.UKExactly";
 	private String filePath;
 	private FTPClient client;
+	private int totalBytes = 0;
 
 	public MyTransferListener(String filePath, FTPClient ftp) {
 		this.filePath = filePath;
@@ -42,18 +43,13 @@ public class MyTransferListener implements FTPDataTransferListener {
 	}
 
 	public void transferred(int length) {
-//		try {
-			System.out.println("file transferred: "+ length);
-//			this.client.noop();
-//		} catch (IllegalStateException ex) {
-//			Logger.getLogger(MyTransferListener.class.getName()).log(Level.SEVERE, null, ex);
-//		} catch (IOException ex) {
-//			Logger.getLogger(MyTransferListener.class.getName()).log(Level.SEVERE, null, ex);
-//		} catch (FTPIllegalReplyException ex) {
-//			Logger.getLogger(MyTransferListener.class.getName()).log(Level.SEVERE, null, ex);
-//		} catch (FTPException ex) {
-//			Logger.getLogger(MyTransferListener.class.getName()).log(Level.SEVERE, null, ex);
-//		}
+		// Yet other length bytes has been transferred since the last time this
+		// method was called
+		this.totalBytes += length;
+		Logger.getLogger(GACOM).log(Level.INFO, "Filename: ".concat(this.filePath));
+		Logger.getLogger(GACOM).log(Level.INFO, "transferred size: ".concat(String.valueOf(this.totalBytes)));
+		System.out.println("file: "+this.filePath);
+		System.out.println("total bytes: "+ this.totalBytes);
 	}
 
 	public void completed() {
