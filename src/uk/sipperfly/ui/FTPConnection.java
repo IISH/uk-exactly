@@ -101,11 +101,11 @@ public class FTPConnection {
 	public boolean upload(File src, FTPClient ftp, String ftpSrc) throws IOException {
 		if (src.isDirectory()) {
 			try {
-                System.out.println("current dir1: "+ ftp.currentDirectory());
+				System.out.println("current dir1: " + ftp.currentDirectory());
 				ftp.createDirectory(src.getName());
 				Logger.getLogger(GACOM).log(Level.INFO, "Directory created: ".concat(src.getName()));
 				ftp.changeDirectory(src.getName());
-				System.out.println("current dir2: "+ ftp.currentDirectory());
+				System.out.println("current dir2: " + ftp.currentDirectory());
 				if (this.destination.equals("/")) {
 					this.destination += src.getName();
 				} else {
@@ -139,7 +139,7 @@ public class FTPConnection {
 			try {
 				try {
 					ftp.setType(FTPClient.TYPE_BINARY);
-					System.out.println("src file == "+ src.getAbsolutePath());
+					System.out.println("src file == " + src.getAbsolutePath());
 					ftp.upload(new java.io.File(src.getAbsolutePath()), new MyTransferListener(src.getAbsolutePath(), ftp));
 					this.parent.uploadedFiles = this.parent.uploadedFiles + 1;
 					this.parent.UpdateProgressBar(this.parent.uploadedFiles);
@@ -195,7 +195,13 @@ public class FTPConnection {
 				if (!upload(localSrc, ftp, "")) {
 					return false;
 				}
-				ftp.disconnect(true);
+				try {
+					ftp.disconnect(false);
+				} catch (SocketTimeoutException e) {
+					Logger.getLogger(FTPConnection.class.getName()).log(Level.SEVERE, null, e);
+				} catch (SocketException ex) {
+					Logger.getLogger(FTPConnection.class.getName()).log(Level.SEVERE, null, ex);
+				}
 				Logger.getLogger(GACOM).log(Level.INFO, "FTP disconnected");
 			} catch (SocketException ex) {
 				Logger.getLogger(FTPConnection.class.getName()).log(Level.SEVERE, null, ex);
