@@ -45,6 +45,7 @@ public class FTPConnection {
 	public String destination;
 	public String securityType = "FTPES";
 	private final Exactly parent;
+	FTPClient ftp;
 
 	public FTPConnection(Exactly parent, String host, String username, String password, int port, String mode, String destination, String securityType) {
 		if (parent == null || host == null || host.length() < 1 || username == null || username.length() < 1
@@ -71,8 +72,8 @@ public class FTPConnection {
 
 		try {
 
-			FTPClient ftp = this.connect(true);
-			ftp.disconnect(true);
+			this.ftp = this.connect(true);
+			this.ftp.disconnect(true);
 			return this.securityType;
 		} catch (SocketException ex) {
 			Logger.getLogger(FTPConnection.class.getName()).log(Level.SEVERE, null, ex);
@@ -98,13 +99,13 @@ public class FTPConnection {
 		}
 	}
 
-	public boolean upload(File src, FTPClient ftp, String ftpSrc) throws IOException {
+	public boolean upload(File src) throws IOException {
 		if (src.isDirectory()) {
 			try {
-				System.out.println("current dir1: " + ftp.currentDirectory());
-				ftp.createDirectory(src.getName());
+				System.out.println("current dir1: " + this.ftp.currentDirectory());
+				this.ftp.createDirectory(src.getName());
 				Logger.getLogger(GACOM).log(Level.INFO, "Directory created: ".concat(src.getName()));
-				ftp.changeDirectory(src.getName());
+				this.ftp.changeDirectory(src.getName());
 				System.out.println("current dir2: " + ftp.currentDirectory());
 				if (this.destination.equals("/")) {
 					this.destination += src.getName();
@@ -112,16 +113,16 @@ public class FTPConnection {
 					this.destination += "/" + src.getName();
 				}
 				for (File file : src.listFiles()) {
-					upload(file, ftp, src.getName());
+					upload(file);
 				}
 				try {
-					ftp.changeDirectoryUp();
+					this.ftp.changeDirectoryUp();
 				} catch (SocketTimeoutException e) {
-					ftp = this.connect(false);
-					ftp.changeDirectoryUp();
+					this.ftp = this.connect(false);
+					this.ftp.changeDirectoryUp();
 				} catch (SocketException ex) {
-					ftp = this.connect(false);
-					ftp.changeDirectoryUp();
+					this.ftp = this.connect(false);
+					this.ftp.changeDirectoryUp();
 				}
 				this.destination = this.destination.substring(0, this.destination.lastIndexOf('/'));
 				System.out.println("this.destination == " + this.destination);
@@ -138,23 +139,23 @@ public class FTPConnection {
 		} else {
 			try {
 				try {
-					ftp.setType(FTPClient.TYPE_BINARY);
+					this.ftp.setType(FTPClient.TYPE_BINARY);
 					System.out.println("src file == " + src.getAbsolutePath());
-					ftp.upload(new java.io.File(src.getAbsolutePath()), new MyTransferListener(src.getAbsolutePath(), ftp));
+					this.ftp.upload(new java.io.File(src.getAbsolutePath()), new MyTransferListener(src.getAbsolutePath()));
 					this.parent.uploadedFiles = this.parent.uploadedFiles + 1;
 					this.parent.UpdateProgressBar(this.parent.uploadedFiles);
 				} catch (SocketTimeoutException e) {
 					Logger.getLogger(GACOM).log(Level.SEVERE, "Socket Timeout Exception ", e.getCause());
-					ftp = this.connect(false);
-					ftp.changeDirectory(this.destination);
-					ftp.setType(FTPClient.TYPE_BINARY);
-					ftp.upload(new java.io.File(src.getAbsolutePath()), new MyTransferListener(src.getAbsolutePath(), ftp));
+					this.ftp = this.connect(false);
+					this.ftp.changeDirectory(this.destination);
+					this.ftp.setType(FTPClient.TYPE_BINARY);
+					this.ftp.upload(new java.io.File(src.getAbsolutePath()), new MyTransferListener(src.getAbsolutePath()));
 				} catch (SocketException ex) {
 					Logger.getLogger(GACOM).log(Level.SEVERE, "Socket Exception ", ex.getCause());
-					ftp = this.connect(false);
-					ftp.changeDirectory(this.destination);
-					ftp.setType(FTPClient.TYPE_BINARY);
-					ftp.upload(new java.io.File(src.getAbsolutePath()), new MyTransferListener(src.getAbsolutePath(), ftp));
+					this.ftp = this.connect(false);
+					this.ftp.changeDirectory(this.destination);
+					this.ftp.setType(FTPClient.TYPE_BINARY);
+					this.ftp.upload(new java.io.File(src.getAbsolutePath()), new MyTransferListener(src.getAbsolutePath()));
 				}
 			} catch (IllegalStateException ex) {
 				Logger.getLogger(FTPConnection.class.getName()).log(Level.SEVERE, null, ex);
@@ -189,14 +190,14 @@ public class FTPConnection {
 	public boolean uploadFiles(String location, String type) throws IOException {
 
 		try {
-			FTPClient ftp = this.connect(false);
+			this.ftp = this.connect(false);
 			File localSrc = new File(location);
 			try {
-				if (!upload(localSrc, ftp, "")) {
+				if (!upload(localSrc)) {
 					return false;
 				}
 				try {
-					ftp.disconnect(false);
+					this.ftp.disconnect(false);
 				} catch (SocketTimeoutException e) {
 					Logger.getLogger(FTPConnection.class.getName()).log(Level.SEVERE, null, e);
 				} catch (SocketException ex) {
@@ -241,32 +242,31 @@ public class FTPConnection {
 		}
 
 		SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-		FTPClient ftp = new FTPClient();
+		FTPClient ftpClient = new FTPClient();
 //		ftp.setType(FTPClient.TYPE_BINARY);
-		ftp.setAutoNoopTimeout(10000);
-		ftp.setCharset("UTF-8");
-		ftp.setSSLSocketFactory(sslSocketFactory);
+		ftpClient.setAutoNoopTimeout(300);
+		ftpClient.setCharset("UTF-8");
+		ftpClient.setSSLSocketFactory(sslSocketFactory);
 
 		if (this.securityType.equalsIgnoreCase("FTPES")) {
-			ftp.setSSLSocketFactory(sslSocketFactory);
-			ftp.setSecurity(FTPClient.SECURITY_FTPES);
+			ftpClient.setSSLSocketFactory(sslSocketFactory);
+			ftpClient.setSecurity(FTPClient.SECURITY_FTPES);
 		}
-		ftp.connect(this.host, this.port);
-		ftp.login(this.username, this.password);
+		ftpClient.connect(this.host, this.port);
+		ftpClient.login(this.username, this.password);
 
 		if (this.mode.equalsIgnoreCase("passive")) {
-			ftp.setPassive(true);
+			ftpClient.setPassive(true);
 		} else if (this.mode.equalsIgnoreCase("active")) {
-			ftp.setPassive(false);
+			ftpClient.setPassive(false);
 		}
-		ftp.noop();
-//		System.out.println("timeout: "+ftp.getAutoNoopTimeout());
+		ftpClient.noop();
 		Logger.getLogger(GACOM).log(Level.INFO, "Connected to server.");
 		if (this.destination.isEmpty()) {
 			this.destination = "/";
 		}
-		ftp.changeDirectory(this.destination);
+		ftpClient.changeDirectory(this.destination);
 
-		return ftp;
+		return ftpClient;
 	}
 }

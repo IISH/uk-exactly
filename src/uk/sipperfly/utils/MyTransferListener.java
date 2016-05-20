@@ -29,12 +29,12 @@ public class MyTransferListener implements FTPDataTransferListener {
 
 	private static String GACOM = "com.UKExactly";
 	private String filePath;
-	private FTPClient client;
+//	private FTPClient client;
 	private int totalBytes = 0;
 
-	public MyTransferListener(String filePath, FTPClient ftp) {
+	public MyTransferListener(String filePath) {
 		this.filePath = filePath;
-		this.client = ftp;
+//		this.client = ftp;
 	}
 
 	public void started() {
@@ -46,8 +46,8 @@ public class MyTransferListener implements FTPDataTransferListener {
 		// Yet other length bytes has been transferred since the last time this
 		// method was called
 		this.totalBytes += length;
-		Logger.getLogger(GACOM).log(Level.INFO, "Filename: ".concat(this.filePath));
-		Logger.getLogger(GACOM).log(Level.INFO, "transferred size: ".concat(String.valueOf(this.totalBytes)));
+//		Logger.getLogger(GACOM).log(Level.INFO, "Filename: ".concat(this.filePath));
+//		Logger.getLogger(GACOM).log(Level.INFO, "transferred size: ".concat(String.valueOf(this.totalBytes)));
 		System.out.println("file: "+this.filePath);
 		System.out.println("total bytes: "+ this.totalBytes);
 	}
