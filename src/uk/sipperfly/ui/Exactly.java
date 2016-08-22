@@ -108,6 +108,7 @@ public class Exactly extends javax.swing.JFrame {
 		this.uIManager.setFtpFields();
 		this.uIManager.setBagInfoFields(true);
 		this.uIManager.setTemplate();
+		this.uIManager.setSftpFields();
 		ImageIcon img = new ImageIcon(Exactly.class.getClass().getResource("/uk/sipperfly/ui/resources/Exactly-logo.png"));
 		this.setIconImage(img.getImage());
 		this.about.setIconImage(img.getImage());
@@ -219,6 +220,7 @@ public class Exactly extends javax.swing.JFrame {
         ftpDelivery = new javax.swing.JCheckBox();
         jButton11 = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
+        sftpDelivery = new javax.swing.JCheckBox();
         note = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel33 = new javax.swing.JLabel();
@@ -283,6 +285,31 @@ public class Exactly extends javax.swing.JFrame {
         jPanel6 = new javax.swing.JPanel();
         btnTransferFiles = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
+        sftp = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        sftp_connect = new javax.swing.JPanel();
+        jLabel23 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        sftp_knownHost = new javax.swing.JTextField();
+        jButton15 = new javax.swing.JButton();
+        sftp_privateKey = new javax.swing.JTextField();
+        jButton16 = new javax.swing.JButton();
+        jLabel26 = new javax.swing.JLabel();
+        sftp_passPhrase = new javax.swing.JPasswordField();
+        jLabel25 = new javax.swing.JLabel();
+        sftp_host = new javax.swing.JTextField();
+        sftp_port = new javax.swing.JTextField();
+        sftp_dest = new javax.swing.JTextField();
+        sftp_type = new javax.swing.JComboBox<>();
+        sftp_user = new javax.swing.JTextField();
+        sftp_pass = new javax.swing.JPasswordField();
+        jButton17 = new javax.swing.JButton();
+        jButton18 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu4 = new javax.swing.JMenu();
         export = new javax.swing.JMenuItem();
@@ -294,6 +321,7 @@ public class Exactly extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         emailSetting = new javax.swing.JMenuItem();
         ftpSettings = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         jInternalFrame1.setVisible(true);
 
@@ -627,6 +655,7 @@ public class Exactly extends javax.swing.JFrame {
             }
         });
 
+        serializeBag.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
         serializeBag.setText("Zip files?");
 
         jProgressBar2.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
@@ -814,7 +843,7 @@ public class Exactly extends javax.swing.JFrame {
         jLabel48.setMinimumSize(new java.awt.Dimension(96, 17));
         jLabel48.setPreferredSize(new java.awt.Dimension(96, 17));
 
-        ftpDelivery.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+        ftpDelivery.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
         ftpDelivery.setText("FTP delivery");
 
         jButton11.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
@@ -835,6 +864,9 @@ public class Exactly extends javax.swing.JFrame {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 2, Short.MAX_VALUE)
         );
+
+        sftpDelivery.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
+        sftpDelivery.setText("SFTP delivery");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -869,7 +901,9 @@ public class Exactly extends javax.swing.JFrame {
                                             .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addComponent(serializeBag)
                                                 .addGap(18, 18, 18)
-                                                .addComponent(ftpDelivery))
+                                                .addComponent(ftpDelivery)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(sftpDelivery))
                                             .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addComponent(editInputDir1, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -907,7 +941,8 @@ public class Exactly extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(serializeBag)
-                    .addComponent(ftpDelivery, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ftpDelivery, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sftpDelivery))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(editInputDir1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -952,7 +987,7 @@ public class Exactly extends javax.swing.JFrame {
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 603, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(note)
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Deliver", jPanel5);
@@ -1076,7 +1111,7 @@ public class Exactly extends javax.swing.JFrame {
                 .addComponent(unBag)
                 .addGap(18, 18, 18)
                 .addComponent(unBaggingProgress, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(437, Short.MAX_VALUE))
+                .addContainerGap(409, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Receive", jPanel4);
@@ -1263,7 +1298,7 @@ public class Exactly extends javax.swing.JFrame {
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton4)
                     .addComponent(saveBtn))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(132, Short.MAX_VALUE))
         );
 
         jPanel3.setMinimumSize(new java.awt.Dimension(64, 48));
@@ -1511,7 +1546,7 @@ public class Exactly extends javax.swing.JFrame {
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveEmailBtn)
                     .addComponent(jButton5))
-                .addContainerGap(545, Short.MAX_VALUE))
+                .addContainerGap(517, Short.MAX_VALUE))
         );
 
         jScrollPane2.setViewportView(jPanel7);
@@ -1587,6 +1622,233 @@ public class Exactly extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        sftp.setMinimumSize(new java.awt.Dimension(64, 48));
+        sftp.setPreferredSize(new java.awt.Dimension(622, 1045));
+        sftp.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                sftpPropertyChange(evt);
+            }
+        });
+
+        jLabel10.setFont(new java.awt.Font("Verdana", 1, 15)); // NOI18N
+        jLabel10.setText("SFTP Settings");
+
+        jLabel15.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+        jLabel15.setText("Host");
+
+        jLabel19.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+        jLabel19.setText("Port");
+
+        jLabel20.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+        jLabel20.setText("Connect Using");
+
+        jLabel21.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+        jLabel21.setText("Username");
+
+        jLabel22.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+        jLabel22.setText("Password");
+
+        sftp_connect.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                sftp_connectPropertyChange(evt);
+            }
+        });
+
+        jLabel23.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+        jLabel23.setText("Known Hosts");
+
+        jLabel24.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+        jLabel24.setText("Private Key");
+
+        sftp_knownHost.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
+        sftp_knownHost.setMinimumSize(new java.awt.Dimension(6, 23));
+        sftp_knownHost.setPreferredSize(new java.awt.Dimension(6, 23));
+
+        jButton15.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+        jButton15.setText("Browse");
+
+        sftp_privateKey.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+
+        jButton16.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+        jButton16.setText("Browse");
+
+        jLabel26.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+        jLabel26.setText("Pass Phrase");
+
+        sftp_passPhrase.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+
+        javax.swing.GroupLayout sftp_connectLayout = new javax.swing.GroupLayout(sftp_connect);
+        sftp_connect.setLayout(sftp_connectLayout);
+        sftp_connectLayout.setHorizontalGroup(
+            sftp_connectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(sftp_connectLayout.createSequentialGroup()
+                .addGroup(sftp_connectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel23)
+                    .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel26))
+                .addGap(18, 18, 18)
+                .addGroup(sftp_connectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(sftp_passPhrase, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(sftp_connectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(sftp_connectLayout.createSequentialGroup()
+                            .addComponent(sftp_privateKey, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(26, 26, 26)
+                            .addComponent(jButton16))
+                        .addGroup(sftp_connectLayout.createSequentialGroup()
+                            .addComponent(sftp_knownHost, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton15))))
+                .addGap(47, 64, Short.MAX_VALUE))
+        );
+        sftp_connectLayout.setVerticalGroup(
+            sftp_connectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(sftp_connectLayout.createSequentialGroup()
+                .addGroup(sftp_connectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(sftp_connectLayout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(jLabel23))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sftp_connectLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(sftp_connectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton15, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(sftp_knownHost, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(8, 8, 8)
+                .addGroup(sftp_connectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sftp_privateKey, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton16, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel24))
+                .addGap(18, 18, 18)
+                .addGroup(sftp_connectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel26)
+                    .addComponent(sftp_passPhrase, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(32, Short.MAX_VALUE))
+        );
+
+        jLabel25.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+        jLabel25.setText("Destination");
+
+        sftp_host.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+
+        sftp_port.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+
+        sftp_dest.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+
+        sftp_type.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+        sftp_type.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Username/Password", "Known Hosts/Private Key" }));
+        sftp_type.setMinimumSize(new java.awt.Dimension(6, 23));
+        sftp_type.setPreferredSize(new java.awt.Dimension(6, 23));
+        sftp_type.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sftp_typeActionPerformed(evt);
+            }
+        });
+
+        sftp_user.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+
+        sftp_pass.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+
+        jButton17.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+        jButton17.setText("Close");
+        jButton17.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton17ActionPerformed(evt);
+            }
+        });
+
+        jButton18.setFont(new java.awt.Font("Verdana", 0, 13)); // NOI18N
+        jButton18.setText("Validate and Save");
+        jButton18.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton18ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout sftpLayout = new javax.swing.GroupLayout(sftp);
+        sftp.setLayout(sftpLayout);
+        sftpLayout.setHorizontalGroup(
+            sftpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(sftpLayout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addGroup(sftpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(sftp_connect, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(sftpLayout.createSequentialGroup()
+                        .addGroup(sftpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(sftpLayout.createSequentialGroup()
+                                .addGroup(sftpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel15)
+                                    .addComponent(jLabel19)
+                                    .addComponent(jLabel25))
+                                .addGap(30, 30, 30)
+                                .addGroup(sftpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(sftp_dest, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(sftp_port, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(sftp_host, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(sftpLayout.createSequentialGroup()
+                                .addGroup(sftpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel20)
+                                    .addComponent(jLabel21)
+                                    .addComponent(jLabel22))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(sftpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(sftp_user, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(sftp_type, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(sftp_pass, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sftpLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton17)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton18)
+                .addGap(71, 71, 71))
+        );
+        sftpLayout.setVerticalGroup(
+            sftpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(sftpLayout.createSequentialGroup()
+                .addGroup(sftpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(sftpLayout.createSequentialGroup()
+                        .addGroup(sftpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(sftpLayout.createSequentialGroup()
+                                .addGroup(sftpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(sftpLayout.createSequentialGroup()
+                                        .addGap(28, 28, 28)
+                                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addGroup(sftpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel15)
+                                            .addGroup(sftpLayout.createSequentialGroup()
+                                                .addComponent(sftp_host, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(3, 3, 3)))
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel19))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sftpLayout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addComponent(sftp_port, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(50, 50, 50))
+                            .addGroup(sftpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(sftp_dest, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel25)))
+                        .addGap(55, 55, 55))
+                    .addGroup(sftpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(sftp_type, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel20)))
+                .addGroup(sftpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel21)
+                    .addComponent(sftp_user, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(sftpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel22)
+                    .addComponent(sftp_pass, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(sftp_connect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(sftpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton18)
+                    .addComponent(jButton17))
+                .addContainerGap(78, Short.MAX_VALUE))
+        );
+
         jMenu4.setText("Exactly");
 
         export.setText("Export");
@@ -1653,6 +1915,14 @@ public class Exactly extends javax.swing.JFrame {
         });
         jMenu2.add(ftpSettings);
 
+        jMenuItem2.setText("SFTP Settings");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem2);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -1662,13 +1932,15 @@ public class Exactly extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(8, 8, 8)
+                .addContainerGap()
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 599, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(sftp, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 627, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -1695,24 +1967,27 @@ public class Exactly extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 672, Short.MAX_VALUE)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 672, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(13, 13, 13)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(clearLog)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(clearTempButton)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(5, 5, 5)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(13, 13, 13)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(clearLog)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(clearTempButton))
+                            .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 518, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(sftp, javax.swing.GroupLayout.PREFERRED_SIZE, 624, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -1732,6 +2007,7 @@ public class Exactly extends javax.swing.JFrame {
 		this.jPanel3.setVisible(false);
 		this.jPanel9.setVisible(true);
 		this.jPanel6.setVisible(false);
+		this.sftp.setVisible(false);
     }//GEN-LAST:event_emailSettingActionPerformed
 
     private void saveEmailBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveEmailBtnActionPerformed
@@ -1760,13 +2036,13 @@ public class Exactly extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void emailNotificationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailNotificationActionPerformed
-		// TODO add your handling code here:
+
 		this.jTabbedPane1.setVisible(false);
-//		this.jScrollPane3.setVisible(false);
 		this.jPanel9.setVisible(false);
 		this.jPanel3.setVisible(false);
 		this.jScrollPane2.setVisible(true);
 		this.jPanel6.setVisible(false);
+		this.sftp.setVisible(false);
     }//GEN-LAST:event_emailNotificationActionPerformed
 
     private void editCurrentStatusPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_editCurrentStatusPropertyChange
@@ -1933,6 +2209,7 @@ public class Exactly extends javax.swing.JFrame {
 		this.jPanel3.setVisible(true);
 		this.jScrollPane2.setVisible(false);
 		this.jPanel6.setVisible(false);
+		this.sftp.setVisible(false);
     }//GEN-LAST:event_ftpSettingsActionPerformed
 
     private void jPanel3PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jPanel3PropertyChange
@@ -2087,7 +2364,7 @@ public class Exactly extends javax.swing.JFrame {
 		List<String> directories = new ArrayList<String>();
 		directories = this.uIManager.getInputDirectories();
 		directories.add(editInputDir.getText());
-		
+
 		long size = 0;
 		ConfigurationsRepo configRepo = new ConfigurationsRepo();
 		Configurations config = configRepo.getOneOrCreateOne();
@@ -2095,7 +2372,7 @@ public class Exactly extends javax.swing.JFrame {
 			if (!directory.isEmpty()) {
 				isSelected = true;
 				File f = new File(directory);
-				if (!f.exists()) {					
+				if (!f.exists()) {
 					UpdateResult("Must choose a valid input folder(s).", 1);
 					return;
 				} else if (f.isFile()) {
@@ -2503,6 +2780,59 @@ public class Exactly extends javax.swing.JFrame {
 		this.warning.setVisible(false);
     }//GEN-LAST:event_jButton13ActionPerformed
 
+    private void sftp_typeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sftp_typeActionPerformed
+		if (this.sftp_type.getSelectedIndex() == 1) {
+			this.sftp_connect.setVisible(true);
+		} else {
+			this.sftp_connect.setVisible(false);
+		}
+    }//GEN-LAST:event_sftp_typeActionPerformed
+
+    private void sftp_connectPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_sftp_connectPropertyChange
+		this.sftp_connect.setVisible(false);
+    }//GEN-LAST:event_sftp_connectPropertyChange
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+		this.jTabbedPane1.setVisible(false);
+		this.jScrollPane2.setVisible(false);
+		this.jPanel3.setVisible(false);
+		this.jPanel9.setVisible(false);
+		this.jPanel6.setVisible(false);
+		this.sftp.setVisible(true);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jButton17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton17ActionPerformed
+		this.jTabbedPane1.setVisible(true);
+		if (this.jTabbedPane1.getSelectedIndex() == 0) {
+			this.jPanel6.setVisible(true);
+		} else {
+			this.jPanel6.setVisible(false);
+		}
+		this.sftp.setVisible(false);
+    }//GEN-LAST:event_jButton17ActionPerformed
+
+    private void sftpPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_sftpPropertyChange
+		this.sftp.setVisible(false);
+    }//GEN-LAST:event_sftpPropertyChange
+
+    private void jButton18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton18ActionPerformed
+		if (this.editCurrentStatus.getText().isEmpty() || this.editCurrentStatus.getText() == null) {
+			UpdateResult("Validating and saving SFTP settings...", 0);
+		} else {
+			UpdateResult("Validating and saving SFTP settings... ", 1);
+		}
+		try {
+			if (this.uIManager.saveSFTPSettings()) {
+				UpdateResult("SFTP settings validated and saved successfully.", 0);
+			} else {
+				UpdateResult("Invalid credentials. Please try again.", 0);
+				Logger.getLogger(GACOM).log(Level.SEVERE, "Invalid credentials. Please try again.");
+			}
+		} catch (IOException ex) {
+			Logger.getLogger(Exactly.class.getName()).log(Level.SEVERE, null, ex);
+		}
+    }//GEN-LAST:event_jButton18ActionPerformed
+
 	/**
 	 * Validates the folder string and verifies that an actual folder exists in the file system.
 	 *
@@ -2668,6 +2998,10 @@ public class Exactly extends javax.swing.JFrame {
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton14;
+    private javax.swing.JButton jButton15;
+    private javax.swing.JButton jButton16;
+    private javax.swing.JButton jButton17;
+    private javax.swing.JButton jButton18;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -2678,14 +3012,24 @@ public class Exactly extends javax.swing.JFrame {
     private javax.swing.JButton jButton9;
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel34;
@@ -2710,6 +3054,7 @@ public class Exactly extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     public javax.swing.JPanel jPanel1;
     public javax.swing.JPanel jPanel10;
     public javax.swing.JPanel jPanel11;
@@ -2740,6 +3085,18 @@ public class Exactly extends javax.swing.JFrame {
     private javax.swing.JButton saveEmailBtn;
     public javax.swing.JCheckBox serializeBag;
     public javax.swing.JTextField serverPort;
+    private javax.swing.JPanel sftp;
+    public javax.swing.JCheckBox sftpDelivery;
+    public javax.swing.JPanel sftp_connect;
+    public javax.swing.JTextField sftp_dest;
+    public javax.swing.JTextField sftp_host;
+    public javax.swing.JTextField sftp_knownHost;
+    public javax.swing.JPasswordField sftp_pass;
+    public javax.swing.JPasswordField sftp_passPhrase;
+    public javax.swing.JTextField sftp_port;
+    public javax.swing.JTextField sftp_privateKey;
+    public javax.swing.JComboBox<String> sftp_type;
+    public javax.swing.JTextField sftp_user;
     public javax.swing.JLabel show;
     public javax.swing.JLabel showTransfer;
     public javax.swing.JCheckBox sslProtocol;

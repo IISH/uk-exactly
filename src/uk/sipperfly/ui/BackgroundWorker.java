@@ -84,6 +84,9 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import uk.sipperfly.persistent.BagInfo;
+import uk.sipperfly.persistent.SFTP;
+import uk.sipperfly.repository.SFTPRepo;
+import uk.sipperfly.utils.SFTPUtil;
 
 /**
  * This class implements the background worker thread.
@@ -110,6 +113,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	private int ftpProcess = 0;
 	private String unbagDestination = "";
 	private UIManager uIManager;
+	private final SFTP sftp;
 	String content = "";
 	String payLoad = "";
 	String bagDate = "";
@@ -131,6 +135,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		}
 		ConfigurationsRepo configRepo = new ConfigurationsRepo();
 		FTPRepo ftpRepo = new FTPRepo();
+		SFTPRepo sftpRepo = new SFTPRepo();
 		this.sources = sources;
 		this.parent = parent;
 		this.config = configRepo.getOneOrCreateOne();
@@ -142,6 +147,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		this.destFolder = this.parent.destDirLocation.getText();
 		this.process = process;
 		this.uIManager = new UIManager(parent);
+		this.sftp = sftpRepo.getOneOrCreateOne();
 	}
 
 	/**
@@ -293,6 +299,15 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 						return -1;
 					}
 				}
+				if (this.parent.sftpDelivery.isSelected()) {
+					String result = ValidateSFTPCredentials();
+					if (!result.equals("true")) {
+						this.parent.UpdateResult("Credentials not valid. Please update SFTP Settings.", 0);
+						Logger.getLogger(GACOM).log(Level.SEVERE, "Credentials not valid. Please update SFTP settings.");
+						this.parent.btnTransferFiles.setEnabled(true);
+						return -1;
+					}
+				}
 				if (this.isCancelled()) {
 					Logger.getLogger(GACOM).log(Level.INFO, "Transfer canceled.");
 					this.parent.UpdateResult("Transfer canceled.", 0);
@@ -343,6 +358,30 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 					this.parent.UpdateResult("Uploading data on FTP ...", 0);
 					Logger.getLogger(GACOM).log(Level.INFO, "Uploading data on FTP ...");
 					UploadFilesFTP();
+				}
+				if (this.parent.sftpDelivery.isSelected()) {
+					if (this.isCancelled()) {
+						Logger.getLogger(GACOM).log(Level.INFO, "Canceling Upload data to SFTP");
+						return -1;
+					}
+					String result = ValidateSFTPCredentials();
+					if (!result.equals("true")) {
+						this.parent.UpdateResult("Credentials not valid. Please update SFTP Settings.", 0);
+						Logger.getLogger(GACOM).log(Level.SEVERE, "Credentials not valid. Please update SFTP settings.");
+						this.parent.btnTransferFiles.setEnabled(true);
+						return -1;
+
+					}
+
+//					this.parent.jProgressBar2.setValue(this.parent.totalFiles + 1);
+					if (this.isCancelled()) {
+						Logger.getLogger(GACOM).log(Level.INFO, "Canceling Upload data to SFTP");
+						return -1;
+					}
+
+					this.parent.UpdateResult("Uploading data on SFTP ...", 0);
+					Logger.getLogger(GACOM).log(Level.INFO, "Uploading data on SFTP ...");
+					UploadFilesSFTP();
 				}
 				if (this.isCancelled()) {
 					Logger.getLogger(GACOM).log(Level.INFO, "Canceling send notification email(s).");
@@ -1067,6 +1106,41 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 			writer.close();
 		} catch (IOException e) {
 			Logger.getLogger(BackgroundWorker.class.getName()).log(Level.SEVERE, null, e);
+		}
+	}
+
+	public String ValidateSFTPCredentials() {
+		String userName = this.sftp.getUsername();
+		String host = this.sftp.getHost();
+		String destination = this.sftp.getDestination();
+		String password = this.sftp.getPassword();
+		int port = this.sftp.getPort();
+		int type = this.sftp.getType();
+		if (userName == null) {
+			return "false";
+		}
+		SFTPUtil util = new SFTPUtil(this.parent, host, userName, password, port, type, destination, "", "");
+		return util.validateCon();
+	}
+
+	public void UploadFilesSFTP() {
+		String userName = this.sftp.getUsername();
+		String host = this.sftp.getHost();
+		String destination = this.sftp.getDestination();
+		String password = this.sftp.getPassword();
+		int port = this.sftp.getPort();
+		int type = this.sftp.getType();
+		SFTPUtil util = new SFTPUtil(this.parent, host, userName, password, port, type, destination, "", "");
+		String location = this.target.toString();
+		if (this.parent.serializeBag.isSelected()) {
+			location = location.concat(".zip");
+		}
+		System.out.println(location);
+		File file = new File(location);
+		if (util.uploadFiles(file)) {
+			this.parent.UpdateResult("File uploaded successfully on SFTP.", 0);
+		} else {
+			this.parent.UpdateResult("An error occured while uploading on SFTP. Cannot upload file.", 0);
 		}
 	}
 }
