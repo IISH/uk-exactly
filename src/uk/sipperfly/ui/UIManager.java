@@ -32,7 +32,6 @@ import uk.sipperfly.repository.FTPRepo;
 import uk.sipperfly.repository.SFTPRepo;
 import uk.sipperfly.utils.CommonUtil;
 import uk.sipperfly.utils.SFTPUtil;
-import uk.sipperfly.utils.sftpTest;
 
 /**
  *
