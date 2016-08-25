@@ -111,6 +111,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	private int process = 0;
 	private int fileCounter = 1;
 	private int ftpProcess = 0;
+	private int sftpProcess = 0;
 	private String unbagDestination = "";
 	private UIManager uIManager;
 	private final SFTP sftp;
@@ -119,6 +120,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	String bagDate = "";
 	String bagitSize = "";
 	String manifest = "";
+	int totalFiles;
 
 	/**
 	 * Constructor for BackgroundWorker
@@ -148,6 +150,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		this.process = process;
 		this.uIManager = new UIManager(parent);
 		this.sftp = sftpRepo.getOneOrCreateOne();
+		this.totalFiles = this.parent.totalFiles;
 	}
 
 	/**
@@ -169,6 +172,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	 */
 	@Override
 	protected Integer doInBackground() {
+		int progress;
 		try {
 			String workingPath;
 			if (this.process == 2) {
@@ -348,8 +352,8 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 						return -1;
 
 					}
-
-					this.parent.jProgressBar2.setValue(this.parent.totalFiles + 1);
+					progress = this.parent.jProgressBar2.getValue();
+					this.parent.jProgressBar2.setValue(progress + 1);
 					if (this.isCancelled()) {
 						Logger.getLogger(GACOM).log(Level.INFO, "Canceling Upload data to FTP");
 						return -1;
@@ -372,8 +376,8 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 						return -1;
 
 					}
-
-//					this.parent.jProgressBar2.setValue(this.parent.totalFiles + 1);
+					progress = this.parent.jProgressBar2.getValue();
+					this.parent.jProgressBar2.setValue(progress + 1);
 					if (this.isCancelled()) {
 						Logger.getLogger(GACOM).log(Level.INFO, "Canceling Upload data to SFTP");
 						return -1;
@@ -391,16 +395,15 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 				if (this.config.getEmailNotifications()) {
 					this.parent.UpdateResult("Preparing to send notification email(s)...", 0);
 					Logger.getLogger(GACOM).log(Level.INFO, "Preparing to send notification email(s)...");
+					progress = this.parent.jProgressBar2.getValue();
+					this.parent.jProgressBar2.setValue(progress + 1);
 					SendMail(target);
 					if (this.isCancelled()) {
 						Logger.getLogger(GACOM).log(Level.INFO, "Canceling send notification email(s)");
 						return -1;
 					}
-					if (this.parent.ftpDelivery.isSelected()) {
-						this.parent.jProgressBar2.setValue(this.parent.totalFiles + 9);
-					} else {
-						this.parent.jProgressBar2.setValue(this.parent.totalFiles + 1);
-					}
+					progress = this.parent.jProgressBar2.getValue();
+					this.parent.jProgressBar2.setValue(progress + 1);
 				}
 				this.parent.jProgressBar2.setValue(this.parent.jProgressBar2.getMaximum());
 				Thread.sleep(2000);
@@ -490,6 +493,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		this.parent.jProgressBar2.setMaximum(0);
 		this.parent.UpdateProgressBar(0);
 		this.parent.ftpDelivery.setSelected(false);
+		this.parent.sftpDelivery.setSelected(false);
 		this.parent.btnCancel.setVisible(false);
 		this.parent.btnTransferFiles.setEnabled(true);
 		this.parent.metadateUpdated = 0;
@@ -572,12 +576,18 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		if (this.isCancelled()) {
 			this.parent.UpdateResult("Transfer canceled. Clean up partially copied directories.", 0);
 			Logger.getLogger(GACOM).log(Level.WARNING, "Transfer canceled. Clean up partially copied directories.");
-		} else if (this.process == 1 && this.ftpProcess == 0) {
+		} else if (this.process == 1 && this.ftpProcess == 0 && this.sftpProcess == 0) {
 			this.parent.UpdateResult("Transfer completed successfully.", 0);
 			Logger.getLogger(GACOM).log(Level.INFO, "Transfer completed successfully.");
-		} else if (this.process == 1 && this.ftpProcess == 1) {
+		} else if (this.process == 1 && this.ftpProcess == 1 && this.sftpProcess == 0) {
 			this.parent.UpdateResult("FTP transfer failed; local transfer completed successfully.", 0);
 			Logger.getLogger(GACOM).log(Level.INFO, "FTP transfer failed; local transfer completed successfully.");
+		} else if (this.process == 1 && this.ftpProcess == 0 && this.sftpProcess == 1) {
+			this.parent.UpdateResult("SFTP transfer failed; local transfer completed successfully.", 0);
+			Logger.getLogger(GACOM).log(Level.INFO, "SFTP transfer failed; local transfer completed successfully.");
+		} else if (this.process == 1 && this.ftpProcess == 1 && this.sftpProcess == 1) {
+			this.parent.UpdateResult("FTP and SFTP transfer failed; local transfer completed successfully.", 0);
+			Logger.getLogger(GACOM).log(Level.INFO, "FTP and SFTP transfer failed; local transfer completed successfully.");
 		} else if (this.process == 2) {
 			this.parent.UpdateResult("Bag Recognition: organized in BagIt structure", 0);
 			Logger.getLogger(GACOM).log(Level.INFO, "Bag Recognition: organized in BagIt structure");
@@ -591,6 +601,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 			Logger.getLogger(GACOM).log(Level.INFO, "Successfully unpacked Bagit bag at ".concat(this.unbagDestination));
 		}
 		this.ftpProcess = 0;
+		this.sftpProcess = 0;
 		this.unbagDestination = "";
 
 	}
@@ -638,10 +649,14 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		if (this.parent.serializeBag.isSelected()) {
 			zip = 1;
 		}
-		if (this.parent.ftpDelivery.isSelected()) {
-			this.commonUtil.CreateSuccessSemaphore(this.config.getUsername(), this.parent.bagNameField.getText(), this.target, this.ftp.getDestination(), this.bagSize, bag.getPayload().size(), zip);
+		if (this.parent.ftpDelivery.isSelected() && this.parent.sftpDelivery.isSelected()) {
+			this.commonUtil.CreateSuccessSemaphore(this.config.getUsername(), this.parent.bagNameField.getText(), this.target, this.ftp.getDestination(), this.sftp.getDestination(), this.bagSize, bag.getPayload().size(), zip);
+		} else if (this.parent.ftpDelivery.isSelected()) {
+			this.commonUtil.CreateSuccessSemaphore(this.config.getUsername(), this.parent.bagNameField.getText(), this.target, this.ftp.getDestination(), "", this.bagSize, bag.getPayload().size(), zip);
+		} else if (this.parent.sftpDelivery.isSelected()) {
+			this.commonUtil.CreateSuccessSemaphore(this.config.getUsername(), this.parent.bagNameField.getText(), this.target, "", this.sftp.getDestination(), this.bagSize, bag.getPayload().size(), zip);
 		} else {
-			this.commonUtil.CreateSuccessSemaphore(this.config.getUsername(), this.parent.bagNameField.getText(), this.target, "", this.bagSize, bag.getPayload().size(), zip);
+			this.commonUtil.CreateSuccessSemaphore(this.config.getUsername(), this.parent.bagNameField.getText(), this.target, "", "", this.bagSize, bag.getPayload().size(), zip);
 		}
 
 		String newChecksum = this.commonUtil.checkSum(this.target.toString().concat("/bag-info.txt"));
@@ -718,18 +733,24 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 //		if (this.parent.serializeBag.isSelected()) {
 //			extra = 10;
 //		}
-		int totalFiles = this.parent.totalFiles;
+//		int totalFiles = this.parent.totalFiles;
 		Logger.getLogger(GACOM).log(Level.INFO, "Max Progress bar count: ".concat(Integer.toString(this.parent.totalFiles)));
 		if (this.parent.ftpDelivery.isSelected() && this.parent.serializeBag.isSelected()) {
-			totalFiles = totalFiles + 2;
+			this.totalFiles = this.totalFiles + 2;
 		} else {
-			int newCount = totalFiles + 8;
-			totalFiles = totalFiles + newCount;
+			int newCount = this.parent.totalFiles + 8;
+			this.totalFiles = this.totalFiles + newCount;
 		}
 		if (this.config.getEmailNotifications()) {
-			totalFiles = totalFiles + 1;
+			this.totalFiles = this.totalFiles + 1;
 		}
-		this.parent.jProgressBar2.setMaximum(totalFiles);
+		if (this.parent.sftpDelivery.isSelected() && this.parent.serializeBag.isSelected()) {
+			this.totalFiles = this.totalFiles + 2;
+		} else {
+			int newCount = this.parent.totalFiles + 8;
+			this.totalFiles = this.totalFiles + newCount;
+		}
+		this.parent.jProgressBar2.setMaximum(this.totalFiles);
 		for (String source : this.sources) {
 			File sourceFile = new File(source);
 			File folder = new File(sourceFile.getName());
@@ -875,22 +896,32 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 			if (this.ftpProcess == 1) {
 				msg = "FTP transfer failed.";
 			}
-			// from, to, subject, body
-			if (this.parent.ftpDelivery.isSelected()) {
-				String ftpLocation = this.ftp.getDestination();
-				if (!ftpLocation.startsWith("/")) {
-					ftpLocation = "/" + ftpLocation;
-				}
-				if (ftpLocation.endsWith("/")) {
-					ftpLocation = ftpLocation + transferName;
+			if (this.sftpProcess == 1) {
+				if (msg.equals("")) {
+					msg = "FTP transfer failed.";
 				} else {
-					ftpLocation = ftpLocation + "/" + transferName;
+					msg = msg + "\n" + "SFTP transfer failed.";
 				}
+			}
+			String loc = "";
+			if (this.parent.ftpDelivery.isSelected() && this.parent.sftpDelivery.isSelected()) {
+				String ftpLocation = this.commonUtil.validDestination(this.ftp.getDestination(), transferName);
+				String sftpLocation = this.commonUtil.validDestination(this.sftp.getDestination(), transferName);
+				loc = "\nFTP Target: " + ftpLocation + "\nSFTP Target: " + sftpLocation;
+			} else if (this.parent.ftpDelivery.isSelected()) {
+				String ftpLocation = this.commonUtil.validDestination(this.ftp.getDestination(), transferName);
+				loc = "\nFTP Target: " + ftpLocation;
+			} else if (this.parent.sftpDelivery.isSelected()) {
+				String sftpLocation = this.commonUtil.validDestination(this.sftp.getDestination(), transferName);
+				loc = "\nSFTP Target: " + sftpLocation;
+			}
+			// from, to, subject, body
+			if (this.parent.ftpDelivery.isSelected() || this.parent.sftpDelivery.isSelected()) {
 				String whole_message
 						= "Transfer completed: " + new Date()
 						+ "\nTransfer Name: " + transferName
 						+ "\nTarget: " + targetS
-						+ "\nFTP Target: " + ftpLocation
+						+ loc
 						+ "\nApplication Used: Exactly"
 						+ "\nUser: " + this.parent.userNameField.getText()
 						+ "\nTotal File count: " + this.bagCount
@@ -1119,7 +1150,9 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		if (userName == null) {
 			return "false";
 		}
-		SFTPUtil util = new SFTPUtil(this.parent, host, userName, password, port, type, destination, "", "");
+		String privateKey = this.sftp.getPrivateKey();
+		String passPhrase = this.sftp.getPassPhrase();
+		SFTPUtil util = new SFTPUtil(this.parent, host, userName, password, port, type, destination, privateKey, passPhrase);
 		return util.validateCon();
 	}
 
@@ -1130,7 +1163,9 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		String password = this.sftp.getPassword();
 		int port = this.sftp.getPort();
 		int type = this.sftp.getType();
-		SFTPUtil util = new SFTPUtil(this.parent, host, userName, password, port, type, destination, "", "");
+		String privateKey = this.sftp.getPrivateKey();
+		String passPhrase = this.sftp.getPassPhrase();
+		SFTPUtil util = new SFTPUtil(this.parent, host, userName, password, port, type, destination, privateKey, passPhrase);
 		String location = this.target.toString();
 		if (this.parent.serializeBag.isSelected()) {
 			location = location.concat(".zip");
@@ -1140,6 +1175,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		if (util.uploadFiles(file)) {
 			this.parent.UpdateResult("File uploaded successfully on SFTP.", 0);
 		} else {
+			this.sftpProcess = 1;
 			this.parent.UpdateResult("An error occured while uploading on SFTP. Cannot upload file.", 0);
 		}
 	}

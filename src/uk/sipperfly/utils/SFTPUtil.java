@@ -10,14 +10,9 @@
 package uk.sipperfly.utils;
 
 import com.jcraft.jsch.*;
-import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Properties;
-import javax.swing.*;
-import org.apache.commons.io.IOUtils;
 import uk.sipperfly.ui.Exactly;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,8 +39,7 @@ public class SFTPUtil {
 	public JSch jsch;
 
 	public SFTPUtil(Exactly parent, String host, String username, String password, int port, int type, String destination, String privateKey, String passPhrase) {
-		if (parent == null || host == null || host.length() < 1 || username == null || username.length() < 1
-				|| password == null || password.length() < 1) {
+		if (parent == null || host == null || host.length() < 1 || username == null || username.length() < 1) {
 			throw new IllegalArgumentException();
 		}
 		this.parent = parent;
@@ -80,15 +74,31 @@ public class SFTPUtil {
 		return "true";
 	}
 
-	public boolean uploadFiles(File src){
+	public boolean uploadFiles(File src) {
 		this.connect();
-		if(!upload(src)){
+		if (!upload(src)) {
 			return false;
+		}
+		try {
+			if (this.channelSftp.isConnected()) {
+				this.channelSftp.exit();
+				this.channel.disconnect();
+				this.session.disconnect();
+				System.out.println("Host Session disconnected.");
+			}
+		} catch (NullPointerException ex) {
+			Logger.getLogger(SFTPUtil.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		return true;
 	}
+
 	public boolean upload(File src) {
-		if (!this.channelSftp.isConnected()) {
+		try {
+			if (!this.channelSftp.isConnected()) {
+				this.connect();
+			}
+		} catch (NullPointerException ex) {
+			Logger.getLogger(SFTPUtil.class.getName()).log(Level.SEVERE, null, ex);
 			this.connect();
 		}
 		if (src.isDirectory()) {
@@ -101,10 +111,10 @@ public class SFTPUtil {
 				System.out.println("this.destination1 == " + this.destination);
 				if (this.destination.equals("/")) {
 					this.destination += src.getName();
-				} else if(this.destination.endsWith("/")) {
+				} else if (this.destination.endsWith("/")) {
 					this.destination += src.getName();
-				}else{
-					this.destination += "/" +  src.getName();
+				} else {
+					this.destination += "/" + src.getName();
 				}
 				System.out.println("this.destination2 == " + this.destination);
 				for (File file : src.listFiles()) {
@@ -113,7 +123,6 @@ public class SFTPUtil {
 				this.destination = this.destination.substring(0, this.destination.lastIndexOf('/'));
 				System.out.println("this.destination == " + this.destination);
 				channelSftp.cd("..");
-				
 			} catch (SftpException ex) {
 				Logger.getLogger(SFTPUtil.class.getName()).log(Level.SEVERE, null, ex);
 				return false;
@@ -122,7 +131,11 @@ public class SFTPUtil {
 		} else {
 			try {
 				System.out.println("uploading src file == " + src.getAbsolutePath());
+				Logger.getLogger(SFTPUtil.class.getName()).log(Level.INFO, "Uploading src file: ".concat(src.getAbsolutePath()));
 				this.channelSftp.put(new FileInputStream(src), src.getName());
+				Logger.getLogger(SFTPUtil.class.getName()).log(Level.INFO, "Uploaded src file: ".concat(src.getAbsolutePath()));
+				int progress = this.parent.jProgressBar2.getValue();
+				this.parent.jProgressBar2.setValue(progress + 1);
 			} catch (SftpException ex) {
 				Logger.getLogger(SFTPUtil.class.getName()).log(Level.SEVERE, null, ex);
 				return false;
@@ -139,9 +152,13 @@ public class SFTPUtil {
 			if (this.port <= 0) {
 				this.port = 22;
 			}
-			this.session = this.jsch.getSession(this.username, this.host, this.port);
+
 			if (this.type == 0) {
+				this.session = this.jsch.getSession(this.username, this.host, this.port);
 				this.session.setPassword(this.password);
+			} else {
+				this.jsch.addIdentity(this.privateKey, this.passPhrase);
+				this.session = this.jsch.getSession(this.username, this.host, this.port);
 			}
 			java.util.Properties config = new java.util.Properties();
 			config.put("StrictHostKeyChecking", "no");

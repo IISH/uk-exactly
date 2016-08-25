@@ -52,10 +52,12 @@ import uk.sipperfly.persistent.BagInfo;
 import uk.sipperfly.persistent.Configurations;
 import uk.sipperfly.persistent.FTP;
 import uk.sipperfly.persistent.Recipients;
+import uk.sipperfly.persistent.SFTP;
 import uk.sipperfly.repository.BagInfoRepo;
 import uk.sipperfly.repository.ConfigurationsRepo;
 import uk.sipperfly.repository.FTPRepo;
 import uk.sipperfly.repository.RecipientsRepo;
+import uk.sipperfly.repository.SFTPRepo;
 
 /**
  *
@@ -72,6 +74,7 @@ public class CommonUtil {
 	BagInfoRepo bagInfoRepo = new BagInfoRepo();
 	RecipientsRepo recipientsRepo = new RecipientsRepo();
 	FTPRepo FTPRepo = new FTPRepo();
+	SFTPRepo SFTPRepo = new SFTPRepo();
 	ConfigurationsRepo configurationsRepo = new ConfigurationsRepo();
 
 	/**
@@ -170,7 +173,7 @@ public class CommonUtil {
 	 * @param zip          1 if zip is checked, 0 otherwise
 	 * @return True if the semaphore was created successfully, false otherwise.
 	 */
-	public boolean CreateSuccessSemaphore(String username, String transferName, Path source, String ftp, String bagSize, int bagCount, int zip) {
+	public boolean CreateSuccessSemaphore(String username, String transferName, Path source, String ftp, String sftp, String bagSize, int bagCount, int zip) {
 		try {
 			File trasferFile = new File(transferSemaphore);
 			Path semaphorePath = this.combine(source, trasferFile.toPath());
@@ -182,29 +185,43 @@ public class CommonUtil {
 				target = target + ".zip";
 			}
 			try (PrintStream ps = new PrintStream(semaphore)) {
-				if (ftp != "") {
-					if (!ftp.startsWith("/")) {
-						ftp = "/" + ftp;
-					}
-					if (ftp.endsWith("/")) {
-						ftp = ftp + transferName;
-					} else {
-						ftp = ftp + "/" + transferName;
-					}
+				if (!ftp.equals("") && !sftp.equals("")) {
+					ftp = validDestination(ftp, transferName);
+					sftp = validDestination(sftp, transferName);
+					ps.printf("Transfer completed: %s %nTransfer name: %s %nTarget: %s  %nFTP Target: %s %nSFTP Target: %s %nApplication used: %s %nUser: %s %nTotal File count: %s%nTotal Bytes: %s\n",
+							new Date(), transferName, target, ftp, sftp, "Exactly", username, bagCount, bagSize);
+				} else if (!ftp.equals("")) {
+					ftp = validDestination(ftp, transferName);
 					ps.printf("Transfer completed: %s %nTransfer name: %s %nTarget: %s  %nFTP Target: %s %nApplication used: %s %nUser: %s %nTotal File count: %s%nTotal Bytes: %s\n",
 							new Date(), transferName, target, ftp, "Exactly", username, bagCount, bagSize);
+				} else if (!sftp.equals("")) {
+					sftp = validDestination(sftp, transferName);
+					ps.printf("Transfer completed: %s %nTransfer name: %s %nTarget: %s  %nSFTP Target: %s %nApplication used: %s %nUser: %s %nTotal File count: %s%nTotal Bytes: %s\n",
+							new Date(), transferName, target, sftp, "Exactly", username, bagCount, bagSize);
 				} else {
 					ps.printf("Transfer completed: %s %nTransfer name: %s %nTarget: %s %nApplication used: %s %nUser: %s %nTotal File count: %s%nTotal Bytes: %s\n",
 							new Date(), transferName, target, "Exactly", username, bagCount, bagSize);
 				}
 				ps.flush();
-				ps.close();		        
-			}			
+				ps.close();
+			}
 			return true;
 		} catch (IOException ex) {
 			Logger.getLogger(GACOM).log(Level.SEVERE, "Failed to create transfer complete semaphore", ex);
 		}
 		return false;
+	}
+
+	public String validDestination(String ftp, String name) {
+		if (!ftp.startsWith("/")) {
+			ftp = "/" + ftp;
+		}
+		if (ftp.endsWith("/")) {
+			ftp = ftp + name;
+		} else {
+			ftp = ftp + "/" + name;
+		}
+		return ftp;
 	}
 
 	/**
@@ -367,7 +384,7 @@ public class CommonUtil {
 	 * @param bagInfo
 	 * @param path
 	 */
-	public String createXMLExport(List<Recipients> recipient, FTP ftp, Configurations config, List<BagInfo> bagInfo, String path, Boolean template) {
+	public String createXMLExport(List<Recipients> recipient, FTP ftp, SFTP sftp, Configurations config, List<BagInfo> bagInfo, String path, Boolean template) {
 		try {
 			char[] charArray = {'<', '>', '&', '"', '\\', '!', '#', '$', '%', '\'', '(', ')', '*', '+', ',', '/', ':', ';', '=', '?', '@', '[', ']', '^', '`', '{', '|', '}', '~'};
 			String name = "Exactly_Configuration_" + System.currentTimeMillis() + ".xml";
@@ -435,7 +452,7 @@ public class CommonUtil {
 
 			Element password1 = doc.createElement("Password");
 
-			if (ftp.getPassword() == null || ftp.getPassword() == "") {
+			if (ftp.getPassword() == null || ftp.getPassword().equals("")) {
 				password1.appendChild(doc.createTextNode(""));
 			} else {
 				password1.appendChild(doc.createTextNode(EncryptDecryptUtil.encrypt(ftp.getPassword())));
@@ -457,6 +474,70 @@ public class CommonUtil {
 				email.appendChild(doc.createTextNode(""));
 			}
 			ftpElement.appendChild(email);
+
+			//////////sftp
+			Element sftpElement = doc.createElement("SFTP");
+			temElement.appendChild(sftpElement);
+
+			Element host = doc.createElement("Host");
+			if (sftp.getHost() != null) {
+				host.appendChild(doc.createTextNode(sftp.getHost()));
+			} else {
+				host.appendChild(doc.createTextNode(""));
+			}
+			sftpElement.appendChild(host);
+
+			Element sftp_user = doc.createElement("Username");
+			if (sftp.getUsername() != null) {
+				sftp_user.appendChild(doc.createTextNode(sftp.getUsername()));
+			} else {
+				sftp_user.appendChild(doc.createTextNode(""));
+			}
+			sftpElement.appendChild(sftp_user);
+
+			Element sftp_password = doc.createElement("Password");
+
+			if (sftp.getPassword() == null || sftp.getPassword().equals("")) {
+				sftp_password.appendChild(doc.createTextNode(""));
+			} else {
+				sftp_password.appendChild(doc.createTextNode(EncryptDecryptUtil.encrypt(sftp.getPassword())));
+			}
+			sftpElement.appendChild(sftp_password);
+
+			Element sftp_port = doc.createElement("Port");
+			sftp_port.appendChild(doc.createTextNode(String.valueOf(sftp.getPort())));
+			sftpElement.appendChild(sftp_port);
+
+			Element privateKey = doc.createElement("Private-Key");
+			if (sftp.getPrivateKey() == null || sftp.getPrivateKey().equals("")) {
+				privateKey.appendChild(doc.createTextNode(""));
+			} else {
+				privateKey.appendChild(doc.createTextNode(sftp.getPrivateKey()));
+			}
+			sftpElement.appendChild(privateKey);
+			Element sftp_passPhrase = doc.createElement("Pass-Phrase");
+			if (sftp.getPassPhrase() == null || sftp.getPassPhrase().equals("")) {
+				sftp_passPhrase.appendChild(doc.createTextNode(""));
+			} else {
+				sftp_passPhrase.appendChild(doc.createTextNode(EncryptDecryptUtil.encrypt(sftp.getPassPhrase())));
+			}
+			sftpElement.appendChild(sftp_passPhrase);
+			Element destination = doc.createElement("Destination");
+			if (sftp.getDestination() != null) {
+				destination.appendChild(doc.createTextNode(sftp.getDestination()));
+			} else {
+				destination.appendChild(doc.createTextNode(""));
+			}
+			sftpElement.appendChild(destination);
+			int type = sftp.getType();
+			Element con_type = doc.createElement("Connection-Type");
+			if (type == 0) {
+				con_type.appendChild(doc.createTextNode("User/Password"));
+			} else {
+				con_type.appendChild(doc.createTextNode("User/Private Key"));
+			}
+			sftpElement.appendChild(con_type);
+
 			//////configurations
 			Element configElement = doc.createElement("configurations");
 			temElement.appendChild(configElement);
@@ -479,7 +560,7 @@ public class CommonUtil {
 
 			Element password = doc.createElement("Password");
 
-			if (config.getPassword() == null || config.getPassword() == "") {
+			if (config.getPassword() == null || config.getPassword().equals("")) {
 				password.appendChild(doc.createTextNode(""));
 			} else {
 				password.appendChild(doc.createTextNode(EncryptDecryptUtil.encrypt(config.getPassword())));
@@ -613,6 +694,46 @@ public class CommonUtil {
 					}
 					ftp.setSecurityType("FTPES");
 					this.FTPRepo.save(ftp);
+				}
+			}
+
+			this.SFTPRepo.truncate();
+			NodeList sftpList = doc.getElementsByTagName("SFTP");
+			for (int temp = 0; temp < sftpList.getLength(); temp++) {
+				SFTP sftp = this.SFTPRepo.getOneOrCreateOne();
+				Node nNode = sftpList.item(temp);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element eElement = (Element) nNode;
+					if (eElement.getElementsByTagName("Host").getLength() == 1) {
+						sftp.setHost(eElement.getElementsByTagName("Host").item(0).getTextContent());
+					}
+					if (eElement.getElementsByTagName("Username").getLength() == 1) {
+						sftp.setUsername(eElement.getElementsByTagName("Username").item(0).getTextContent());
+					}
+					if (eElement.getElementsByTagName("Password").getLength() == 1) {
+						sftp.setPassword(EncryptDecryptUtil.decrypt(eElement.getElementsByTagName("Password").item(0).getTextContent()));
+					}
+					if (eElement.getElementsByTagName("Port").getLength() == 1) {
+						sftp.setPort(Integer.parseInt(eElement.getElementsByTagName("Port").item(0).getTextContent()));
+					}
+					if (eElement.getElementsByTagName("Private-Key").getLength() == 1) {
+						sftp.setPrivateKey(eElement.getElementsByTagName("Private-Key").item(0).getTextContent());
+					}
+					if (eElement.getElementsByTagName("Pass-Phrase").getLength() == 1) {
+						sftp.setPassPhrase(EncryptDecryptUtil.decrypt(eElement.getElementsByTagName("Pass-Phrase").item(0).getTextContent()));
+					}
+					if (eElement.getElementsByTagName("Destination").getLength() == 1) {
+						sftp.setDestination(eElement.getElementsByTagName("Destination").item(0).getTextContent());
+					}
+					if (eElement.getElementsByTagName("Connection-Type").getLength() == 1) {
+						String type = eElement.getElementsByTagName("Connection-Type").item(0).getTextContent();
+						if (type.equals("User/Password")) {
+							sftp.setType(0);
+						} else {
+							sftp.setType(1);
+						}
+					}
+					this.SFTPRepo.save(sftp);
 				}
 			}
 

@@ -31,7 +31,6 @@ public class SFTP implements Serializable {
 	private int type = 0;
 	private String username;
 	private String password;
-	private String knownHost = "";
 	private String privateKey;
 	private String passPhrase;
 
@@ -86,14 +85,6 @@ public class SFTP implements Serializable {
 
 	public void setPort(int port) {
 		this.port = port;
-	}
-
-	public String getKnownHost() {
-		return knownHost;
-	}
-
-	public void setKnownHost(String knownHost) {
-		this.knownHost = knownHost;
 	}
 	
 	public String getPrivateKey() {

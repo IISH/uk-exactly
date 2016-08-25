@@ -32,6 +32,7 @@ import uk.sipperfly.repository.FTPRepo;
 import uk.sipperfly.repository.SFTPRepo;
 import uk.sipperfly.utils.CommonUtil;
 import uk.sipperfly.utils.SFTPUtil;
+import uk.sipperfly.utils.sftpTest;
 
 /**
  *
@@ -63,7 +64,6 @@ public class UIManager {
 		this.commonUtil = new CommonUtil();
 		this.defaultTemplateRepo = new DefaultTemplateRepo();
 		this.sftpRepo = new SFTPRepo();
-//		this.sftp = new SFTPUtil(mainFrame);
 //		this.bag_size = new int[1];
 	}
 
@@ -118,7 +118,7 @@ public class UIManager {
 		}
 		mainFrame.ftpDestination.setText(configurations.getDestination());
 	}
-	
+
 	public void setSftpFields() {
 		SFTP configurations = this.sftpRepo.getOneOrCreateOne();
 		mainFrame.sftp_host.setText(configurations.getHost());
@@ -127,8 +127,16 @@ public class UIManager {
 		mainFrame.sftp_port.setText(String.valueOf(configurations.getPort()));
 		mainFrame.sftp_dest.setText(configurations.getDestination());
 		mainFrame.sftp_type.setSelectedIndex(configurations.getType());
-		if(configurations.getType() == 1){
+		mainFrame.sftp_privateKey.setText(configurations.getPrivateKey());
+		mainFrame.sftp_passPhrase.setText(configurations.getPassPhrase());
+		if (configurations.getType() == 1) {
 			mainFrame.sftp_connect.setVisible(true);
+			this.mainFrame.jLabel22.setVisible(false);
+			this.mainFrame.sftp_pass.setVisible(false);
+		} else {
+			mainFrame.sftp_connect.setVisible(false);
+			this.mainFrame.jLabel22.setVisible(true);
+			this.mainFrame.sftp_pass.setVisible(true);
 		}
 	}
 
@@ -440,7 +448,6 @@ public class UIManager {
 			return false;
 		}
 	}
-	
 
 	/**
 	 * validate ftp settings.
@@ -521,7 +528,8 @@ public class UIManager {
 		Configurations configurations = this.configurationsRepo.getOneOrCreateOne();
 		List<Recipients> recipients = this.recipientsRepo.getAll();
 		FTP ftp = this.FTPRepo.getOneOrCreateOne();
-		this.commonUtil.createXMLExport(recipients, ftp, configurations, bagInfo, path, false);
+		SFTP sftp = this.sftpRepo.getOneOrCreateOne();
+		this.commonUtil.createXMLExport(recipients, ftp, sftp, configurations, bagInfo, path, false);
 		return true;
 	}
 
@@ -574,8 +582,9 @@ public class UIManager {
 			Configurations configurations = this.configurationsRepo.getOneOrCreateOne();
 			List<Recipients> recipients = this.recipientsRepo.getAll();
 			FTP ftp = this.FTPRepo.getOneOrCreateOne();
+			SFTP sftp = this.sftpRepo.getOneOrCreateOne();
 			defaultTemplate.setCurrentTemplate(file.getName());
-			defaultTemplate.setTemplate(this.commonUtil.createXMLExport(recipients, ftp, configurations, bagInfo, "", true));
+			defaultTemplate.setTemplate(this.commonUtil.createXMLExport(recipients, ftp, sftp, configurations, bagInfo, "", true));
 			this.defaultTemplateRepo.save(defaultTemplate);
 		} else {
 			File file = new File(path);
@@ -651,11 +660,6 @@ public class UIManager {
 		if (condition) {
 			this.mainFrame.bagInfo.resetEntryList();
 			this.setBagInfoFields(false);
-//			try {
-//				Thread.sleep(500);
-//			} catch (InterruptedException ex) {
-//				Logger.getLogger(UIManager.class.getName()).log(Level.SEVERE, null, ex);
-//			}
 			List<BagInfo> bagInfo1 = this.bagInfoRepo.getOneOrCreateOne();
 			if (bagInfo1.size() > 0) {
 				this.mainFrame.hideTransfer.setVisible(true);
@@ -710,32 +714,43 @@ public class UIManager {
 		}
 		return false;
 	}
-	
+
 	public boolean saveSFTPSettings() throws IOException {
 		String result = this.validateSFTPSettings();
 		if (result.equals("true")) {
 			SFTP Sftp = this.sftpRepo.getOneOrCreateOne();
-			Sftp.setHost(this.mainFrame.sftp_host.getText());
-			Sftp.setPassword(new String(mainFrame.sftp_pass.getPassword()));
-			Sftp.setUsername( mainFrame.sftp_user.getText());
+			Sftp.setHost(this.mainFrame.sftp_host.getText());			
+			Sftp.setUsername(mainFrame.sftp_user.getText());
 			Sftp.setDestination(mainFrame.sftp_dest.getText());
 			Sftp.setType(this.mainFrame.sftp_type.getSelectedIndex());
 			int port = Integer.parseInt(mainFrame.sftp_port.getText());
 			Sftp.setPort(port);
+			if (this.mainFrame.sftp_type.getSelectedIndex() == 1) {
+				Sftp.setPrivateKey(this.mainFrame.sftp_privateKey.getText());
+				Sftp.setPassPhrase(new String(mainFrame.sftp_passPhrase.getPassword()));
+				Sftp.setPassword("");
+			}else{
+				Sftp.setPrivateKey("");
+				Sftp.setPassPhrase("");
+				Sftp.setPassword(new String(mainFrame.sftp_pass.getPassword()));
+			}
+
 			this.sftpRepo.save(Sftp);
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 	public String validateSFTPSettings() throws IOException {
 		String userName = mainFrame.sftp_user.getText();
 		String host = mainFrame.sftp_host.getText();
 		String destination = mainFrame.sftp_dest.getText();
 		String password = new String(mainFrame.sftp_pass.getPassword());
+		String privateKey = this.mainFrame.sftp_privateKey.getText();
+		String passPhrase = new String(this.mainFrame.sftp_passPhrase.getPassword());
 		int port = 22;
-        int type = this.mainFrame.sftp_type.getSelectedIndex();
+		int type = this.mainFrame.sftp_type.getSelectedIndex();
 		try {
 			port = Integer.parseInt(mainFrame.sftp_port.getText());
 		} catch (java.lang.NumberFormatException ex) {
@@ -743,11 +758,12 @@ public class UIManager {
 			return "false";
 		}
 
-		if (userName.isEmpty() || host.isEmpty() || password.isEmpty()) {
+		if (userName.isEmpty() || host.isEmpty()) {
 			return "false";
 		}
-		this.sftp = new SFTPUtil(this.mainFrame, host, userName, password, port, type, destination, "", "");
+		this.sftp = new SFTPUtil(this.mainFrame, host, userName, password, port, type, destination, privateKey, passPhrase);
 		return this.sftp.validateCon();
 
 	}
+
 }

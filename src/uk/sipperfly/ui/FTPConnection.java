@@ -142,8 +142,8 @@ public class FTPConnection {
 					this.ftp.setType(FTPClient.TYPE_BINARY);
 					System.out.println("src file == " + src.getAbsolutePath());
 					this.ftp.upload(new java.io.File(src.getAbsolutePath()), new MyTransferListener(src.getAbsolutePath()));
-					this.parent.uploadedFiles = this.parent.uploadedFiles + 1;
-					this.parent.UpdateProgressBar(this.parent.uploadedFiles);
+					int progress = this.parent.jProgressBar2.getValue();
+					this.parent.jProgressBar2.setValue(progress + 1);
 				} catch (SocketTimeoutException e) {
 					Logger.getLogger(GACOM).log(Level.SEVERE, "Socket Timeout Exception ", e.getCause());
 					this.ftp = this.connect(false);
