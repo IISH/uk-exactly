@@ -2369,7 +2369,7 @@ public class Exactly extends javax.swing.JFrame {
 					String osName = System.getProperty("os.name").toLowerCase();
 					boolean isMacOs = osName.startsWith("mac os x");
 					if (isMacOs) {
-						p = Runtime.getRuntime().exec("find " + f.getAbsolutePath().replace(" ", "\\ ") + " -type f -exec stat {} +");
+						p = Runtime.getRuntime().exec(new String[]{"find", f.getAbsolutePath(), "-type", "f", "-exec", "stat", "{}", "+"});
 						this.fileSystem.append(f.getAbsolutePath());
 						this.fileSystem.append(System.getProperty("line.separator"));
 					} else {
