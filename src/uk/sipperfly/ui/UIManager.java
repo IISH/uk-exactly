@@ -13,6 +13,7 @@ package uk.sipperfly.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -718,7 +719,7 @@ public class UIManager {
 		String result = this.validateSFTPSettings();
 		if (result.equals("true")) {
 			SFTP Sftp = this.sftpRepo.getOneOrCreateOne();
-			Sftp.setHost(this.mainFrame.sftp_host.getText());			
+			Sftp.setHost(this.mainFrame.sftp_host.getText());
 			Sftp.setUsername(mainFrame.sftp_user.getText());
 			Sftp.setDestination(mainFrame.sftp_dest.getText());
 			Sftp.setType(this.mainFrame.sftp_type.getSelectedIndex());
@@ -728,7 +729,7 @@ public class UIManager {
 				Sftp.setPrivateKey(this.mainFrame.sftp_privateKey.getText());
 				Sftp.setPassPhrase(new String(mainFrame.sftp_passPhrase.getPassword()));
 				Sftp.setPassword("");
-			}else{
+			} else {
 				Sftp.setPrivateKey("");
 				Sftp.setPassPhrase("");
 				Sftp.setPassword(new String(mainFrame.sftp_pass.getPassword()));
@@ -763,6 +764,19 @@ public class UIManager {
 		this.sftp = new SFTPUtil(this.mainFrame, host, userName, password, port, type, destination, privateKey, passPhrase);
 		return this.sftp.validateCon();
 
+	}
+
+	public boolean validateFolderName(String name) {
+		char[] charArray = {'<', '>', '"', '\\', '*', ':', '/', '?', '|'};
+		char[] txt = name.toCharArray();
+		for (int i = 0; i < name.length(); i++) {
+			for (int j = 0; j < charArray.length; j++) {
+				if (txt[i] == charArray[j]) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 }

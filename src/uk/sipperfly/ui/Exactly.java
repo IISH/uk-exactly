@@ -2331,6 +2331,11 @@ public class Exactly extends javax.swing.JFrame {
 			UpdateResult("Save Metadata before starting Transfer.", 1);
 			return;
 		}
+
+		if (!this.uIManager.validateFolderName(this.bagNameField.getText())) {
+			UpdateResult("Folder name "+ this.bagNameField.getText()+" can't contain special characters < > \\ / ? * | \" :", 1);
+			return;
+		}
 		if (!this.setDropLocation()) {
 			this.btnTransferFiles.setEnabled(true);
 			this.btnCancel.setVisible(false);
@@ -2342,7 +2347,7 @@ public class Exactly extends javax.swing.JFrame {
 		List<String> directories = new ArrayList<String>();
 		directories = this.uIManager.getInputDirectories();
 		directories.add(editInputDir.getText());
-
+		StringBuilder invalidNames = new StringBuilder();
 		long size = 0;
 		ConfigurationsRepo configRepo = new ConfigurationsRepo();
 		Configurations config = configRepo.getOneOrCreateOne();
@@ -2362,6 +2367,10 @@ public class Exactly extends javax.swing.JFrame {
 				} else {
 					size = size + FileUtils.sizeOfDirectory(f);
 					this.totalFiles = this.totalFiles + commonUtil.countFilesInDirectory(f, config.getFilters());
+				}
+				if (!this.uIManager.validateFolderName(f.getName())) {
+					invalidNames.append(f.getName());
+					invalidNames.append(System.getProperty("line.separator"));
 				}
 				String s;
 				Process p;
@@ -2386,6 +2395,13 @@ public class Exactly extends javax.swing.JFrame {
 					System.out.println("error: " + e.toString());
 				}
 			}
+		}
+
+		if (invalidNames != null && invalidNames.length() > 0) {
+			UpdateResult("Following Folder name(s) contain special characters < > \\ / ? * | \" :", 1);
+			UpdateResult("Please rename before transferring", 0);
+			UpdateResult(invalidNames.toString(), 0);
+			return;
 		}
 		this.uploadedFiles = this.totalFiles;
 		size = commonUtil.convertBytestoGB(size);
