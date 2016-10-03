@@ -2332,7 +2332,7 @@ public class Exactly extends javax.swing.JFrame {
 			return;
 		}
 
-		if (!this.uIManager.validateFolderName(this.bagNameField.getText())) {
+		if (!this.uIManager.validateTitle(this.bagNameField.getText())) {
 			UpdateResult("Folder name "+ this.bagNameField.getText()+" can't contain special characters < > \\ / ? * | \" :", 1);
 			return;
 		}
@@ -2368,9 +2368,12 @@ public class Exactly extends javax.swing.JFrame {
 					size = size + FileUtils.sizeOfDirectory(f);
 					this.totalFiles = this.totalFiles + commonUtil.countFilesInDirectory(f, config.getFilters());
 				}
-				if (!this.uIManager.validateFolderName(f.getName())) {
-					invalidNames.append(f.getName());
-					invalidNames.append(System.getProperty("line.separator"));
+				this.uIManager.validateFolderName(f);
+				
+				if (this.uIManager.output != null && !this.uIManager.output.equals("")) {
+					System.out.println("output = "+ this.uIManager.output);
+					invalidNames.append(this.uIManager.output);
+this.uIManager.output="";
 				}
 				String s;
 				Process p;

@@ -766,9 +766,33 @@ public class UIManager {
 
 	}
 
-	public boolean validateFolderName(String name) {
+	public String output = "";
+	public boolean validateFolderName(File file) {
+		StringBuilder invalidNames = new StringBuilder();
+		if(file.isFile()){
+			if(!this.validateTitle(file.getName())){
+			invalidNames.append(file.getName());
+					invalidNames.append(System.getProperty("line.separator"));
+					this.output += invalidNames.toString();
+		}
+		}else if(file.isDirectory()){
+			if(!this.validateTitle(file.getName())){
+			invalidNames.append(file.getName());
+					invalidNames.append(System.getProperty("line.separator"));
+					this.output += invalidNames.toString();
+		}
+			for (File f : file.listFiles()) {
+			this.validateFolderName(f);
+			}
+		}
+		
+		
+		return true;
+	}
+	
+	public boolean validateTitle(String name) {
 		char[] charArray = {'<', '>', '"', '\\', '*', ':', '/', '?', '|'};
-		char[] txt = name.toCharArray();
+			char[] txt = name.toCharArray();
 		for (int i = 0; i < name.length(); i++) {
 			for (int j = 0; j < charArray.length; j++) {
 				if (txt[i] == charArray[j]) {
@@ -776,6 +800,8 @@ public class UIManager {
 				}
 			}
 		}
+		
+		
 		return true;
 	}
 
