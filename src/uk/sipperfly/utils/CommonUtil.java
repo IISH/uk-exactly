@@ -167,13 +167,14 @@ public class CommonUtil {
 	 * @param username     The name of the user that initiated the transfer.
 	 * @param transferName transfer title
 	 * @param source       local path for transfer
-	 * @param ftp          ftp path for transfer if ft deliver is checked
+	 * @param ftp          ftp path for transfer if ftp deliver is checked
+	 * @param sftp         SFTP path for transfer if SFTP deliver is checked
 	 * @param bagSize      size in bytes
 	 * @param bagCount     total files
 	 * @param zip          1 if zip is checked, 0 otherwise
 	 * @return True if the semaphore was created successfully, false otherwise.
 	 */
-	public boolean CreateSuccessSemaphore(String username, String transferName, Path source, String ftp, String sftp, String bagSize, int bagCount, int zip) {
+	public boolean CreateSuccessSemaphore(String username, String transferName, Path source, String ftp, String sftp, String bagSize, int bagCount, int zip, String sender, String recipients, int sendEmail) {
 		try {
 			File trasferFile = new File(transferSemaphore);
 			Path semaphorePath = this.combine(source, trasferFile.toPath());
@@ -181,26 +182,28 @@ public class CommonUtil {
 			semaphore.createNewFile();
 			String target = source.toString();
 			if (zip == 1) {
-//				transferName = transferName + ".zip";
 				target = target + ".zip";
 			}
 			try (PrintStream ps = new PrintStream(semaphore)) {
 				if (!ftp.equals("") && !sftp.equals("")) {
 					ftp = validDestination(ftp, transferName);
 					sftp = validDestination(sftp, transferName);
-					ps.printf("Transfer completed: %s %nTransfer name: %s %nTarget: %s  %nFTP Target: %s %nSFTP Target: %s %nApplication used: %s %nUser: %s %nTotal File count: %s%nTotal Bytes: %s\n",
+					ps.printf("Transfer completed: %s %nTransfer name: %s %nTarget: %s  %nFTP Target: %s %nSFTP Target: %s %nApplication used: %s %nUser: %s %nTotal file count: %s%nTotal Bytes: %s\n",
 							new Date(), transferName, target, ftp, sftp, "Exactly", username, bagCount, bagSize);
 				} else if (!ftp.equals("")) {
 					ftp = validDestination(ftp, transferName);
-					ps.printf("Transfer completed: %s %nTransfer name: %s %nTarget: %s  %nFTP Target: %s %nApplication used: %s %nUser: %s %nTotal File count: %s%nTotal Bytes: %s\n",
+					ps.printf("Transfer completed: %s %nTransfer name: %s %nTarget: %s  %nFTP Target: %s %nApplication used: %s %nUser: %s %nTotal file count: %s%nTotal Bytes: %s\n",
 							new Date(), transferName, target, ftp, "Exactly", username, bagCount, bagSize);
 				} else if (!sftp.equals("")) {
 					sftp = validDestination(sftp, transferName);
-					ps.printf("Transfer completed: %s %nTransfer name: %s %nTarget: %s  %nSFTP Target: %s %nApplication used: %s %nUser: %s %nTotal File count: %s%nTotal Bytes: %s\n",
+					ps.printf("Transfer completed: %s %nTransfer name: %s %nTarget: %s  %nSFTP Target: %s %nApplication used: %s %nUser: %s %nTotal file count: %s%nTotal Bytes: %s\n",
 							new Date(), transferName, target, sftp, "Exactly", username, bagCount, bagSize);
 				} else {
-					ps.printf("Transfer completed: %s %nTransfer name: %s %nTarget: %s %nApplication used: %s %nUser: %s %nTotal File count: %s%nTotal Bytes: %s\n",
+					ps.printf("Transfer completed: %s %nTransfer name: %s %nTarget: %s %nApplication used: %s %nUser: %s %nTotal file count: %s%nTotal Bytes: %s\n",
 							new Date(), transferName, target, "Exactly", username, bagCount, bagSize);
+				}
+				if (sendEmail == 1) {
+					ps.printf("%nEmail address of sender: %s %nEmail address of recipient(s): %s", sender, recipients);
 				}
 				ps.flush();
 				ps.close();

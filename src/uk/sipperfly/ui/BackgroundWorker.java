@@ -649,14 +649,30 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		if (this.parent.serializeBag.isSelected()) {
 			zip = 1;
 		}
+		int emailNotification = 0;
+		String sender = "";
+		String recipients = "";
+		if (this.config.getEmailNotifications()) {
+			emailNotification = 1;
+			sender = this.config.getUsername();
+			RecipientsRepo recipientsRepo = new RecipientsRepo();
+			List<Recipients> recipientsList = recipientsRepo.getAll();
+			for (Recipients res : recipientsList) {
+				recipients += res.getEmail() + ", ";
+			}
+			if (!recipients.isEmpty()) {
+				recipients = recipients.substring(0, recipients.length() - 2);
+			}
+
+		}
 		if (this.parent.ftpDelivery.isSelected() && this.parent.sftpDelivery.isSelected()) {
-			this.commonUtil.CreateSuccessSemaphore(this.config.getUsername(), this.parent.bagNameField.getText(), this.target, this.ftp.getDestination(), this.sftp.getDestination(), this.bagSize, bag.getPayload().size(), zip);
+			this.commonUtil.CreateSuccessSemaphore(this.config.getUsername(), this.parent.bagNameField.getText(), this.target, this.ftp.getDestination(), this.sftp.getDestination(), this.bagSize, bag.getPayload().size(), zip, sender, recipients, emailNotification);
 		} else if (this.parent.ftpDelivery.isSelected()) {
-			this.commonUtil.CreateSuccessSemaphore(this.config.getUsername(), this.parent.bagNameField.getText(), this.target, this.ftp.getDestination(), "", this.bagSize, bag.getPayload().size(), zip);
+			this.commonUtil.CreateSuccessSemaphore(this.config.getUsername(), this.parent.bagNameField.getText(), this.target, this.ftp.getDestination(), "", this.bagSize, bag.getPayload().size(), zip, sender, recipients, emailNotification);
 		} else if (this.parent.sftpDelivery.isSelected()) {
-			this.commonUtil.CreateSuccessSemaphore(this.config.getUsername(), this.parent.bagNameField.getText(), this.target, "", this.sftp.getDestination(), this.bagSize, bag.getPayload().size(), zip);
+			this.commonUtil.CreateSuccessSemaphore(this.config.getUsername(), this.parent.bagNameField.getText(), this.target, "", this.sftp.getDestination(), this.bagSize, bag.getPayload().size(), zip, sender, recipients, emailNotification);
 		} else {
-			this.commonUtil.CreateSuccessSemaphore(this.config.getUsername(), this.parent.bagNameField.getText(), this.target, "", "", this.bagSize, bag.getPayload().size(), zip);
+			this.commonUtil.CreateSuccessSemaphore(this.config.getUsername(), this.parent.bagNameField.getText(), this.target, "", "", this.bagSize, bag.getPayload().size(), zip, sender, recipients, emailNotification);
 		}
 
 		String newChecksum = this.commonUtil.checkSum(this.target.toString().concat("/bag-info.txt"));
@@ -924,7 +940,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 						+ loc
 						+ "\nApplication Used: Exactly"
 						+ "\nUser: " + this.parent.userNameField.getText()
-						+ "\nTotal File count: " + this.bagCount
+						+ "\nTotal file count: " + this.bagCount
 						+ "\nTotal Bytes: " + this.bagSize
 						+ "\nPayload Oxum: " + this.payLoad
 						+ "\nBagging Date: " + this.bagDate
@@ -938,7 +954,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 						+ "\nTarget: " + targetS
 						+ "\nApplication Used: Exactly"
 						+ "\nUser: " + this.parent.userNameField.getText()
-						+ "\nTotal File count: " + this.bagCount
+						+ "\nTotal file count: " + this.bagCount
 						+ "\nTotal Bytes: " + this.bagSize
 						+ "\nPayload Oxum: " + this.payLoad
 						+ "\nBagging Date: " + this.bagDate
