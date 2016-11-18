@@ -122,6 +122,10 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	String manifest = "";
 	int totalFiles;
 
+//	public BackgroundWorker(int process) {
+//		this.process = process;
+//	}
+
 	/**
 	 * Constructor for BackgroundWorker
 	 *
@@ -174,6 +178,14 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	protected Integer doInBackground() {
 		int progress;
 		try {
+			if (this.process == 0) {
+				this.parent.uIManager.setConfigurationFields();
+				this.parent.uIManager.setEmailFields();
+				this.parent.uIManager.setFtpFields();
+				this.parent.uIManager.setBagInfoFields(true);
+				this.parent.uIManager.setTemplate();
+				this.parent.uIManager.setSftpFields();
+			}
 			String workingPath;
 			if (this.process == 2) {
 				if (!this.inputFolder.isEmpty() || this.inputFolder != null) {
