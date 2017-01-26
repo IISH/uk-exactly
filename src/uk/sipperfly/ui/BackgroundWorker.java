@@ -125,7 +125,6 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 //	public BackgroundWorker(int process) {
 //		this.process = process;
 //	}
-
 	/**
 	 * Constructor for BackgroundWorker
 	 *
@@ -985,7 +984,9 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 			if (filterList.size() > 0) {
 				for (String filter : filterList) {
 					String[] data = filter.split("=");
-					writer.println(data[1] + "  " + data[0]);
+					if (data.length > 1) {
+						writer.println(data[1] + "  " + data[0]);
+					}
 				}
 			}
 			writer.close();
