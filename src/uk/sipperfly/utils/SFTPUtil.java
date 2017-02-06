@@ -1,7 +1,7 @@
 /*
  * UK Exactly
  * Author: Nouman Tayyab
- * Version: 1.0
+ * Version: 0.1.4
  * Requires: JDK 1.7 or higher
  * Description: This tool transfers digital files to the AVPreserve
  * Support: info@avpreserve.com
