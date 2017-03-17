@@ -91,6 +91,7 @@ public class Exactly extends javax.swing.JFrame {
 	public int[] bag_size;
 	public int metadateUpdated = 0;
 	public StringBuilder fileSystem;
+	public String sourceChecksum;
 
 	/**
 	 * Creates new form MainFrame
@@ -2352,6 +2353,7 @@ public class Exactly extends javax.swing.JFrame {
 		long size = 0;
 		ConfigurationsRepo configRepo = new ConfigurationsRepo();
 		Configurations config = configRepo.getOneOrCreateOne();
+		sourceChecksum = "";
 		for (String directory : directories) {
 			if (!directory.isEmpty()) {
 				isSelected = true;
@@ -2364,10 +2366,12 @@ public class Exactly extends javax.swing.JFrame {
 					boolean ignore = commonUtil.checkIgnoreFiles(f.getName(), config.getFilters());
 					if (!ignore) {
 						this.totalFiles = this.totalFiles + 1;
+						sourceChecksum += f.getName() + "_|_" + commonUtil.checkSum(f.getAbsolutePath()) + "\n";
 					}
 				} else {
 					size = size + FileUtils.sizeOfDirectory(f);
 					this.totalFiles = this.totalFiles + commonUtil.countFilesInDirectory(f, config.getFilters());
+					sourceChecksum += commonUtil.getDirectoryChecksum(f);
 				}
 				this.uIManager.validateFolderName(f);
 

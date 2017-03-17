@@ -788,4 +788,19 @@ public class CommonUtil {
 		}
 		return message;
 	}
+
+	public static String getDirectoryChecksum(File directory) {
+		String out = "";
+		for (File file : directory.listFiles()) {
+			String fileName = file.getName();
+			if (!file.exists()) {
+				out += fileName + "_|_" + "not found" + "\n";
+			} else if (file.isFile()) {
+				out += fileName + "_|_" + checkSum(file.getAbsolutePath()) + "\n";
+			} else if (file.isDirectory()) {
+				out += getDirectoryChecksum(file);
+			}
+		}
+		return out;
+	}
 }

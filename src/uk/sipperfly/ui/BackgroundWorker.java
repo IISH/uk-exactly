@@ -115,6 +115,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	private String unbagDestination = "";
 	private UIManager uIManager;
 	private final SFTP sftp;
+	private static String targetChecksum;
 	String content = "";
 	String payLoad = "";
 	String bagDate = "";
@@ -335,6 +336,9 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 				this.parent.UpdateResult("Transfering files...", 0);
 				Logger.getLogger(GACOM).log(Level.INFO, "Transfering files...");
 				Path target = TransferFiles();
+				if (!getTargetChecksum(this.target.toFile()).equals("success")) {
+					return -1;
+				}
 				if (this.isCancelled()) {
 					Logger.getLogger(GACOM).log(Level.INFO, "Canceling Transfer Files task.");
 					Logger.getLogger(GACOM).log(Level.INFO, "Transfer canceled.");
@@ -745,6 +749,32 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		if (this.parent.totalFiles > this.parent.tranferredFiles) {
 			this.parent.UpdateProgressBar(this.parent.totalFiles);
 		}
+	}
+
+	public String getTargetChecksum(File directory) {
+		targetChecksum = "";
+		for (File file : directory.listFiles()) {
+			if (!file.exists()) {
+				this.parent.UpdateResult("Something went wrong while copying data to destination.", 0);
+				Logger.getLogger(GACOM).log(Level.SEVERE, "Something went wrong while copying data to staging.");
+				Logger.getLogger(GACOM).log(Level.SEVERE, file.getName() + " not found at target destination");
+				return "error";
+			} else if (file.isFile()) {
+				targetChecksum += file.getName() + "_|_" + this.commonUtil.checkSum(file.getAbsolutePath()) + "\n";
+			} else if (file.isDirectory()) {
+				targetChecksum += this.commonUtil.getDirectoryChecksum(file);
+			}
+		}
+		List<String> filterList = Arrays.asList(this.parent.sourceChecksum.split("\n"));
+		for (String str : filterList) {
+			if (!targetChecksum.contains(str)) {
+				String[] info = str.split("_|_");
+				this.parent.UpdateResult(info[0] + " either got corrupted or not copied to the destination", 0);
+				Logger.getLogger(GACOM).log(Level.SEVERE, info[0] + " either got corrupted or not copied to the destination");
+				return "error";
+			}
+		}
+		return "success";
 	}
 
 	/**
