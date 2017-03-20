@@ -337,6 +337,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 				Logger.getLogger(GACOM).log(Level.INFO, "Transfering files...");
 				Path target = TransferFiles();
 				if (!getTargetChecksum(this.target.toFile()).equals("success")) {
+					FileUtils.deleteDirectory(this.target.toFile());
 					return -1;
 				}
 				if (this.isCancelled()) {
