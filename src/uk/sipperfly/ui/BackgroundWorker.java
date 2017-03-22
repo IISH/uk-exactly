@@ -122,6 +122,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	String bagitSize = "";
 	String manifest = "";
 	int totalFiles;
+	private int totalTries = 1;
 
 //	public BackgroundWorker(int process) {
 //		this.process = process;
@@ -335,10 +336,28 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 				//transfer
 				this.parent.UpdateResult("Transfering files...", 0);
 				Logger.getLogger(GACOM).log(Level.INFO, "Transfering files...");
+				// rimsha here
+
 				Path target = TransferFiles();
 				if (!getTargetChecksum(this.target.toFile()).equals("success")) {
+					this.parent.UpdateResult("Something went wrong while copying files again trying to transfer files...", 0);
 					FileUtils.deleteDirectory(this.target.toFile());
-					return -1;
+					this.totalTries = this.totalTries + 1;
+					this.setTragetPath();
+					target = TransferFiles();
+					if (!getTargetChecksum(this.target.toFile()).equals("success")) {
+						this.parent.UpdateResult("Something went wrong while copying files again trying to transfer files...", 0);
+						FileUtils.deleteDirectory(this.target.toFile());
+						this.setTragetPath();
+						this.totalTries = this.totalTries + 1;
+						target = TransferFiles();
+						if (!getTargetChecksum(this.target.toFile()).equals("success")) {
+							this.parent.UpdateResult("Please try again.", 0);
+							this.totalTries = 1;
+							FileUtils.deleteDirectory(this.target.toFile());
+							return -1;
+						}
+					}
 				}
 				if (this.isCancelled()) {
 					Logger.getLogger(GACOM).log(Level.INFO, "Canceling Transfer Files task.");
@@ -770,7 +789,9 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		for (String str : filterList) {
 			if (!targetChecksum.contains(str)) {
 				String[] info = str.split("_|_");
-				this.parent.UpdateResult(info[0] + " either got corrupted or not copied to the destination", 0);
+				if (this.totalTries == 3) {
+					this.parent.UpdateResult(info[0] + " either got corrupted or not copied to the destination", 0);
+				}
 				Logger.getLogger(GACOM).log(Level.SEVERE, info[0] + " either got corrupted or not copied to the destination");
 				return "error";
 			}
@@ -792,23 +813,26 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 //			extra = 10;
 //		}
 //		int totalFiles = this.parent.totalFiles;
-		Logger.getLogger(GACOM).log(Level.INFO, "Max Progress bar count: ".concat(Integer.toString(this.parent.totalFiles)));
-		if (this.parent.ftpDelivery.isSelected() && this.parent.serializeBag.isSelected()) {
-			this.totalFiles = this.totalFiles + 2;
-		} else {
-			int newCount = this.parent.totalFiles + 8;
-			this.totalFiles = this.totalFiles + newCount;
+		if (this.totalTries == 1) {
+			System.out.println("this.totalTries == " + this.totalTries);
+			Logger.getLogger(GACOM).log(Level.INFO, "Max Progress bar count: ".concat(Integer.toString(this.parent.totalFiles)));
+			if (this.parent.ftpDelivery.isSelected() && this.parent.serializeBag.isSelected()) {
+				this.totalFiles = this.totalFiles + 2;
+			} else {
+				int newCount = this.parent.totalFiles + 8;
+				this.totalFiles = this.totalFiles + newCount;
+			}
+			if (this.config.getEmailNotifications()) {
+				this.totalFiles = this.totalFiles + 1;
+			}
+			if (this.parent.sftpDelivery.isSelected() && this.parent.serializeBag.isSelected()) {
+				this.totalFiles = this.totalFiles + 2;
+			} else {
+				int newCount = this.parent.totalFiles + 8;
+				this.totalFiles = this.totalFiles + newCount;
+			}
+			this.parent.jProgressBar2.setMaximum(this.totalFiles);
 		}
-		if (this.config.getEmailNotifications()) {
-			this.totalFiles = this.totalFiles + 1;
-		}
-		if (this.parent.sftpDelivery.isSelected() && this.parent.serializeBag.isSelected()) {
-			this.totalFiles = this.totalFiles + 2;
-		} else {
-			int newCount = this.parent.totalFiles + 8;
-			this.totalFiles = this.totalFiles + newCount;
-		}
-		this.parent.jProgressBar2.setMaximum(this.totalFiles);
 		for (String source : this.sources) {
 			File sourceFile = new File(source);
 			File folder = new File(sourceFile.getName());

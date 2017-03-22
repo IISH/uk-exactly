@@ -2308,7 +2308,6 @@ public class Exactly extends javax.swing.JFrame {
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File[] files = fileChooser.getSelectedFiles();
 			if (files.length >= 1) {
-				System.out.println("file 0 : " + files[0].getAbsolutePath());
 				inputDirPath = files[0].getAbsolutePath();
 				editInputDir.setText(inputDirPath);
 				for (int i = 1; i < files.length; i++) {
@@ -2376,7 +2375,6 @@ public class Exactly extends javax.swing.JFrame {
 				this.uIManager.validateFolderName(f);
 
 				if (this.uIManager.output != null && !this.uIManager.output.equals("")) {
-					System.out.println("output = " + this.uIManager.output);
 					invalidNames.append(this.uIManager.output);
 					this.uIManager.output = "";
 				}
@@ -2713,7 +2711,6 @@ public class Exactly extends javax.swing.JFrame {
 
 	private void aboutAreaHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_aboutAreaHyperlinkUpdate
 		if (HyperlinkEvent.EventType.ACTIVATED.equals(evt.getEventType())) {
-			System.out.println(evt.getURL());
 			Desktop desktop = Desktop.getDesktop();
 			try {
 				desktop.browse(evt.getURL().toURI());
@@ -2725,7 +2722,6 @@ public class Exactly extends javax.swing.JFrame {
 
 	private void authorAreaHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_authorAreaHyperlinkUpdate
 		if (HyperlinkEvent.EventType.ACTIVATED.equals(evt.getEventType())) {
-			System.out.println(evt.getURL());
 			Desktop desktop = Desktop.getDesktop();
 			try {
 				desktop.browse(evt.getURL().toURI());
@@ -2737,7 +2733,6 @@ public class Exactly extends javax.swing.JFrame {
 
 	private void contactAreaHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_contactAreaHyperlinkUpdate
 		if (HyperlinkEvent.EventType.ACTIVATED.equals(evt.getEventType())) {
-			System.out.println(evt.getURL());
 			Desktop desktop = Desktop.getDesktop();
 			try {
 				desktop.browse(evt.getURL().toURI());

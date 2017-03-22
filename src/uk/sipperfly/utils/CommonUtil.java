@@ -108,7 +108,6 @@ public class CommonUtil {
 				count += countFilesInDirectory(file, filters);
 			}
 		}
-		System.out.println(count);
 		return count;
 	}
 
