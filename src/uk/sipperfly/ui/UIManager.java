@@ -538,17 +538,17 @@ public class UIManager {
 	 */
 	public void enableORdisableFields() {
 		List<String> allFields = new ArrayList<String>();
-		allFields.add("Source Organization");
-		allFields.add("Organization Address");
-		allFields.add("Contact Name");
-		allFields.add("Contact Phone");
-		allFields.add("Contact Email");
-		allFields.add("External Description");
-		allFields.add("External Identifier");
-		allFields.add("Bag Group Identifier");
-		allFields.add("Bag Count");
-		allFields.add("Internal Sender Identifier");
-		allFields.add("Internal Sender Description");
+		allFields.add("Source-Organization");
+		allFields.add("Organization-Address");
+		allFields.add("Contact-Name");
+		allFields.add("Contact-Phone");
+		allFields.add("Contact-Email");
+		allFields.add("External-Description");
+		allFields.add("External-Identifier");
+		allFields.add("Bag-Group-Identifier");
+		allFields.add("Bag-Count");
+		allFields.add("Internal-Sender-Identifier");
+		allFields.add("Internal-Sender-Description");
 		List l = this.mainFrame.bagInfo.getList();
 		int check;
 		if (this.mainFrame.enableBagFields.isSelected()) {
