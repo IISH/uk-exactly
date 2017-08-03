@@ -122,7 +122,7 @@ public class CommonUtil {
 	public static boolean checkIgnoreFiles(String fileName, String dbFilters) {
 		boolean ignore = false;
 
-		if (dbFilters != null) {
+		if (dbFilters != null && !dbFilters.equals("")) {
 			List<String> filterList = Arrays.asList(dbFilters.split(","));
 
 			int lastIndex = fileName.lastIndexOf('.');
