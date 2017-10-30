@@ -59,6 +59,8 @@ public class Configurations implements Serializable {
 	 * Drop location path.
 	 */
 	private String dropLocation;
+	
+	private int size = 200;
 	/**
 	 * Ignore filters
 	 */
@@ -102,6 +104,24 @@ public class Configurations implements Serializable {
 	 */
 	public void setDropLocation(String dropLocation) {
 		this.dropLocation = dropLocation;
+	}
+
+	/**
+	 * Get Drop Location
+	 *
+	 * @return
+	 */
+	public int getSize() {
+		return this.size;
+	}
+
+	/**
+	 * Set Drop Location
+	 *
+	 * @param size
+	 */
+	public void setSize(int size) {
+		this.size = size;
 	}
 
 	/**
