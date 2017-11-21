@@ -308,7 +308,7 @@ Portions Copyrighted 2013 Sun Microsystems, Inc.
 
     <target name="-set-do-build-native-package">
         <property name="do.build.native.package" value="true"/>
-        <echo message="do.build.native.package = ${do.build.native.package}" level="verbose"/> 
+        <echo message="do.build.native.package = ${do.build.native.package}" level="verbose"/>
     </target>
     <target name="-check-ant-jre-supports-native-packaging" depends="-check-jfx-sdk-version, -check-ant-javafx-version, -check-ant-jre-version">
         <fail message="Error:${line.separator}JavaFX native packager requires NetBeans to run on JDK 1.7u6 or later !" if="have-ant-jre-pre7u6"/>

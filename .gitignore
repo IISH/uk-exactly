@@ -7,3 +7,4 @@ ukexactly
 logfile.txt
 logfile.txt*
 nbproject/private
+/target/

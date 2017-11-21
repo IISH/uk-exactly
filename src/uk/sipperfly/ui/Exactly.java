@@ -225,7 +225,7 @@ public class Exactly extends javax.swing.JFrame {
         jPanel8 = new javax.swing.JPanel();
         sftpDelivery = new javax.swing.JCheckBox();
         jLabel50 = new javax.swing.JLabel();
-        bagSize = new javax.swing.JTextField();
+        //bagSize = new javax.swing.JTextField();
         jLabel23 = new javax.swing.JLabel();
         note = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
@@ -934,14 +934,14 @@ public class Exactly extends javax.swing.JFrame {
                         .addGap(0, 74, Short.MAX_VALUE))
                     .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel50, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(bagSize, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+//            .addGroup(jPanel1Layout.createSequentialGroup()
+//                .addContainerGap()
+//                .addComponent(jLabel50, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                .addGap(18, 18, 18)
+//                .addComponent(bagSize, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+//                .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -969,11 +969,11 @@ public class Exactly extends javax.swing.JFrame {
                     .addComponent(btnDirChoose1)
                     .addComponent(jLabel49, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel50, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bagSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel23))
-                .addGap(6, 6, 6)
+//                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+//                    .addComponent(jLabel50, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                    .addComponent(bagSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                    .addComponent(jLabel23))
+//                .addGap(6, 6, 6)
                 .addComponent(jProgressBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -2353,22 +2353,22 @@ public class Exactly extends javax.swing.JFrame {
 	}//GEN-LAST:event_bagNameFieldActionPerformed
 
 	private void btnTransferFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransferFilesActionPerformed
-		int bagSize = 0;
-		if (this.bagSize.getText() != null && !this.bagSize.getText().equals("")) {
-			try {
-				bagSize = Integer.valueOf(this.bagSize.getText());
-			} catch (NumberFormatException ex) {
-				UpdateResult("Bag size must be a positive integer", 1);
-				return;
-			}
-			if (bagSize > 0) {
-				this.uIManager.saveBagSize();
-			}
-		}
-		if (bagSize <= 0) {
-			UpdateResult("Bag size must be greater than 0", 1);
-			return;
-		}
+//		int bagSize = 0;
+//		if (this.bagSize.getText() != null && !this.bagSize.getText().equals("")) {
+//			try {
+//				bagSize = Integer.valueOf(this.bagSize.getText());
+//			} catch (NumberFormatException ex) {
+//				UpdateResult("Bag size must be a positive integer", 1);
+//				return;
+//			}
+//			if (bagSize > 0) {
+//				this.uIManager.saveBagSize();
+//			}
+//		}
+//		if (bagSize <= 0) {
+//			UpdateResult("Bag size must be greater than 0", 1);
+//			return;
+//		}
 		if (this.MetadataReminder == 1) {
 			UpdateResult("Save Metadata before starting Transfer.", 1);
 			return;
@@ -2452,10 +2452,11 @@ public class Exactly extends javax.swing.JFrame {
 		}
 		this.uploadedFiles = this.totalFiles;
 		size = commonUtil.convertBytestoGB(size);
-		if (size > bagSize) {
-			UpdateResult("Directories size exceed from " + bagSize + " GB.", 1);
-			return;
-		}
+		//Removed the max. size option
+//		if (size > bagSize) {
+//			UpdateResult("Directories size exceed from " + bagSize + " GB.", 1);
+//			return;
+//		}
 
 		if (!isSelected) {
 			UpdateResult("Must choose an input folder.", 1);
@@ -3022,7 +3023,7 @@ public class Exactly extends javax.swing.JFrame {
     private javax.swing.JEditorPane authorArea;
     private javax.swing.JPanel authorPanel;
     public javax.swing.JTextField bagNameField;
-    public javax.swing.JTextField bagSize;
+    //public javax.swing.JTextField bagSize;
     public javax.swing.JButton btnCancel;
     private javax.swing.JButton btnDirChoose;
     private javax.swing.JButton btnDirChoose1;

@@ -99,7 +99,7 @@ public class UIManager {
 
 		mainFrame.emailNotifications.setSelected(configurations.getEmailNotifications());
 		mainFrame.editInputDir1.setText(configurations.getDropLocation());
-		mainFrame.bagSize.setText(String.valueOf(configurations.getSize()));
+//		mainFrame.bagSize.setText(String.valueOf(configurations.getSize()));
 	}
 
 	/**
@@ -147,7 +147,7 @@ public class UIManager {
 	public void restoreTransferPath() {
 		Configurations configurations = this.configurationsRepo.getOneOrCreateOne();
 		mainFrame.editInputDir1.setText(configurations.getDropLocation());
-		mainFrame.bagSize.setText(String.valueOf(configurations.getSize()));
+//		mainFrame.bagSize.setText(String.valueOf(configurations.getSize()));
 	}
 
 	/**
@@ -240,7 +240,7 @@ public class UIManager {
 	
 	public void saveBagSize(){
 		Configurations configurations = this.configurationsRepo.getOneOrCreateOne();
-		configurations.setSize(Integer.valueOf(mainFrame.bagSize.getText()));
+//		configurations.setSize(Integer.valueOf(mainFrame.bagSize.getText()));
 		this.configurationsRepo.save(configurations);
 	}
 
