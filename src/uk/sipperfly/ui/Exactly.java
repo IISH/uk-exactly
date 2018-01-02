@@ -2436,6 +2436,9 @@ public class Exactly extends javax.swing.JFrame {
 			return;
 		}
 		if (this.metadateUpdated == 0) {
+                        this.warning.setAlwaysOnTop(true);
+                        this.warning.setModal(true);
+                        this.warning.setLocationRelativeTo(this);
 			this.warning.setVisible(true);
 		} else {
 			this.jButton14ActionPerformed(evt);
