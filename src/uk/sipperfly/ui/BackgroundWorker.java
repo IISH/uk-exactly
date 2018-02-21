@@ -557,10 +557,28 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	protected Path setTragetPath() throws Exception {
             // get the drop location path from database.
             Path targetDirPath = new File(this.config.getDropLocation()).toPath();
+            System.out.println( "targetDirPath: " + targetDirPath.toString() );
             // create it if it doesn't exist
             targetDirPath = Paths.get(targetDirPath.toString(), this.target.getFileName().toString());
+            System.out.print( "Needs to create: " + targetDirPath );
             if (!Files.exists(targetDirPath)) {
-                Files.createDirectory(targetDirPath);
+                try{
+                    Files.createDirectory(targetDirPath);
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                    try(  PrintWriter out = new PrintWriter( "file_permission_sp_exception.txt" )  ){
+                        out.println( ex.getCause() + "\n" + ex.getMessage() );
+                    }
+                    System.out.println("Ex: " + ex.getMessage() );
+                    try{
+                        File f = new File(targetDirPath.toString());
+                        f.mkdirs();
+                    }catch(Exception e){
+                        FileUtils.forceMkdir(new File(targetDirPath.toString()));
+                        e.printStackTrace();
+                    }
+                }
+                
             }
 
             // use the bag name that User selected instead of Source directory/file name.

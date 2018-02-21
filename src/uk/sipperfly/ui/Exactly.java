@@ -2342,6 +2342,7 @@ public class Exactly extends javax.swing.JFrame {
 //			UpdateResult("Bag size must be greater than 0", 1);
 //			return;
 //		}
+                System.out.println( "Initial" );
 		if (this.MetadataReminder == 1) {
 			UpdateResult("Save Metadata before starting Transfer.", 1);
 			return;
@@ -2367,23 +2368,28 @@ public class Exactly extends javax.swing.JFrame {
 		ConfigurationsRepo configRepo = new ConfigurationsRepo();
 		Configurations config = configRepo.getOneOrCreateOne();
 		sourceChecksum = "";
+                System.out.println( "before dir scan" );
 		for (String directory : directories) {
 			if (!directory.isEmpty()) {
+                                System.out.println( "Dir scanning" + directory.toString() );
 				isSelected = true;
 				File f = new File(directory);
 				if (!f.exists()) {
 					UpdateResult("Must choose a valid input folder(s).", 1);
 					return;
 				} else if (f.isFile()) {
-					size = size + FileUtils.sizeOf(f);
-					boolean ignore = commonUtil.checkIgnoreFiles(f.getName(), config.getFilters());
-					if (!ignore) {
+//					size = size + FileUtils.sizeOf(f);
+//					boolean ignore = commonUtil.checkIgnoreFiles(f.getName(), config.getFilters());
+//					if (!ignore) {
+                                        
 						this.totalFiles = this.totalFiles + 1;
 						sourceChecksum += f.getName() + "_|_" + commonUtil.checkSum(f.getAbsolutePath()) + "\n";
-					}
+                                                System.out.println( "File: " + f.getName() );
+//					}
 				} else {
-					size = size + FileUtils.sizeOfDirectory(f);
+//					size = size + FileUtils.sizeOfDirectory(f);
 					this.totalFiles = this.totalFiles + commonUtil.countFilesInDirectory(f, config.getFilters());
+                                        System.out.println( "Dir Files count: " + this.totalFiles );
 					sourceChecksum += commonUtil.getDirectoryChecksum(f);
 				}
 				this.uIManager.validateFolderName(f);
@@ -2395,6 +2401,7 @@ public class Exactly extends javax.swing.JFrame {
 				String s;
 				Process p;
 				try {
+                                        System.out.println("Startedprocesing: 2404");
 					String osName = System.getProperty("os.name").toLowerCase();
 					boolean isMacOs = osName.startsWith("mac os x");
 					if (isMacOs) {
@@ -2404,6 +2411,7 @@ public class Exactly extends javax.swing.JFrame {
 					} else {
 						p = Runtime.getRuntime().exec("cmd /c dir \"" + f.getAbsolutePath() + "\" /S /A");
 					}
+                                        System.out.println("processing complete: 2414");
 					BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
 					while ((s = br.readLine()) != null) {
 						this.fileSystem.append(s);
@@ -2424,7 +2432,7 @@ public class Exactly extends javax.swing.JFrame {
 			return;
 		}
 		this.uploadedFiles = this.totalFiles;
-		size = commonUtil.convertBytestoGB(size);
+//		size = commonUtil.convertBytestoGB(size);
 		//Removed the max. size option
 //		if (size > bagSize) {
 //			UpdateResult("Directories size exceed from " + bagSize + " GB.", 1);
