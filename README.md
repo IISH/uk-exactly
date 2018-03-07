@@ -6,10 +6,8 @@ Exactly is a simple and easy to use application for remotely and safely transfer
 Building on work originally begun by the Gates Archive, AVPreserve and the Louie B. Nunn Center for Oral History at the University of Kentucky Libraries developed Exactly to meet the growing need for archives to acquire born digital content directly from donors and to begin the activities of establishing provenance and fixity early in the process of acquisition. Read more about how the Nunn Center is using Exactly <a href="http://digitalomnium.com/exactly-transfer-tool-released/">here</a>.
 
 <b>Distribution</b>
-<li>
-    - Windows and MacOS distribution [instructions](./dist.md)
-</li>
-
+<li>Windows and MacOS distribution <a href="./dist.md">instructions</a></li>
+<br/>
 <b>Help Guides</b>
 <li><a href="https://www.avpreserve.com/wp-content/uploads/2016/03/ExactlyUserGuide.0.1.1.pdf">EXACTLY USER GUIDE - VERSION 0.1.1 (PDF, 865 KB)</a></li>
 <li><a href="https://www.avpreserve.com/wp-content/uploads/2016/01/Quickstart-Guide-Delivery.pdf">EXACTLY QUICKSTART GUIDE - DELIVERY (PDF, 956 KB)</a></li>
