@@ -1,11 +1,11 @@
 /* 
  * Exactly
- * Author: Nouman Tayyab (nouman@avpreserve.com)
- * Author: Rimsha Khalid (rimsha@avpreserve.com)
- * Version: 0.1.5
+ * Author: Nouman Tayyab (nouman@weareavp.com)
+ * Author: Rimsha Khalid (rimsha@weareavp.com)
+ * Version: 0.1.6
  * Requires: JDK 1.7 or higher
  * Description: This tool transfers digital files to the UK Exactly
- * Support: info@avpreserve.com
+ * Support: info@weareavp.com
  * License: Apache 2.0
  * Copyright: University of Kentucky (http://www.uky.edu). All Rights Reserved
  */
@@ -607,7 +607,7 @@ public class Exactly extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Exactly 0.1.5");
+        setTitle("Exactly 0.1.6");
         setBackground(new java.awt.Color(255, 255, 255));
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -2684,11 +2684,11 @@ public class Exactly extends javax.swing.JFrame {
 		this.contactArea.setEditable(false);
 		this.contactArea.setContentType("text/html");
 		try {
-			this.contactArea.setPage("https://github.com/avpreserve/uk-exactly/issues");
+			this.contactArea.setPage("https://github.com/WeAreAVP/uk-exactly/issues");
 		} catch (IOException ex) {
 			Logger.getLogger(Exactly.class.getName()).log(Level.SEVERE, null, ex);
 		}
-		this.contactArea.setText("<html>Please post issues and feature requests at <a href='https://github.com/avpreserve/uk-exactly/issues'> https://github.com/avpreserve/uk-exactly/issues</a>.<br><br> Please send questions, comments or feedback to info@avpreserve.com.</html>");
+		this.contactArea.setText("<html>Please post issues and feature requests at <a href='https://github.com/WeAreAVP/uk-exactly/issues'> https://github.com/WeAreAVP/uk-exactly/issues</a>.<br><br> Please send questions, comments or feedback to info@weareavp.com.</html>");
 	}//GEN-LAST:event_contactAreaPropertyChange
 
 	private void aboutPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_aboutPropertyChange
@@ -2722,14 +2722,14 @@ public class Exactly extends javax.swing.JFrame {
 		this.aboutArea.setEditable(false);
 		this.aboutArea.setContentType("text/html");
 		try {
-			this.aboutArea.setPage("https://github.com/avpreserve/uk-exactly");
-			this.aboutArea.setPage("https://www.avpreserve.com/tools");
+			this.aboutArea.setPage("https://github.com/WeAreAVP/uk-exactly");
+			this.aboutArea.setPage("https://www.weareavp.com/products/exactly");
 		} catch (IOException ex) {
 			Logger.getLogger(Exactly.class.getName()).log(Level.SEVERE, null, ex);
 		}
-		this.aboutArea.setText("<html>Exactly 0.1.5<br>"
-				+ "<p>Exactly was developed by the Louie B. Nunn Center at the University of Kentucky Libraries and AVPreserve and can be found at <a href='https://www.avpreserve.com/tools'>www.avpreserve.com/tools</a>.</p><br>"
-				+ "The GitHub repository for Exactly can be found at <a href='https://github.com/avpreserve/uk-exactly'>https://github.com/avpreserve/uk-exactly</a>.<br><br>"
+		this.aboutArea.setText("<html>Exactly 0.1.6<br>"
+				+ "<p>Exactly was developed by the Louie B. Nunn Center at the University of Kentucky Libraries and AVP and can be found at <a href='https://www.weareavp.com/products/exactly'>www.weareavp.com/products/exactly</a>.</p><br>"
+				+ "The GitHub repository for Exactly can be found at <a href='https://github.com/WeAreAVP/uk-exactly'>https://github.com/WeAreAVP/uk-exactly</a>.<br><br>"
 				+ "<p>Exactly is a simple and easy to use application for remotely and safely transferring any born-digital material to the archive. Exactly is a user-friendly application that utilizes the BagIt File Packaging Format, supports FTP transfer, as well as standard network transfers, and integrates into desktop-based file sharing workflows such as Dropbox or Google Drive. Additionally, Exactly allows the archive to create preset configurations, as well as customized metadata templates for the donor to fill out before submission. With structured metadata coming into the archive with the digital object, the accessioning process can be much more efficiently. Exactly can send email notifications when files have been delivered to the archive. Exactly is addressing one of the Nunn Center’s greatest workflow challenges, but also one of the greatest challenges facing any archive working with born-digital material.</p>"
 				+ "</html>");
 	}//GEN-LAST:event_aboutAreaPropertyChange

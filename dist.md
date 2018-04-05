@@ -1,4 +1,4 @@
-Exactly 0.1.5
+Exactly 0.1.6
 ====
 
 MacOS Build
@@ -6,7 +6,7 @@ MacOS Build
 - install/clone `jar2app` from [https://github.com/Jorl17/jar2app](https://github.com/Jorl17/jar2app)
 - Run build [or press F11], it will generate `exactly.jar` in `uk-exactly/target/`
 - Then run the following command (remember to updated the version numbers)
->jar2app uk-exactly/target/exactly.jar -n "Exactly" -d "com.avp.exactly" -i "./uk-exactly/exactly-big.icns" -v "0.1.5" -s "0.1" -o ../Exactly.app
+>jar2app uk-exactly/target/exactly.jar -n "Exactly" -d "com.avp.exactly" -i "./uk-exactly/exactly-big.icns" -v "0.1.6" -s "0.1" -o ../Exactly.app
 
 
 Windows

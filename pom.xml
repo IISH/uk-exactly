@@ -6,7 +6,7 @@
 
     <groupId>uk-exactly</groupId>
     <artifactId>uk-exactly</artifactId>
-    <version>1.0</version>
+    <version>0.1.6</version>
 
     <properties>
         <maven.compiler.source>1.7</maven.compiler.source>
