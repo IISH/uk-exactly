@@ -1,11 +1,11 @@
 /* 
  * Exactly
- * Author: Nouman Tayyab (nouman@avpreserve.com)
- * Author: Rimsha Khalid (rimsha@avpreserve.com)
- * Version: 0.1.5
+ * Author: Nouman Tayyab (nouman@weareavp.com)
+ * Author: Rimsha Khalid (rimsha@weareavp.com)
+ * Version: 0.1.6
  * Requires: JDK 1.7 or higher
  * Description: This tool transfers digital files to the UK Exactly
- * Support: info@avpreserve.com
+ * Support: info@weareavp.com
  * License: Apache 2.0
  * Copyright: University of Kentucky (http://www.uky.edu). All Rights Reserved
  */
@@ -567,7 +567,7 @@ public class Exactly extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Exactly 0.1.5");
+        setTitle("Exactly 0.1.6");
         setBackground(new java.awt.Color(255, 255, 255));
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -2649,9 +2649,9 @@ public class Exactly extends javax.swing.JFrame {
 private void contactAreaPanel() {                                           
 		this.contactArea.setEditable(false);
 		this.contactArea.setContentType("text/html");
-		
 		this.contactArea.setText("<html>Please post issues and feature requests at <a href='https://github.com/WeAreAVP/uk-exactly/issues'> https://github.com/WeAreAVP/uk-exactly/issues</a>.<br><br> Please send questions, comments or feedback to info@weareavp.com.</html>");
 	}                                          
+
 
 	private void authorAreaPanelContent() {                                          
 		this.authorArea.setEditable(false);
@@ -2670,9 +2670,9 @@ private void contactAreaPanel() {
 				+ "<p>Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. </p>"
 				+ "See the License for the specific language governing permissions and limitations under the License."
 				+ "</html>");
-                
                 this.authorArea.setCaretPosition(0);
 	}       
+
 	private void aboutAreaHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_aboutAreaHyperlinkUpdate
 		if (HyperlinkEvent.EventType.ACTIVATED.equals(evt.getEventType())) {
 			Desktop desktop = Desktop.getDesktop();
