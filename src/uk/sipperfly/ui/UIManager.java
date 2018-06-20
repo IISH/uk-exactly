@@ -778,13 +778,13 @@ public class UIManager {
 	public boolean validateFolderName(File file) {
 		StringBuilder invalidNames = new StringBuilder();
 		if(file.isFile()){
-			if(!this.validateTitle(file.getName())){
+			if(!this.validateFile(file.getName())){
 			invalidNames.append(file.getName());
 					invalidNames.append(System.getProperty("line.separator"));
 					this.output += invalidNames.toString();
 		}
 		}else if(file.isDirectory()){
-			if(!this.validateTitle(file.getName())){
+			if(!this.validateFile(file.getName())){
 			invalidNames.append(file.getName());
 					invalidNames.append(System.getProperty("line.separator"));
 					this.output += invalidNames.toString();
@@ -810,6 +810,10 @@ public class UIManager {
 		}
 		
 		
+		return true;
+	}
+
+	private boolean validateFile(String name) {
 		return true;
 	}
 
