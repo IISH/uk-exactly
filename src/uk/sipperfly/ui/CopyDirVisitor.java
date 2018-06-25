@@ -89,7 +89,7 @@ class CopyDirVisitor extends SimpleFileVisitor<Path> {
         public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
             //need to apply directory metadata after walk finishes so it persists
             Path targetPath = toPath.resolve(fromPath.relativize(dir));
-			CommonUtil.copyFileAttributes(fromPath, targetPath);
+			CommonUtil.copyFileAttributes(dir, targetPath);
             return super.postVisitDirectory(dir, exc);
         }
 

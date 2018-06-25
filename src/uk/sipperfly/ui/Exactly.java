@@ -89,7 +89,7 @@ public class Exactly extends javax.swing.JFrame {
 	public int[] emailIdList;
 	private int MetadataReminder = 0;
 	public int[] bag_size;
-	public int metadateUpdated = 0;
+	public int metadateUpdated = 1;
 	public StringBuilder fileSystem;
 	public String sourceChecksum;
 
@@ -104,7 +104,7 @@ public class Exactly extends javax.swing.JFrame {
 		initLogger();
 		this.fileSystem = new StringBuilder();
 		this.uIManager = new UIManager(this);
-		ImageIcon img = new ImageIcon(Exactly.class.getClass().getResource("/uk/sipperfly/ui/resources/Exactly-logo.png"));
+		ImageIcon img = new ImageIcon(this.getClass().getResource("/uk/sipperfly/ui/resources/Exactly-logo.png"));
 		this.setIconImage(img.getImage());
 		this.about.setIconImage(img.getImage());
 		String osName = System.getProperty("os.name").toLowerCase();
@@ -618,6 +618,7 @@ public class Exactly extends javax.swing.JFrame {
 
         serializeBag.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
         serializeBag.setText("Zip files?");
+        serializeBag.setSelected(true);
 
         jProgressBar2.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
