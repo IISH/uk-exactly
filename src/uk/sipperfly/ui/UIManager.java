@@ -814,7 +814,20 @@ public class UIManager {
 	}
 
 	private boolean validateFile(String name) {
-		return true;
+		{
+			char[] charArray = {'/'};
+			char[] txt = name.toCharArray();
+			for (int i = 0; i < name.length(); i++) {
+				for (int j = 0; j < charArray.length; j++) {
+					if (txt[i] == charArray[j]) {
+						return false;
+					}
+				}
+			}
+
+
+			return true;
+		}
 	}
 
 }

@@ -525,7 +525,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 	 */
 	public void resetTransferFiles() {
 		this.parent.bagNameField.setText("");
-		this.parent.serializeBag.setSelected(false);
+		this.parent.serializeBag.setSelected(true);
 		this.parent.editInputDir.setText("");
 		this.parent.jProgressBar2.setMaximum(0);
 		this.parent.UpdateProgressBar(0);
@@ -533,7 +533,7 @@ class BackgroundWorker extends SwingWorker<Integer, Void> {
 		this.parent.sftpDelivery.setSelected(false);
 		this.parent.btnCancel.setVisible(false);
 		this.parent.btnTransferFiles.setEnabled(true);
-		this.parent.metadateUpdated = 0;
+		this.parent.metadateUpdated = 1;
 	}
 
 	/**
